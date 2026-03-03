@@ -7,7 +7,7 @@ public class Calculators
      * modeloCarro , valorVeiculoTabelaFipe , valorSeguro , mediaRevisao, valorMediaGasolina , kmPorLitro, KilometroRodadoAnual, valorPneu 
      * 
 	 * Exemplo:
-	 * Calculators.calcularCustoVeicularMensal(70000, 5000, 1500, 5.70, 9, 30000, 500, 0);
+	 * Calculators.calcularCustoVeicularMensal('Prisma 2019' , 70000, 4000, 1500, 5.70, 12, 30000, 500, 60000);
 	 * 
 	 * verificar resultado do debug!!!
 	 */
