@@ -1,0 +1,85 @@
+<apex:page Controller="ControllerTabelaDeJogos" showHeader="true" tabStyle="X1_Fase__tab" sidebar="false" >
+    <style type="text/css">
+        
+    #A
+    {
+    font-size:16px;
+    color:00ffff;
+    text-align:left;    
+    font: Helvetica 12pt;
+   /* border: 1px solid black;*/
+    }
+    
+    #B
+    {
+    bcground-color:
+    font-size:16px;
+    color:00ffff;
+    text-align:Center;    
+    font: Helvetica 12pt;
+   /* border: 1px solid black;*/
+    }
+    
+    table td 
+    {
+       /* width: 30px;*/
+        /*overflow: hidden;*/
+       /* display: inline-block;*/
+        white-space: nowrap;
+        text-align: center;
+    }
+    
+    #vazio
+    {
+    border: 0px;
+    width: 10px;
+    };
+    
+    .activeTab {background-color: #236FBD; color:white; background-image:none}
+    .inactiveTab { background-color: lightgrey; color:black; background-image:none}
+    
+    </style>
+    
+    <apex:form >
+   
+    <apex:tabPanel switchType="client" selectedTab="name1" id="theTabPanel">
+    <apex:tab label="1ª Fase" name="name1" id="tabOne">
+    
+    <apex:pageblock >
+    
+    
+    <apex:dataTable value="{!ListaConta}" var="a" 
+       columns="10" cellPadding="10" border="1">
+       
+       <apex:facet name="caption"><p id="A">1ª Fase<hr></hr></p></apex:facet>
+
+        <apex:facet name="header"><p id="B">Grupo A</p></apex:facet>
+                                                 
+       <apex:column headerValue="" Value="{!a.Id}"/> 
+
+       <apex:column value="{{!a.Name} x {!a.Name}}"/>
+
+       <apex:column value="{!a.Id} teste "/>
+<!--       <apex:column colspan="4" headerValue=""/> 
+       <apex:column value="{!a.Id}"/>
+       <apex:column colspan="3" value="{!a.Name} x {!a.Name} "/>
+       <apex:column value="{!a.Id}"/> -->
+       
+       
+    </apex:dataTable>
+
+
+<!-- _________________________________________________________________________________________-->   
+
+       
+       </apex:pageblock>
+    </apex:tab>   
+    <apex:tab label="2ª Fase" name="name2" id="tabTwo">
+    DADOS GUIA 2
+     <apex:pageblock title="2ª Fase">
+     </apex:pageblock>
+    
+    </apex:tab>   
+    </apex:tabPanel>
+    </apex:form>
+</apex:page>

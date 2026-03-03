@@ -1,0 +1,69 @@
+<aura:component controller="ControllerAtualizarCadastroConta"  implements="force:hasRecordId,flexipage:availableForAllPageTypes"  access="global"  >
+	
+    
+    <aura:attribute name="title" type="String" />
+    <aura:attribute name="BuscaCep" type="String" />
+    <aura:attribute name="endereco" type="ConsultaServiceConsultarCep.Endereco" />
+    
+    <lightning:card>
+        <aura:set attribute="title">
+            <lightning:icon iconName="utility:connected_apps" size="small"/>
+            {! v.title }
+        </aura:set>
+        
+         <div class="row">             
+                <p><lightning:formattedText value="Busca rápida de Endereço do cliente" /></p>       
+                
+        </div>  
+
+        <div class="slds-grid slds-gutters">
+          <div class="slds-col">
+            <span>
+                            <lightning:input style="width:100px" 
+                                 name="cep" 
+                                 disabled="false" 
+                                 value="{!v.BuscaCep}" 
+                                 maxlength="8"
+            					 messageWhenTooLong="You have exceeded the limit of 8 characters!" 
+                                 label="CEP : " />  
+            </span>
+          </div>
+          <div class="slds-col">
+            <span>
+              <br/><br/>
+              <lightning:button label="Buscar" 	iconName="utility:record_lookup" iconPosition="Right" onclick="{!c.consultar}"/>            
+            </span>
+          </div>
+          <div class="slds-col">
+              <span>
+              
+            </span>
+          </div>
+        </div>
+        
+        
+                                                               
+        
+        
+        <lightning:input style="width:500px"  disabled="true" value="{!v.endereco.cep}" label="cep : " />                 
+        <lightning:input style="width:500px"  disabled="true" value="{!v.endereco.logradouro}"  label="Logradouro : " /> 
+        <lightning:input style="width:500px"  disabled="true" value="{!v.endereco.complemento}" label="complemento : " /> 
+        <lightning:input style="width:500px"  disabled="true" value="{!v.endereco.bairro}"  label="bairro : " /> 
+        <lightning:input style="width:500px"  disabled="true" value="{!v.endereco.uf}"  label="uf : " /> 
+        <lightning:input style="width:500px"  disabled="true" value="{!v.endereco.unidade}"  label="unidade : " /> 
+        <lightning:input style="width:500px"  disabled="true" value="{!v.endereco.ibge}"  label="ibge : " /> 
+        <lightning:input style="width:500px"  disabled="true" value="{!v.endereco.gia}"  label="gia : " /> 
+        
+        
+        
+        
+        
+        
+        <aura:set attribute="footer">
+             <lightning:badge label="Busca por CEP"/>  
+        </aura:set>
+        
+    </lightning:card>    
+
+
+</aura:component>

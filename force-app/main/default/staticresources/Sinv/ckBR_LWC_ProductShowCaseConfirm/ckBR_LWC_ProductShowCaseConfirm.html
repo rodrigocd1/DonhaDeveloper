@@ -1,0 +1,124 @@
+<template>
+    <!-- Modal Section -->
+    <section if:true={isShowConfirm} role="dialog" tabindex="-1" aria-labelledby="modal-heading-itens" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-modal_large slds-fade-in-open fundoModal">
+        <div class="slds-modal__container modalContainerConfirmar">
+            <!-- Modal Header -->
+            <header class="slds-modal__header slds-text-align_left">
+                <lightning-button-icon icon-name="utility:close" onclick={closeApply} alternative-text="Fechar" variant="bare" class="slds-button slds-button_icon slds-modal__close"></lightning-button-icon>
+                <!-- Modal Title -->
+                <h2 id="modal-heading-itens" class="slds-modal__title slds-hyphenate">
+                    <strong>Aplicar</strong> 
+                </h2>
+                <div class="slds-text-title slds-grid slds-align_absolute-center"> 
+                    <div style="display: flex; align-items: center;">
+                        <span>{nome}</span>
+                        <div class="circle" style={investmentSelected.circleStyle}></div>
+                        <span class="slds-m-left_medium">{classificacaoTributaria}</span>
+                    </div>
+                </div> 
+                <!-- <div class="slds-grid slds-wrap slds-var-m-top_small">
+                    <div class="slds-col slds-size_1-of-1">
+                        <div class="slds-text-title">{nome}
+                            <div class="circle positionCircle" style={investmentSelected.circleStyle}>
+                                <div class="slds-m-left_medium">{classificacaoTributaria}</div>
+                            </div>  
+                        </div>
+                    </div>
+                </div> -->
+            </header>
+
+            <!-- Modal Content -->
+            <div class="slds-modal__content slds-p-around_medium">
+                <!-- Seção "Valores, taxas e prazos" -->
+                <div class="slds-var-m-bottom_medium">     
+                    <lightning-icon icon-name="utility:clock" size="x-small" alternative-text={label.horarioMovimentacao} title={label.horarioMovimentacao}></lightning-icon>  
+                    <span class="slds-m-left_xx-small">{label.horarioMovimentacao} <b class="slds-m-left_xxx-small"> {horarioMovimentacao} </b> {label.horarioBR}</span>
+                </div>  
+
+                <div class="slds-m-top_large"></div>    
+                <div class="slds-text-heading_small"><strong>Resumo da Operação</strong></div>
+                <div class="slds-m-top_large"></div>
+
+                <!-- Grid Layout 4x2 -->
+                <div class="slds-grid slds-wrap slds-gutters">
+                    <!-- Coluna 1 -->
+                    <div class="slds-col slds-size_1-of-4">
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label">Valor da Aplicação</label>
+                            <div class="slds-form-element__control">
+                                <!--<input type="text" class="input-inline" value={investmentSelected.valueaplicacao}  readonly /> -->
+                                {investmentSelected.valueaplicacao}
+                                <div class="slds-border_top"></div>
+                            </div> 
+                        </div> 
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label">Vencimento da Aplicação</label>
+                            <div class="slds-form-element__control">
+                                <input type="text" class="input-inline" value={valorVencimentoAplicacao}  readonly />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Coluna 2 -->
+                    <div class="slds-col slds-size_1-of-4"> 
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label">Percentual CDI(%)<lightning-icon icon-name="utility:info" size="x-small" alternative-text={label.percentualCDI} title={label.percentualCDI}></lightning-icon></label>
+                            <div class="slds-form-element__control">
+                                <input type="text" class="input-inline" value={investmentSelected.valuePercentual} readonly />
+                            </div>
+                        </div>
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label">Vencimento da Carência</label>
+                            <div class="slds-form-element__control">
+                                <input type="text" class="input-inline" value={valorVencimentoCarencia}  readonly />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Coluna 3 -->
+                    <div class="slds-col slds-size_1-of-4">
+                        <div class="slds-form-element">
+                            <label class="diasCarencia">Dias de Carência</label>
+                            <div class="slds-form-element__control">
+                                <input type="text" class="input-inline" value={investmentSelected.valueDiasCarencia}  readonly />
+                            </div>
+                        </div>
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label">Prazo (Dias Úteis)</label>
+                            <div class="slds-form-element__control">
+                                <input type="text" class="input-inline" value={investmentSelected.valuePrazoDiasUteis}  readonly />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Coluna 4 -->
+                    <div class="slds-col slds-size_1-of-4">
+                        <div class="slds-form-element">
+                            <label class="diasCarencia">Prazo (Dias Corridos)</label>
+                            <div class="slds-form-element__control">
+                                <input type="text" class="input-inline" value={investmentSelected.valuePrazoDiasCorridos} readonly />
+                            </div>
+                        </div> 
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label">Data do Investimento</label>
+                            <div class="slds-form-element__control">     
+                                <input type="text" class="input-inline" value={valorDataInvestimento} readonly/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Texto adicional com bordas --> 
+                <div class="slds-box slds-box_x-small slds-theme_default slds-m-top_large">
+                    <p>A aplicação é efetivada independente dos débitos lançados em sua conta corrente na mesma data de liquidação da aplicação, <strong>mediante a existência de Cadastro válido</strong>. Caso o saldo se torne devedor decorrente de débitos lançados na data de aplicação, essa situação poderá gerar cobrança de encargos.</p>
+                </div>
+            </div> 
+
+            <!-- Modal Footer -->
+            <div class="slds-modal__footer">   
+                <lightning-button label="Editar" class="slds-m-right_x-small" variant="neutral" onclick={handleEdit}></lightning-button>
+                <lightning-button label="Confirmar" variant="brand" onclick={handleApply}></lightning-button>
+            </div>
+        </div>
+    </section>
+</template>

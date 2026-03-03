@@ -1,0 +1,17 @@
+<aura:component >
+	teste demonstracao
+    
+        <div class="row">
+        <h2 class="header">Basic Input Email</h2>
+        <lightning:input type="email" name="email1" value="abc@domain.com" label="Email field with predefined value" />
+        <lightning:input type="email" name="email2" value="invalid-email-address" label="Email field with an invalid value" />
+        <lightning:input type="email" name="email3" placeholder="youraddress@company.com" label="Input Three" />
+    </div>
+
+    <div class="row">
+        <h2 class="header">Advanced Input Email</h2>
+        <lightning:input type="email" name="email4" readonly="true" value="lightning@force.com" label="Read-only email field" />
+        <lightning:input type="email" name="email5" disabled="true" value="lightning@force.com" label="Disabled email field" />
+        <lightning:input type="email" name="email6" required="true" value="lightning@force.com" label="Required email field" />
+    </div>
+</aura:component>

@@ -1,0 +1,9 @@
+<aura:component implements="force:hasRecordId,flexipage:availableForAllPageTypes"  access="global" controller="TestController" >
+	<aura:attribute name="accounts" type="list" ></aura:attribute>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:iteration items="{!v.accounts}" var="conta" >    
+        <br/>{!conta.Name}<br/>
+    </aura:iteration>
+    
+    
+</aura:component>

@@ -1,0 +1,28 @@
+<apex:page controller="ControllerAtualizarCadastroConta" >
+    <apex:messages />
+    <apex:form >
+        <apex:pageBlock title="">
+            
+            <apex:inputField label="Conta de Busca" value="{!account.Conta__c}" /><br/>
+            
+     		<apex:inputText maxlength="8" title="Exemplo Cep a ser digitado : 01317000" label="Cep de Busca" value="{!cepBusca}" />
+            <apex:commandButton value="Consultar"  action="{!buscarCEP}"/>
+        </apex:pageBlock>
+        
+        
+        <apex:pageBlock title="Endereço Retornado">
+            <apex:pageBlockSection >
+                <apex:inputText label="CEP"  			value="{!endereco.cep 		   	}" 	/><br/>
+                <apex:inputText label="logradouro"  	value="{!endereco.logradouro  	}" 	/><br/>
+                <apex:inputText label="complemento"  	value="{!endereco.complemento 	}" 	/><br/>
+                <apex:inputText label="bairro"  		value="{!endereco.bairro 	   	}" 	/><br/>
+                <apex:inputText label="localidade"  	value="{!endereco.localidade  	}" 	/><br/>
+                <apex:inputText label="uf"  			value="{!endereco.uf 		   	}" 	/><br/>
+                <apex:inputText label="unidade"  		value="{!endereco.unidade 	   	}" 	/><br/>
+                <apex:inputText label="ibge"  			value="{!endereco.ibge 	   		}" 	/><br/>
+                <apex:inputText label="gia"  			value="{!endereco.gia 		   	}" 	/><br/>                      
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+        
+	</apex:form> 
+</apex:page>

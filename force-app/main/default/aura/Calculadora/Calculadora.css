@@ -1,0 +1,29 @@
+.THIS {
+    min-width:430px;
+    max-width:620px;
+}
+.THIS.c-container {
+    border: 1px solid #d8dde6;
+    margin: 10px 0 20px 0;
+}
+
+.THIS .custom-box {
+    text-align: center;
+    background-color: #f4f6f9;
+    padding: 1rem;
+    border: 1px solid #d8dde6;
+     min-width:40px;
+    max-width:40px;
+    min-height:52px;
+    max-height:52px;
+}
+
+.THIS .custom-button {
+    text-align: center;    
+    padding: 1rem;
+    border: 1px solid #d8dde6;
+    min-width:40px;
+    max-width:40px;
+    min-height:52px;
+    max-height:52px;
+}

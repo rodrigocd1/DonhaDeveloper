@@ -1,0 +1,85 @@
+<apex:page controller="WrapperClass" sidebar="false" showHeader="false">
+<apex:form >
+    <apex:pageMessages />
+    <apex:pageBlock title="Edicao de Informacoes da Conta" mode="edit">
+    
+    
+Nome da Conta<c:AutoCompleteV2 allowClear="true" importJquery="true" labelField="Name" SObject="Account" valueField="Id" targetField="" style="width:150px"/> <br/><br/> 
+    
+     Criterio 1: 
+            <apex:selectlist rendered="true" value="{!campo1}" size="1">
+                <apex:selectOptions value="{!listaCamposConta}"/>
+            </apex:selectlist>
+        
+            <apex:selectlist rendered="true" value="{!criterioDeFiltro}" size="1">
+                <apex:selectOptions value="{!listaFiltros}"/>
+            </apex:selectlist>
+            
+            <apex:inputText value="{!valor1}"/>
+    
+      <apex:commandButton value="Pesquisar" action="{!pesquisar}" />  
+     
+        
+
+    <apex:pageBlockSection >    
+    
+            <apex:pageBlockSectionItem >
+            
+                <apex:commandButton value="Alterar tipo" action="{!Changetype}" reRender="theTable"/>
+                    
+            <apex:inputField value="{!anacc.type}"/>
+            
+            
+        </apex:pageBlockSectionItem>
+        
+    </apex:pageBlockSection> 
+     
+    <apex:pageBlockTable value="{!accwrap}" var="a" id="theTable">          
+        <apex:column headerValue="Todos Nomes de Contas"  >
+        
+                <apex:facet name="header">                         
+                    <apex:commandlink value="Nome das Contas" action="{!orderByName}" id="teste" />                             
+                </apex:facet>
+                
+        <apex:inputCheckbox value="{!a.selected}"/>
+        <apex:actionSupport event="onclick" action="{!getselected}" reRender="other_block"/>&nbsp;
+        <apex:outputField value="{!a.acc.name}"/>
+        </apex:column>                          
+        
+        
+
+         
+        <apex:column headerValue="Owner name" >
+            <apex:outputField value="{!a.acc.Ownerid}"/>
+        </apex:column>
+         
+        <apex:column headerValue="Type">        
+        
+                <apex:facet name="header">                         
+                    <apex:commandlink value="Tipo" action="{!orderByType}" id="teste2" />                               
+                </apex:facet>
+        
+            <apex:outputField value="{!a.acc.Type}"/>
+        </apex:column>
+         
+        <apex:column headerValue="Last modify " >
+        
+                <apex:facet name="header">                         
+                    <apex:commandlink value="Website" action="{!orderByWebsite}" id="teste3" />                             
+                </apex:facet>
+        
+            <apex:outputField value="{!a.acc.Website}"/>
+        </apex:column>
+         
+        <apex:column headerValue="Last modify " >
+            <apex:outputField value="{!a.acc.Price__c}"/>
+        </apex:column>
+
+        
+    </apex:pageBlockTable>
+
+     
+    </apex:pageBlock>
+
+    </apex:form>
+</apex:page>

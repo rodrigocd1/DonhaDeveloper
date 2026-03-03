@@ -1,0 +1,106 @@
+<aura:component >
+    <aura:attribute name="title" type="String" default="Calculadora Br"/>
+
+    <lightning:card>
+        <aura:set attribute="title">
+            <lightning:icon iconName="utility:connected_apps" size="small"/>
+            {! v.title }
+        </aura:set>
+        <!--
+        <aura:set attribute="footer">
+            <lightning:badge label="Tag1"/>
+            <lightning:badge label="Tag2"/>
+            <lightning:badge label="Tag3"/>
+        </aura:set>
+		-->
+        <div class="c-container" align="center" >
+        
+        <lightning:textarea name="input4" readonly="true" value="0"  /><br/>
+        
+        <lightning:layout>
+                 <lightning:layoutItem padding="around-small">
+                    <div class="custom-box">7</div>
+                </lightning:layoutItem>
+                <lightning:layoutItem padding="around-small">
+                    <div class="custom-box">8</div>
+                </lightning:layoutItem>      
+                <lightning:layoutItem padding="around-small">
+                    <div class="custom-box">9</div>
+                </lightning:layoutItem>         
+            	<lightning:layoutItem padding="around-small">
+            		<lightning:button class="custom-button" variant="brand" label="X" title="X" onclick="{! c.handleClick }" />
+            	</lightning:layoutItem>    
+        </lightning:layout>    
+                <lightning:layout>
+                 <lightning:layoutItem padding="around-small">
+                    <div class="custom-box">4</div>
+                </lightning:layoutItem>
+                <lightning:layoutItem padding="around-small">
+                    <div class="custom-box">5</div>
+                </lightning:layoutItem>      
+                    <lightning:layoutItem padding="around-small">
+                    <div class="custom-box">6</div>
+                </lightning:layoutItem>                  
+                <lightning:layoutItem padding="around-small">
+            		<lightning:button class="custom-button" label="/" title="/" onclick="{! c.handleClick }"/>
+            	</lightning:layoutItem>   
+        </lightning:layout> 
+            
+        <lightning:layout>
+                 <lightning:layoutItem padding="around-small">
+                    <div class="custom-box">1</div>
+                </lightning:layoutItem>
+                <lightning:layoutItem padding="around-small">
+                    <div class="custom-box">2</div>
+                </lightning:layoutItem>      
+                    <lightning:layoutItem padding="around-small">
+                    <div class="custom-box">3</div>
+                </lightning:layoutItem>                  
+            	<lightning:layoutItem padding="around-small">
+            		<lightning:button class="custom-button" variant="success" label="+" title="+" onclick="{! c.handleClick }"/>
+            	</lightning:layoutItem>               
+        </lightning:layout>             
+        <lightning:layout>
+                 <lightning:layoutItem padding="around-small">
+                    <div class="custom-box">0</div>
+                </lightning:layoutItem>
+                <lightning:layoutItem padding="around-small">
+                    <div class="custom-box">00</div>
+                </lightning:layoutItem>
+                <lightning:layoutItem padding="around-small">
+                    <div class="custom-box">.</div>        
+            	</lightning:layoutItem>
+            	<lightning:layoutItem padding="around-small">
+            		<lightning:button class="custom-button" variant="destructive" label="-" title="-" onclick="{! c.handleClick }"/>
+            	</lightning:layoutItem>               
+        </lightning:layout>      
+                 <lightning:layout>
+				<div align="right" >
+            	<lightning:layoutItem padding="around-small">
+            		<lightning:button class="custom-button" variant="neutral" label="=" title="=" onclick="{! c.handleClick }"/>
+            	</lightning:layoutItem>               
+                </div>
+        </lightning:layout>            
+        </div>
+    
+        <br/>
+        <div>
+                    <!-- Base variant: Makes a button look like a link -->    
+            
+            <!-- Brand variant: Identifies the primary action in a group of buttons -->
+            
+            
+        
+            <!-- Neutral variant (default) -->
+            
+        
+            
+            <!-- Success variant: Identifies a successful action -->
+            
+        
+            <!-- Destructive variant: Identifies a potentially negative action -->
+            
+        
+        </div>
+    </lightning:card>
+</aura:component>

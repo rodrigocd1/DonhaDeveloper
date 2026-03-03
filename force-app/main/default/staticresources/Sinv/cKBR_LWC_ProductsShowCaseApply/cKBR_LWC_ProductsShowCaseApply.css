@@ -1,0 +1,217 @@
+.fontSize {
+    font-size: 120%;
+    font-family: var(--lwc-fontFamily, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol');
+}
+ 
+ 
+
+:host {
+    display: block;
+    padding: 1rem;
+}
+
+.header h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.header p {
+    font-size: 0.875rem;
+    color: #666;
+    margin-bottom: 1rem;
+}
+
+.highlight {
+    color: #0176d3;
+}
+
+.section {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.left-column,
+.right-column {
+    width: 48%;
+}
+
+.field {
+    margin-bottom: 1rem;
+}
+
+.field label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.input-inline {
+    border: none;
+    border-bottom: 1px solid #d8dde6;
+    width: 100%;
+    padding: 0.25rem 0;
+    font-size: 0.875rem;
+    color: #333;
+    background-color: transparent;
+    transition: border-color 0.3s ease;
+    margin-top: -20px;
+}
+
+.input-inline:focus {
+    outline: none;
+    border-bottom: 1px solid #0176d3;
+}
+
+.input-inline:disabled {
+    color: #6c757d;
+    border-bottom: 1px solid #d8dde6;
+    background-color: transparent;
+}
+
+.error {
+    color: red;
+    font-size: 0.75rem;
+}
+
+.hasError {
+    border-bottom: 1px solid red;
+}
+
+.hasError .slds-icon {
+    margin-left: 0.5rem;
+    color: red;
+}
+
+.input-inline.hasError {
+    border-bottom: 1px solid red;
+    padding-right: 20px;
+    background: url('/assets/images/exclamation_icon.png') no-repeat right;
+    background-size: 16px;
+}
+
+.consultar-button {
+    background-color: #0176d3;
+    border-color: #0176d3;
+    color: #fff;
+}
+  
+.positionCircle {  
+    margin-left: 1rem; /* Ajuste conforme necessário */
+    margin-top: 0; /* Remova qualquer margem superior para alinhamento vertical */
+    display: inline-block; /* Garante que o círculo permaneça na mesma linha que o texto */
+    vertical-align: middle; /* Alinha verticalmente ao meio do texto */
+}
+
+:host { 
+    display: block;
+    padding: 1rem;
+} 
+
+/* Fundo cinza claro fora do modal */
+.slds-backdrop {
+    background-color: rgba(0, 0, 0, 0.1); /* Ajuste para um fundo cinza claro */
+}
+
+/* Alinhar o botão de fechar no canto superior direito */
+.slds-modal__close {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    z-index: 1;
+}
+.iconFilterClass {  
+    margin-top: 150%; 
+}
+@media (min-width: 48em) {  
+    .slds-col {  
+        width: 48%; /* Cada coluna ocupará aproximadamente 48% para manter espaço entre elas */
+        margin-bottom: 1rem; /* Espaço entre as linhas */
+    }
+}
+
+@media (min-width: 48em) { 
+    .slds-modal_large .slds-modal__container, .slds-modal--large .slds-modal__container {
+        width: 70%;
+        max-width: none;
+        min-width: 40rem;
+    }
+}
+
+@media (max-width: 47.99em) {
+    /* Estilo para dispositivos móveis */
+    .slds-col {
+        width: 48%; /* Colunas ocupam 100% da largura em dispositivos móveis */
+        margin-bottom: 10px; /* Espaço entre as linhas */
+    }
+}
+
+/* Alinhamento das labels e inputs */
+.slds-form-element {
+    display: flex;
+    flex-direction: column; /* Alinhar labels e inputs em coluna */
+}
+
+.slds-form-element__label {
+      
+    font-size: 12px;
+    margin-bottom: 1px;
+    margin-top: -9px;
+}
+
+.resultadoFinanceiro{
+    margin-right:5%; 
+}
+.fundoModal {    
+    background-color: rgb(211 211 211 / 50%);
+}
+.slds-gutters {
+    margin-right: calc(-1* var(--lwc-spacingSmall, 0.75rem));
+    margin-left: calc(-1* var(--lwc-spacingSmall, 0.75rem));
+    MARGIN-TOP: calc(-1* var(--lwc-spacingSmall, 0.75rem));
+    margin-bottom: -15px;
+}
+.slds-text-heading_small {
+    font-size: 13px;
+    line-height: var(--lwc-lineHeightHeading, 1.25);
+    margin-top: -12px;
+    margin-bottom: 20px;
+}
+.sldsValoresTaxas{
+    font-weight: bolder;
+    margin-bottom: -13px;
+    margin-top: -15px;
+}
+.slds-form-element__control {
+    font-size: 12px;
+}
+.slds-var-m-bottom_medium {
+    margin-bottom: var(--lwc-varSpacingVerticalMedium, 1rem);
+    margin-top: -10px;
+    font-size: 11px;
+}
+.slds-var-m-top_small {
+    margin-top: var(--lwc-varSpacingVerticalSmall, 0.75rem);
+    margin-bottom: -20px;
+}
+.buttonCalcular {
+    margin-bottom: 35px;
+    margin-top: 10px;
+    
+}
+.necessarioPreencher {
+    font-size: 11px;
+    color: gray;
+    margin-bottom: 31px;
+    margin-top: -18px;
+}
+.slds-icon-text-default {
+    width: 11px;
+    position: initial;
+    --slds-c-icon-color-foreground: var(--slds-c-icon-color-foreground-default, var(--sds-c-icon-color-foreground-default, var(--slds-g-color-neutral-base-50, var(--lwc-colorTextIconDefault, rgb(116, 116, 116)))));
+}
+.slds-modal {
+    position: fixed;
+    top: -32px;
+    height: 644px;
+} 

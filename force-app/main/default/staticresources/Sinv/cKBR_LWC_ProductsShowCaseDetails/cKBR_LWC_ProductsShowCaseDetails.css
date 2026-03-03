@@ -1,0 +1,170 @@
+.slds-modal__header {
+    text-align: left;
+    border-bottom: 1px solid #d8dde6;
+    padding-bottom: 1rem;
+    margin-top: -20px;
+}
+
+.slds-modal__title .circle { 
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    border-radius: 50%;
+    background-color: var(--circle-color, blue); /* Customize based on class */
+    margin-left: 10px;
+}
+.slds-text-align_left { 
+    text-align: left;
+    margin-left: 1rem; 
+}
+
+.slds-text-title_bold {
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.5rem;
+    display: inline-block;
+}
+.regasteMinimoClass{
+    margin-right:60%;   
+    margin-top:2%;  
+}
+
+.slds-modal__content {
+    padding: 0;
+    margin: 0;
+}
+
+.slds-modal__footer {
+    border-top: 1px solid #d8dde6;
+    padding: 1rem;
+    text-align: right;
+} 
+
+.slds-text-align_left {          
+    text-align: left; 
+    margin-left: 0rem; /* Alinha as respostas à borda */
+}
+
+.slds-m-top_x-small {
+    margin-top: 0.25rem;
+}      
+:host { 
+    display: block;
+    padding: 1rem;
+} 
+
+/* Fundo cinza claro fora do modal */
+.slds-backdrop {
+    background-color: rgba(0, 0, 0, 0.1); /* Ajuste para um fundo cinza claro */
+} 
+
+/* Alinhar o botão de fechar no canto superior direito */
+.slds-modal__close {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    z-index: 1;
+}
+
+
+@media (min-width: 48em) { 
+    .slds-col {  
+        width: 48%; /* Cada coluna ocupará aproximadamente 48% para manter espaço entre elas */
+        margin-bottom: 1rem; /* Espaço entre as linhas */
+    }
+}
+
+@media (max-width: 47.99em) {
+    /* Estilo para dispositivos móveis */
+    .slds-col {
+        width: 100%; /* Colunas ocupam 100% da largura em dispositivos móveis */
+        margin-bottom: 1rem; /* Espaço entre as linhas */
+    }
+}
+@media (min-width: 48em) {
+    .slds-modal_large .slds-modal__container, .slds-modal--large .slds-modal__container {
+        width: 70%; 
+        max-width: none;
+        min-width: 40rem;
+        height: 107%;
+    }
+}
+
+.conteudoModal { 
+    padding: 0;
+    margin: 0;
+    height: 65%;
+}
+ 
+/* Alinhamento das labels e inputs */
+.slds-form-element {
+    display: flex;
+    flex-direction: column; /* Alinhar labels e inputs em coluna */
+}
+
+.slds-form-element__label {
+    margin-bottom: 0.5rem; /* Espaço entre o label e o input */
+    font-size: 0.875rem; 
+}
+.resultadoFinanceiro{
+    margin-right:5%; 
+}
+.fundoModal {    
+    background-color: rgb(211 211 211 / 50%);
+}
+.slds-modal__content {
+    padding: 1% !important; 
+    margin: 0; 
+}
+
+.slds-text-title { 
+    display: flex; /* Utiliza flexbox para alinhamento horizontal */
+    align-items: center; /* Alinha os itens ao centro verticalmente */
+    justify-content: flex-start; /* Alinha todos os itens à esquerda */
+    margin-bottom: -10px;
+    
+}
+
+.circle {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background-color: var(--circle-color, blue); /* Personalização da cor */
+    margin-left: 10px; /* Espaçamento entre o nome e o círculo */
+}
+
+.slds-m-left_medium {
+    margin-left: 10px; /* Ajuste conforme necessário para espaçamento entre o círculo e o texto da classificação tributária */
+}
+
+.positionCircle {
+    display: inline-block; /* Garante que o círculo fique na mesma linha */
+    vertical-align: middle; /* Alinha verticalmente ao meio do texto */
+}
+.slds-gutters {
+    margin-right: calc(-1* var(--lwc-spacingSmall, 0.75rem));
+    margin-left: calc(-1* var(--lwc-spacingSmall, 0.75rem));
+    MARGIN-TOP: calc(-1* var(--lwc-spacingSmall, 0.75rem));
+    margin-bottom: -15px;
+}
+.slds-text-heading_small {
+    font-size: 13px;
+    line-height: var(--lwc-lineHeightHeading, 1.25);
+    margin-top: -10px;
+    margin-bottom: -20px;
+}
+.slds-form-element__label{
+    font-size: 12px;
+    margin-bottom: 1px;
+}
+.sldsParaApicar{
+    font-weight: bolder;
+    margin-bottom: -20px;
+}
+.slds-form-element__control {
+    font-size: 12px;
+}
+.slds-modal {
+    position: fixed;
+    top: -51px;
+    height: 644px;
+} 

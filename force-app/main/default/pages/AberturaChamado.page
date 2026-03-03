@@ -1,0 +1,20 @@
+<apex:page controller="ControllerAberturaChamado" tabStyle="Case" sidebar="false" showHeader="true">
+    <apex:form >
+        <apex:pageBlock title="Templade de Suporte e Garantia"> 
+            <apex:pageBlockSection columns="1">
+                <apex:pageBlockSectionItem >
+            		<apex:inputTextarea rows="5" cols="100" />
+				</apex:pageBlockSectionItem> 
+            </apex:pageBlockSection>
+        </apex:pageBlock>                    
+                <apex:inputTextarea rows="5" cols="100" label="Descrição Detalhada" />
+                <apex:inputTextarea rows="5" cols="50" label="Perfis de Acesso à Funcionalidade" />
+                <apex:inputTextarea rows="5" cols="100" label="Simulação de Processo no Ambiente de Homologação" />
+                <apex:inputTextarea rows="5" cols="100" label="Resultado Esperado" />
+                
+                
+            
+
+        
+    </apex:form>
+</apex:page>

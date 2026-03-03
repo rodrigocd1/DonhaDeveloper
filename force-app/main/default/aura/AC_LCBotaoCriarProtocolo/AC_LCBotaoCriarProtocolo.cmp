@@ -1,0 +1,18 @@
+<aura:component controller="AC_LCBotaoCriaProtocoloController" 
+                access="global" 
+                implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickAction">
+    
+	<aura:attribute name="recordId" type="String"  default=""/>
+	<aura:attribute name="recordIdNew"  type='String'  default=""/>
+    <aura:attribute name="recordTypeId"  type='String'  default=""/>
+    <aura:attribute name="IdContrato"  type='String'  default=""/>
+	<aura:handler name="init" value="{!this}" action="{!c.criarProtocolo}"/>
+	
+	<div tabindex="-1" style="display:none;">
+		<div class="slds-modal__content slds-p-around--medium">
+			Carregando...
+			<aura:text value="O Protocolo está sendo criado!"/> 
+	    </div>
+	</div>
+	<h1 style="txtCss">O Protocolo está sendo criado!</h1>
+</aura:component>

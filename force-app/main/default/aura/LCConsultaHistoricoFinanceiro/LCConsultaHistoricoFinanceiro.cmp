@@ -1,0 +1,77 @@
+<aura:component access="global" controller="AC_ControllerConsultaHistoricoFinanceiro" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickAction">
+    
+    <aura:attribute name="conta" type="Account"></aura:attribute>
+    <aura:attribute name="detalheTitulos" type = "AC_ConsultaHistoricoFinanceiro.ReturnRequisicao"></aura:attribute>
+    <aura:attribute name="lstDetalhesTitulos" type="AC_ConsultaHistoricoFinanceiro.DetalheTitulo[]"></aura:attribute>
+    <aura:attribute name="Titulos" type="AC_ConsultaHistoricoFinanceiro.ReturnRequisicaoListaTitulos"></aura:attribute>
+    <aura:attribute name="lstItensTitulos" type="AC_ConsultaHistoricoFinanceiro.Titulo[]"></aura:attribute>
+    <aura:attribute name="showSpinner" type="Boolean" default="false"></aura:attribute>
+    
+    <div class="slds-modal_small">
+        <lightning:layout>
+        	<lightning:layoutItem size="12">
+                <div class="slds-scrollable" style="height:430x; width:100%">
+                	<aura:if isTrue="{!v.showSpinner}">
+                        <lightning:spinner alternativeText="Carregando..." title="Carregando..." variant="brand" size="larger"/>
+                    </aura:if>
+                    <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered slds-border_right slds-border_left">
+                    	<thead>
+                        	<tr class="slds-text-title_caps slds-line-height_reset">
+                                <th>
+									<div class="slds-truncate" style="width:70px" title="Collun 1">Titulo</div>                                 
+                                </th>
+								<th>
+									 <div class="slds-truncate" style="width:70px" title="Collun 1">Numero Titulo</div>                                 
+                                </th>
+                                <th>
+									<div class="slds-truncate" style="width:70px" title="Collun 1">Comple Titulo</div>                                
+                                </th>
+                                <th>
+									 <div class="slds-truncate" style="width:70px" title="Collun 1">Venc Titulo</div>                                
+                                </th>
+                                <th>
+									 <div class="slds-truncate" style="width:70px" title="Collun 1">Valor Titulo</div>                                
+                                </th>
+                                <th>
+									<div class="slds-truncate" style="width:70px" title="Collun 1">Situação</div>                                 
+                                </th>
+                                <th>
+									<div class="slds-truncate" title="Collun 1"></div>                                 
+                                </th>                              
+                            </tr>
+                        </thead>
+                        <tbody>
+                        	<aura:iteration indexVar="index" var="itens" items="{!v.lstItensTitulos}">
+                            	<tr class="slds-hint-parent">
+                                    <td>
+                                    	<div style="font-size: 0.8125rem">{!itens.IdTitulo}</div>
+                                    </td>
+                                    <td>
+                                    	<div style="font-size: 0.8125rem">{!itens.NumTitulo}</div>
+                                    </td>
+                                    <td>
+                                    	<div style="font-size: 0.8125rem">{!itens.CompTitulo}</div>
+                                    </td>
+                                    <td>
+                                    	<div style="font-size: 0.8125rem">{!itens.VencTitulo}</div>
+                                    </td>
+                                    <td>
+                                    	<div style="font-size: 0.8125rem">{!itens.VlrTitulo}</div>
+                                    </td>
+                                    <td>
+                                    	<div style="font-size: 0.8125rem">{!itens.SituacaiTitulo}</div>
+                                    </td>
+                                    <td>
+                                    	<lightning:button variant="base" name="Detalhe" title="Detalhes" label="Selecionar" onClick="{!c.getDetails}"></lightning:button>
+                                    </td>
+                                </tr>
+                            </aura:iteration>
+                        </tbody>
+                    </table>
+                </div>
+            </lightning:layoutItem>
+        </lightning:layout>
+    </div>
+    
+	
+</aura:component>

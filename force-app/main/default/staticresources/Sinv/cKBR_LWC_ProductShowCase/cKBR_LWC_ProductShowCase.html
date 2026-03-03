@@ -1,0 +1,177 @@
+<template>
+    <template if:true={isFeatureActive}>
+        <div class="marginleft">
+            <div class="slds-col slds-size_10-of-12"><lightning-input type="search" placeholder="Buscar por nome"
+                    onchange={handleSearchChange}></lightning-input></div>
+            <div class="marginlefttop"><lightning-button-icon onclick={toggleMenu} icon-name="utility:filter"
+                    size="medium" alternative-text="Ordenar"></lightning-button-icon></div>
+            <!-- Dynamic Menu -->     
+            <template if:true={isMenuOpen}>
+                <section class="slds-popover slds-nubbin_top-left slds-dynamic-menu"
+                    style="position: absolute; right: 0; top: 48px;">
+                    <div class="slds-popover__body slds-p-horizontal_none">
+                        <!-- Título -->
+                        <div class="slds-p-around_small slds-text-heading_small" style="font-size: 17px;">Ordenar por
+                        </div>
+                        <footer class="slds-popover__footer"></footer>
+                        <!-- Opções de Ordenação -->
+                        <ul class="slds-listbox slds-listbox_vertical" role="group">
+                            <li class="slds-listbox__item" role="presentation">
+                                <div class="slds-media slds-listbox__option slds-listbox__option_plain" role="option">
+                                    <lightning-card class="cardbox">
+                                        <div class="slds-box clickable-card" onclick={handleSortByClass}>
+                                            <div class="redColor">Classe de Ativos</div>
+                                            <p>Padrão</p>
+                                        </div>
+                                    </lightning-card>
+                                </div>
+                            </li>
+                            <li class="slds-listbox__item" role="presentation">
+                                <div class="slds-media slds-listbox__option slds-listbox__option_plain" role="option">
+                                    <lightning-card class="cardbox">
+                                        <div class="slds-box clickable-card" onclick={handleSortByName}>
+                                            <div class="redColor">Nome</div>
+                                            <p>A-Z</p>
+                                        </div>
+                                    </lightning-card>
+                                </div>
+                            </li>
+                            <li class="slds-listbox__item" role="presentation">
+                                <div class="slds-media slds-listbox__option slds-listbox__option_plain" role="option">
+                                    <lightning-card class="cardbox">
+                                        <div class="slds-box clickable-card" onclick={handleSortByMinApplication}>
+                                            <div class="redColor">Aplicação</div>
+                                            <p>Mínima</p>
+                                        </div>
+                                    </lightning-card>
+                                </div>
+                            </li>
+                            <li class="slds-listbox__item" role="presentation">
+                                <div class="slds-media slds-listbox__option slds-listbox__option_plain" role="option">
+                                    <lightning-card class="cardbox">
+                                        <div class="slds-box clickable-card" onclick={handleSortByRisk}>
+                                            <div class="redColor">Risco</div>
+                                            <p>Menor</p>
+                                        </div>
+                                    </lightning-card>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- Footer -->
+                    <footer class="slds-popover__footer">
+                        <lightning-button variant="neutral" label="Remover ordenação"
+                            onclick={handleRemoveSort}></lightning-button>
+                        <div class="slds-m-left_medium"></div>
+                        <lightning-button variant="brand" label="Ordenar" onclick={handleApplySort}></lightning-button>
+                    </footer>
+                </section>
+            </template>
+        </div>
+        <!-- Itera sobre os itens da lista -->
+        <template if:true={datalist}>
+            <template for:each={datalist} for:item="item" for:index="index">
+                <lightning-card key={item.id} class="slds-p-around_small">
+                    <div class="slds-box">
+                        <div class="blue-risk-bar" style={item.riskBarStyle}></div>
+                        <div class="slds-grid slds-wrap card-container">
+                            <!-- Seção da esquerda com informações do investimento -->
+                            <div class="slds-col slds-size_12-of-12 slds-large-size_8-of-12 slds-p-around_small">
+                                <!-- Nome do investimento como título --> 
+                                <div class="investment-header slds-p-bottom_small">
+                                    <h2 class="investment-type">{item.nome}</h2>
+                                </div>
+                                <!-- Informações do investimento -->
+                                <!-- Informações do investimento -->
+                                <div class="investment-info slds-grid slds-wrap">
+                                    <div class="slds-col slds-size_1-of-4 small-font">
+                                        <strong>Classe</strong>
+                                        <div class="class-display">
+                                            <div class="circle" style={item.circleStyle}></div>
+                                            <span>{item.classeAtivoDescricao}</span>
+                                        </div>
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-4 small-font">
+                                        <strong>Risco:</strong>
+                                        <div>{item.riskDescription}</div>
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-4 small-font">
+                                        <strong>Aplicação Mínima:</strong>
+                                        <div>{item.aplicacaoMinima}</div>
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-4 small-font">
+                                        <strong>Horário de Movimentação:<lightning-helptext
+                                                content="Horário de Brasília"></lightning-helptext></strong>
+                                        <div>{item.horarioMovimentacao}</div> 
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!-- Seção da direita com botões -->
+<div class="slds-col slds-size_12-of-12 slds-large-size_3-of-12 slds-grid slds-grid_align-center slds-grid_vertical slds-justify_end">
+    <div class="action-buttons slds-grid slds-wrap slds-justify_center slds-align_absolute-center">
+        <lightning-button variant="neutral" label="Detalhar"
+            class="slds-m-horizontal_x-small borderButton" onclick={handleRowActionDetalhes}
+            data-id={item.id}></lightning-button> 
+        <lightning-button variant="brand" label="Aplicar"
+            class="slds-m-horizontal_x-small borderButton" onclick={handleRowActionAplicar}
+            data-id={item.id}></lightning-button>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                </lightning-card>
+            </template>
+        </template>
+    </template>
+    <!-- Exibir a mensagem de desativação quando a funcionalidade está inativa -->
+    <template if:false={isFeatureActive}>
+        <div class="slds-text-color_error">
+            <template if:true={isModalDisabledFunctionality}>
+                <div class="slds-notify slds-notify_alert slds-alert_offline" role="alert">
+                    <span class="slds-assistive-text">{disabledSinv}</span>
+                    <span class="slds-icon_container slds-icon-utility-offline slds-m-right_x-small"
+                        title="Description of icon when needed">
+                        <div class="slds-icon slds-icon_x-small" aria-hidden="true"><lightning-icon
+                                icon-name="utility:offline" size="x-small" alternative-text={featureDisabledMessage}
+                                title={featureDisabledMessage}></lightning-icon></div>
+                    </span>
+                    <h2>{featureDisabledMessage}</h2>
+                    <div class="slds-notify__close">
+                        <button class="slds-button slds-button_icon slds-button_icon-small slds-button_icon-inverse"
+                            title="Fechar">
+                            <svg class="slds-button__icon" aria-hidden="true">
+                                <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                            </svg>
+                            <span class="slds-assistive-text">Fechar</span>
+                        </button>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </template>
+    <template if:true={isShowDetalhes}>
+        <div class="slds-m-vertical_medium slds-gutters">
+            <c-c-k-b-r-_-l-w-c-_-products-show-case-details onselected={handleCloseDetalhesEvent}
+                onclose={hancleCloseEvent} investment-selected={investmentSelected} 
+                is-show-details={isShowDetalhes} 
+                vitrine-api-list={vitrineAPIList}>
+            </c-c-k-b-r-_-l-w-c-_-products-show-case-details>
+        </div>
+    </template>
+    <!-- Modal de Aplicar -->
+    <template if:true={isShowAplicar}>
+        <div class="slds-m-vertical_medium">
+            <c-c-k-b-r-_-l-w-c-_-products-show-case-apply onselected={handleCloseAplicarEvent}
+                oncloseapply={handleCloseAplicarEvent} 
+                investment-selected={investmentSelected}
+                is-show-aplicar={isShowAplicar} 
+                vitrine-api-list={vitrineAPIList}> </c-c-k-b-r-_-l-w-c-_-products-show-case-apply>
+        </div>
+    </template> 
+
+    <template if:true={spinnerTable}>
+        <lightning-spinner variant="brand" size="medium"></lightning-spinner>
+    </template>
+</template>

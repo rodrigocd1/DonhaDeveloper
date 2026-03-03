@@ -1,0 +1,216 @@
+<template>  
+    <!-- Modal Section -->
+    <!--<div style="overflow-y: hidden; height: 50%; width:60%; position: relative;"> -->
+    <section if:true={isShowDetails} role="dialog" tabindex="-1" aria-labelledby="modal-heading-itens" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-modal_large slds-fade-in-open fundoModal">
+ 
+        <div class="slds-modal__container containerCss">     
+            <!-- Modal Header -->
+            <header class="slds-modal__header slds-text-align_left"> 
+                <lightning-button-icon icon-name="utility:close" onclick={closeApply} alternative-text="Fechar" variant="bare" class="slds-button slds-button_icon slds-modal__close"></lightning-button-icon>
+                 
+                <!-- Modal Title -->  
+                <h2 id="modal-heading-itens" class="slds-modal__title slds-hyphenate">
+                    <strong>Detalhes do Produto</strong> 
+                </h2> 
+                <div class="slds-text-title slds-grid slds-align_absolute-center"> 
+                    <div style="display: flex; align-items: center;">
+                        <span>{nome}</span>
+                        <div class="circle" style={investmentSelected.circleStyle}></div>
+                        <span class="slds-m-left_medium">{classificacaoTributaria}</span>
+                    </div>
+                </div> 
+                
+                <!--<div class="slds-grid slds-wrap slds-var-m-top_small">
+                    <div class="slds-col slds-size_1-of-1"> 
+                        <div class="slds-text-title">{nome}
+                            <div class="circle positionCircle" style={investmentSelected.circleStyle}>
+                                  
+                                <div class="slds-m-left_medium">{classificacaoTributaria}</div> 
+                            </div>  
+
+                        </div>      
+                         
+                          
+                    </div>
+                </div>-->
+            </header>
+
+            <!-- Modal Content --> 
+            <div class="slds-modal__content slds-p-around_medium conteudoModal">
+                <!-- Horário de movimentação --> 
+                <div class="slds-var-m-bottom_medium">       
+                    <lightning-icon icon-name="utility:clock"  size="x-small" alternative-text={label.horarioMovimentacao} title={label.horarioMovimentacao}></lightning-icon>   <span class="slds-m-left_xx-small" style="font-size: 11px;">
+                        {label.horarioMovimentacao}     
+                        <b class="slds-m-left_xxx-small">{horarioMovimentacao}</b> {label.horarioBR}</span>    
+                </div>  
+                <div class="slds-m-top_xx-small"></div> 
+                <!-- Section for "Para Aplicar" --> 
+                <div class="sldsParaApicar"><strong>Para Aplicar</strong></div>
+                <div class="slds-m-top_large"></div> 
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col">
+                        <span>
+                            <div class="slds-form slds-form_stacked">
+                                <!-- insert your field attributes here inside div class="slds-form-element" for those many fields you want to show in one column --> 
+                                <div class="slds-form-element"> 
+                                    <label class="slds-form-element__label" for="form-element-01">Aplique a partir de</label>
+                                    <div class="slds-form-element__control">
+                                        {aplicacaoMinima} 
+                                        <div class="slds-border_top"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </span>
+                    </div>
+                    <div class="slds-col">
+                        <span>
+                            <div class="slds-form slds-form_stacked">
+                                <!-- insert your field attributes here inside div class="slds-form-element" for those many fields you want to show in one column --> 
+                                <div class="slds-form-element">
+                                    <label class="slds-form-element__label" for="form-element-01">Classificação Tributária</label>
+                                    <div class="slds-form-element__control">
+                                        {classificacaoTributaria} 
+                                        <div class="slds-border_top"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </span>
+                    </div>
+                </div>
+                <div class="slds-m-top_xx-small"></div>
+                <div class="slds-text-heading_small"><strong>Para Resgatar</strong></div> 
+                <div class="slds-m-top_large"></div>
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col"> 
+                        <span>
+                            <div class="slds-form slds-form_stacked">
+                                <!-- insert your field attributes here inside div class="slds-form-element" for those many fields you want to show in one column --> 
+                                <div class="slds-form-element">
+                                    <label class="slds-form-element__label" for="form-element-02">Resgate Mínimo</label>
+                                    <div class="slds-form-element__control"> 
+                                        {regasteMinimo}  
+                                        <div class="slds-border_top"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </span>
+                    </div>
+                    <div class="slds-col">
+                        <span>
+                            <div class="slds-form slds-form_stacked">
+                                <!-- insert your field attributes here inside div class="slds-form-element" for those many fields you want to show in one column --> 
+                                <div class="slds-form-element">
+                                    <label class="slds-form-element__label" for="form-element-02">Carência</label>
+                                    <div class="slds-form-element__control"> 
+                                        {carencia}   
+                                        <div class="slds-border_top"></div> 
+                                    </div>
+                                </div>
+                            </div>
+                        </span>
+                    </div>
+                </div>
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col">
+                        <span>
+                            <div class="slds-form slds-form_stacked">
+                                <!-- insert your field attributes here inside div class="slds-form-element" for those many fields you want to show in one column --> 
+                                <div class="slds-form-element">
+                                    <label class="slds-form-element__label" for="form-element-01">Saldo Mínimo para permanência</label>
+                                    <div class="slds-form-element__control">
+                                        {saldoMinimo}  
+                                        <div class="slds-border_top"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </span>
+                    </div>
+                    <div class="slds-col">
+                        <span>
+                            <div class="slds-form slds-form_stacked">
+                                <!-- insert your field attributes here inside div class="slds-form-element" for those many fields you want to show in one column --> 
+                                <div class="slds-form-element">
+                                    <label class="slds-form-element__label" for="form-element-01">Crédito em conta corrente  
+                                       <lightning-icon icon-name="utility:info" size="xx-small" alternative-text={label.contaCorrente} title={label.contaCorrente}></lightning-icon>
+                                    </label>  
+                                    <div class="slds-form-element__control">  
+                                        {creditoContaCorrente}   
+                                        <div class="slds-border_top"></div> 
+                                    </div>
+                                </div>
+                            </div>
+                        </span>
+                    </div>
+                </div>
+                <div class="slds-m-top_xx-small"></div>
+                <div class="slds-text-heading_small"><strong>Outras Informações</strong></div>
+                <div class="slds-m-top_large"></div> 
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col">
+                        <span>
+                            <div class="slds-form slds-form_stacked">
+                                <!-- insert your field attributes here inside div class="slds-form-element" for those many fields you want to show in one column --> 
+                                <div class="slds-form-element">
+                                    <label class="slds-form-element__label" for="form-element-01">IR sobre o rendimento</label>
+                                    <div class="slds-form-element__control">
+                                         {iRendimento} 
+                                        <div class="slds-border_top"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </span>
+                    </div>
+                    <div class="slds-col">
+                        <span>
+                            <div class="slds-form slds-form_stacked">
+                                <!-- insert your field attributes here inside div class="slds-form-element" for those many fields you want to show in one column --> 
+                                <div class="slds-form-element">
+                                    <label class="slds-form-element__label" for="form-element-01">IOF
+                                    </label>
+                                    <div class="slds-form-element__control"> 
+                                        {iof}    
+                                        <div class="slds-border_top"></div> 
+                                    </div>
+                                </div>
+                            </div>
+                        </span>
+                    </div>
+                </div>
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col">
+                        <span>
+                            <div class="slds-form slds-form_stacked">
+                                <!-- insert your field attributes here inside div class="slds-form-element" for those many fields you want to show in one column --> 
+                                <div class="slds-form-element">
+                                    <label class="slds-form-element__label" for="form-element-02">Risco</label>
+                                    <div class="slds-form-element__control">
+                                         {risco}  
+                                        <div class="slds-border_top"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </span>
+                    </div>
+                </div>
+                </div>  
+
+            <!-- Modal Footer -->
+            <div class="slds-modal__footer">      
+                <lightning-button label="Aplicar" variant="brand" onclick={handleApply}></lightning-button>
+            </div> 
+        </div>  
+    </section> 
+    <!--</div> -->
+    
+
+    <!-- Aplicar Modal -->
+    <template if:true={isShowAplicar}>      
+        <div class="slds-m-vertical_medium">            
+            <c-c-k-b-r-_-l-w-c-_-products-show-case-apply            
+                onselected={handleCloseEvent}             
+                investment-selected={investmentSelected}
+                is-show-aplicar={isShowAplicar}>        
+            </c-c-k-b-r-_-l-w-c-_-products-show-case-apply>    
+        </div>          
+    </template> 
+</template>

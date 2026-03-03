@@ -1,0 +1,305 @@
+<template>
+    <!-- Modal Section -->
+    <section if:true={isShowAplicar} role="dialog" tabindex="-1" aria-labelledby="modal-heading-itens" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-modal_large slds-fade-in-open fundoModal">
+        <div class="slds-modal__container">
+            <!-- Modal Header -->
+            <header class="slds-modal__header slds-text-align_left"> 
+                <lightning-button-icon icon-name="utility:close" onclick={closeApply} alternative-text="Fechar" variant="bare" class="slds-button slds-button_icon slds-modal__close"></lightning-button-icon>
+                <!-- Modal Title --> 
+                <h2 id="modal-heading-itens" class="slds-modal__title slds-hyphenate">
+                    <strong>Aplicar</strong>
+                </h2>
+                <div class="slds-grid slds-wrap slds-var-m-top_small">
+                    <div class="slds-col slds-size_1-of-1">
+                        <div class="slds-text-title">{nome}
+                            <div class="circle positionCircle" style={investmentSelected.circleStyle}>
+                                <div class="slds-m-left_medium">{classificacaoTributaria}</div>
+                            </div>  
+                        </div> 
+                    </div>
+                </div>
+            </header> 
+
+            <!-- Modal Content -->
+            <div class="slds-modal__content slds-p-around_medium">
+                <!-- Seção "Valores, taxas e prazos" -->
+                <div class="slds-var-m-bottom_medium">    
+                    <lightning-icon icon-name="utility:clock" size="x-small" alternative-text={label.horarioMovimentacao} title={label.horarioMovimentacao}></lightning-icon>   <span> {label.horarioMovimentacao} <b> {horarioMovimentacao} </b> {label.horarioBR}</span>
+                </div>  
+                <div class="slds-m-top_large"></div>    
+                <div class="sldsValoresTaxas"><strong>Valores, taxas e prazos</strong></div>
+                <div class="slds-m-top_large"></div>
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col">
+                        <span>
+                            <div class="slds-form slds-form_stacked">
+                                <div class="slds-form-element"> 
+                                    <label class="slds-form-element__label">Valor da aplicação*</label> 
+                                   <!-- Campo "Valor da aplicação" -->
+                                    <div class="slds-form-element__control">
+                                        <input type="text" class="input-inline {hasErrorClass(valorAplicacao)}" value={formattedValorAplicacao} onchange={handleChangeValorAplicacao} onkeydown={handleTabFromValorAplicacao} data-id="valorAplicacao" tabindex="0" />
+                                    </div>
+                                </div>
+                            </div>
+                        </span>
+                    </div>
+                    <div class="slds-col">
+                        <span>
+                            <div class="slds-form slds-form_stacked">
+                                <div class="slds-form-element">    
+                                    
+                                    <label class="slds-form-element__label">Percentual CDI(%)<lightning-icon icon-name="utility:info" size="x-small" alternative-text={label.percentualCDI} title={label.percentualCDI}></lightning-icon></label>
+                                    <div class="slds-form-element__control"> 
+                                        <input type="text" class="input-inline" disabled={isDisabledPercentualCDI} value={formattedPercentualCDI} onchange={handleChangePercentual} />  
+                                    </div>
+                                </div>
+                            </div>
+                        </span>
+                    </div>
+                </div>
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col">
+                        <span>
+                            <div class="slds-form slds-form_stacked">
+                                <div class="slds-form-element">
+                                    <label class="slds-form-element__label">Liquidez</label>
+                                    <div class="slds-form-element__control">
+                                        <input type="text" class="input-inline" value={valueLiquidez} readonly />
+                                    </div>
+                                </div>
+                            </div>
+                        </span>
+                    </div>
+                    <div class="slds-col">
+                        <span>
+                            <div class="slds-form slds-form_stacked">
+                                <div class="slds-form-element">
+                                    <label class="slds-form-element__label">Dias de Carência</label>
+                                    <div class="slds-form-element__control">
+                                        <input type="text" class="input-inline" value={valueDiasCarencia} readonly />
+                                        <!--<div class="slds-form-element__help">Carência legal de 370 dias</div> -->
+                                    </div>
+                                </div>
+                            </div>
+                        </span>
+                    </div>
+                </div>
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col">
+                        <span>
+                            <div class="slds-form slds-form_stacked">
+                                <div class="slds-form-element">
+                                    <label class="slds-form-element__label">Vencimento da carência</label>
+                                    <div class="slds-form-element__control">
+                                        <input type="date" class="input-inline" value={valorVencimentoCarencia} readonly />
+                                    </div>
+                                </div>
+                            </div>
+                        </span>
+                    </div>
+                    <div class="slds-col">
+                        <span>
+                            <div class="slds-form slds-form_stacked">
+                                <div class="slds-form-element">
+                                    <label class="slds-form-element__label">Prazo (dias corridos)*</label> 
+                                    <!-- Campo "Prazo (Dias Corridos)" -->
+                                    <div class="slds-form-element__control">
+                                        <input type="text" class="input-inline {hasErrorClass(valorPrazoDiasCorridos)}" id="prazoDiasCorridos" disabled={isDisabledvalorPrazoDiasCorridos} value={valorPrazoDiasCorridos} onchange={handlePrazoDiasCorridos} onkeydown={handleTabFromPrazoDiasCorridos} data-id="prazoDiasCorridos" tabindex="0"/>
+                                        <!--<div class="slds-form-element__help">Entre 370 e 1080 dias</div>
+                                        <div if:true={isPrazoDiasCorridosEmpty} class="slds-form-element__help error">Campo Obrigatório.</div>-->
+                                    </div>
+
+                                </div>
+                            </div>
+                        </span>
+                    </div>
+                </div>
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col">
+                        <span>
+                            <div class="slds-form slds-form_stacked">
+                                <div class="slds-form-element">
+                                    <label class="slds-form-element__label">Prazo (dias úteis)</label>
+                                    <div class="slds-form-element__control">
+                                        <input type="number" class="input-inline" value={valorPrazoDiasUteis} readonly />
+                                    </div>
+                                </div>
+                            </div>
+                        </span>
+                    </div>
+                    <div class="slds-col">
+                        <span> 
+                            <div class="slds-form slds-form_stacked">
+                                <div class="slds-form-element"> 
+                                    <label class="slds-form-element__label">Vencimento da Aplicação*</label>
+                                    <!-- Campo "Vencimento da Aplicação" -->
+                                    <div class="slds-form-element__control">
+                                        <input type="date" class="input-inline {hasErrorClass(valorVencimentoAplicacao)}" id="vencimentoAplicacao" disabled={isDisabledvalorVencimentoAplicacao} value={valorVencimentoAplicacao} onchange={handleVencimentoAplicacaoChange} data-id="vencimentoAplicacao" tabindex="0"/>
+                                        <!--<div if:true={isVencimentoAplicacaoEmpty} class="slds-form-element__help error">Campo Obrigatório.</div> -->
+                                    </div> 
+                                </div>
+                            </div>
+                        </span>
+                    </div>
+                </div>
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col">
+                        <span>
+                            <div class="slds-form slds-form_stacked">
+                                <div class="slds-form-element">
+                                    <label class="slds-form-element__label">Data do Investimento</label>
+                                    <div class="slds-form-element__control">
+                                        <input type="date" class="input-inline" value={valorDataInvestimento} readonly />
+                                    </div>
+                                </div>
+                            </div>
+                        </span>
+                    </div>
+                    <div class="slds-col">
+                        <span>
+                            <div class="slds-form slds-form_stacked">
+                                <div class="slds-form-element">
+                                    <label class="slds-form-element__label">Resgate mínimo*</label>
+                                    <div class="slds-form-element__control">
+                                        <input type="text" class="input-inline" value={formattedValorResgateMinimo} disabled={isDisabledValorResgateMinimo} onchange={handleChangeResgateMinimo} />
+                                    </div>
+                                </div>
+                            </div>
+                        </span>
+                    </div>
+                </div>
+                <div class="buttonCalcular">
+                    <lightning-button variant="neutral" label="Calcular" title="Calcular" onclick={handleClickConsultar}></lightning-button>
+                </div>
+                <div class="slds-m-top_medium"></div> 
+                <div class="slds-text-heading_small"><strong>Valorização</strong></div>
+                <div class="slds-m-top_large"></div>  
+                <div class="necessarioPreencher">É necessário preencher o campo valor da aplicação acima para carregar as informações dessa seção</div>
+                <div class="slds-m-top_medium"></div>
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col">
+                        <span>
+                            <div class="slds-form slds-form_stacked">
+                                <div class="slds-form-element">
+                                    <label class="slds-form-element__label">CDI Negociado (%)</label>
+                                    <div class="slds-form-element__control">
+                                        <input type="text" class="input-inline" disabled={isDisabledCdiNegociado} value={formattedCdiNegociado} onchange={handleChangeCdiNegociado} />
+                                    </div>
+                                </div>
+                            </div>
+                        </span>
+                    </div>
+                    <div class="slds-col">
+                        <span>
+                            <div class="slds-form slds-form_stacked">
+                                <div class="slds-form-element">
+                                    <label class="slds-form-element__label">Custo Banco (%)</label>
+                                    <div class="slds-form-element__control"> 
+                                        <input type="text" class="input-inline" disabled={isDisabledCustoBanco} value={formattedCustoBanco} onchange={handleChangeCustoBanco} />
+                                    </div>
+                                </div>
+                            </div>
+                        </span>
+                    </div>
+                </div>
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col">
+                        <span>
+                            <div class="slds-form slds-form_stacked">
+                                <div class="slds-form-element">
+                                    <label class="slds-form-element__label">Taxa 252 cliente(%)</label>
+                                    <div class="slds-form-element__control"> 
+                                        <input type="text" class="input-inline" disabled={isDisabledTaxa252Cliente} value={formattedTaxa252Cliente} onchange={handleChangeTaxa252Cliente} />
+                                    </div>
+                                </div>
+                            </div>
+                        </span>
+                    </div>
+                    <div class="slds-col">
+                        <span>
+                            <div class="slds-form slds-form_stacked">
+                                <div class="slds-form-element">
+                                    <label class="slds-form-element__label">Taxa 360 cliente (%)</label>
+                                    <div class="slds-form-element__control">
+                                        <input type="text" class="input-inline" disabled={isDisabledTaxa360Cliente} value={formattedTaxa360Cliente} onchange={handleChangeTaxa360Cliente} />
+                                    </div>
+                                </div>
+                            </div>
+                        </span>
+                    </div>
+                </div>
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col">
+                        <span>
+                            <div class="slds-form slds-form_stacked">
+                                <div class="slds-form-element">
+                                    <label class="slds-form-element__label">Taxa 252 Banco(%)</label>
+                                    <div class="slds-form-element__control">
+                                        <input type="text" class="input-inline" disabled={isDisabledTaxa252Banco} value={formattedTaxa252Banco} onchange={handleChangeTaxa252Banco} />
+                                    </div>
+                                </div>
+                            </div>
+                        </span>
+                    </div>
+                    <div class="slds-col">
+                        <span>
+                            <div class="slds-form slds-form_stacked">
+                                <div class="slds-form-element">
+                                    <label class="slds-form-element__label">Taxa 360 Banco (%)</label>
+                                    <div class="slds-form-element__control"> 
+                                        <input type="text" class="input-inline" disabled={isDisabledTaxa360Banco} value={formattedTaxa360Banco} onchange={handleChangeTaxa360Banco} />
+                                    </div>
+                                </div>
+                            </div>
+                        </span>
+                    </div>
+                </div>
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col">
+                        <span>
+                            <div class="slds-form slds-form_stacked">
+                                <div class="slds-form-element">
+                                    <label class="slds-form-element__label">Spread Banco</label>
+                                    <div class="slds-form-element__control"> 
+                                        <input type="number" class="input-inline" disabled={isDisabledSpreadBanco} value={formattedSpreadBanco} onchange={handleChangeSpreadBanco} />
+                                    </div>
+                                </div>
+                            </div>
+                        </span>
+                    </div>
+                    <div class="slds-col">
+                        <span>
+                            <div class="slds-form slds-form_stacked">
+                                <div class="slds-form-element"> 
+                                    <label class="slds-form-element__label resultadoFinanceiro">Resultado Financeiro Banco</label>
+                                    <div class="slds-form-element__control">    
+                                        <input type="text" class="input-inline resultadoFinanceiro" disabled={isDisabledResultadoFinanceiro} value={formattedResultadoFinanceiro} onchange={handleChangeResultadoFinanceiro} />
+                                    </div> 
+                                </div>
+                            </div>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal Footer --> 
+            <div class="slds-modal__footer">
+                <lightning-button label="Aplicar" variant="brand" disabled={isApplyDisabled} onclick={handleApply}></lightning-button>
+            </div>
+        </div>
+    </section>
+
+
+     <!-- Confirmar Modal --> 
+     <template if:true={isShowConfirm}>       
+        <div class="slds-m-vertical_medium">             
+            <c-ck-b-r-_-l-w-c-_-product-show-case-confirm   
+                onselectededit={handleOpenEdit}         
+                onselectedconfirm={handleCloseConfirm}                
+                investment-selected={selectedConfirmar} 
+                is-show-confirm={isShowConfirm}>            
+            </c-ck-b-r-_-l-w-c-_-product-show-case-confirm>    
+        </div>          
+    </template>  
+
+    
+</template>

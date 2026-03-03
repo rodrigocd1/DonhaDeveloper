@@ -1,0 +1,25 @@
+<apex:page Controller="ControllerConsultaCep" showHeader="true" sidebar="true"  cache="false">
+    <apex:messages />
+    <apex:form >
+        <apex:pageBlock title="Consulta CEP">
+     		<apex:inputText maxlength="8" title="Exemplo Cep a ser digitado : 01317000" label="Cep de Busca" value="{!cepBusca}" />
+            <apex:commandButton value="Consultar"  action="{!buscarCEP}"/>
+        </apex:pageBlock>
+        
+        
+        <apex:pageBlock title="Endereço Retornado">
+            <apex:pageBlockSection >
+                <apex:outputText label="CEP"  			value="{!endereco.cep 		   	}" 	/><br/>
+                <apex:outputText label="logradouro"  	value="{!endereco.logradouro  	}" 	/><br/>
+                <apex:outputText label="complemento"  	value="{!endereco.complemento 	}" 	/><br/>
+                <apex:outputText label="bairro"  		value="{!endereco.bairro 	   	}" 	/><br/>
+                <apex:outputText label="localidade"  	value="{!endereco.localidade  	}" 	/><br/>
+                <apex:outputText label="uf"  			value="{!endereco.uf 		   	}" 	/><br/>
+                <apex:outputText label="unidade"  		value="{!endereco.unidade 	   	}" 	/><br/>
+                <apex:outputText label="ibge"  			value="{!endereco.ibge 	   		}" 	/><br/>
+                <apex:outputText label="gia"  			value="{!endereco.gia 		   	}" 	/><br/>                      
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+        
+	</apex:form>        
+</apex:page>
