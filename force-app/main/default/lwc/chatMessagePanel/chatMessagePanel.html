@@ -1,0 +1,139 @@
+<template>
+    <lightning-card title="Chat" icon-name="utility:chat">
+
+        <!-- Loading -->
+        <template if:true={isLoading}>
+            <div class="slds-align_absolute-center slds-p-around_medium">
+                <lightning-spinner alternative-text="Carregando..." size="small"></lightning-spinner>
+            </div>
+        </template>
+
+        <!-- Error -->
+        <template if:true={errorMsg}>
+            <div class="slds-p-around_small">
+                <p class="slds-text-color_error">{errorMsg}</p>
+            </div>
+        </template>
+
+        <!-- No thread: initiate conversation form -->
+        <template if:true={showInitForm}>
+            <div class="slds-p-around_medium">
+                <lightning-combobox
+                    label="Motivo"
+                    value={reason}
+                    options={reasonOptions}
+                    onchange={handleReasonChange}
+                    required>
+                </lightning-combobox>
+                <lightning-textarea
+                    label="Mensagem inicial"
+                    value={initialMessage}
+                    onchange={handleInitialMsgChange}
+                    class="slds-m-top_small"
+                    max-length="2000">
+                </lightning-textarea>
+                <br/>
+                <lightning-button
+                    label="Iniciar conversa"
+                    variant="brand"
+                    onclick={handleStartThread}
+                    class="slds-m-top_small">
+                </lightning-button>
+            </div>
+        </template>
+
+        <!-- Thread exists -->
+        <template if:true={thread}>
+            <!-- Status bar -->
+            <div class="slds-p-horizontal_medium slds-p-top_small slds-grid slds-grid_align-spread slds-grid_vertical-align-center">
+                <span class="slds-badge slds-m-right_small">{thread.status}</span>
+                <template if:true={isInternal}>
+                    <div class="slds-grid slds-grid_vertical-align-center">
+                        <lightning-combobox
+                            label=""
+                            value={newStatus}
+                            options={statusOptions}
+                            onchange={handleStatusChange}
+                            class="slds-m-right_x-small"
+                            style="min-width:130px">
+                        </lightning-combobox>
+                        <lightning-button
+                            label="Atualizar"
+                            size="small"
+                            onclick={handleUpdateStatus}>
+                        </lightning-button>
+                    </div>
+                </template>
+            </div>
+
+            <!-- Messages area -->
+            <div class="chat-messages slds-p-horizontal_medium slds-p-vertical_small" style="max-height:350px;overflow-y:auto;" lwc:ref="msgContainer">
+                <template for:each={messages} for:item="msg">
+                    <div key={msg.id} class={msg.cssClass} style="margin-bottom:8px;">
+                        <p class="slds-text-body_small slds-text-color_weak">
+                            <strong>{msg.senderName}</strong>
+                            &nbsp;·&nbsp;{msg.formattedDate}
+                        </p>
+
+                        <!-- UserMessage -->
+                        <template if:true={msg.isUserMessage}>
+                            <div class="slds-box slds-box_xx-small slds-theme_shade" style="display:inline-block;max-width:85%;">
+                                <p class="slds-text-body_regular">{msg.body}</p>
+                            </div>
+                        </template>
+
+                        <!-- StatusChange -->
+                        <template if:true={msg.isStatusChange}>
+                            <div class="slds-box slds-box_xx-small slds-theme_alt-inverse" style="display:inline-block;max-width:85%;">
+                                <p class="slds-text-body_small slds-text-color_weak">🔄 {msg.body}</p>
+                            </div>
+                        </template>
+
+                        <!-- File -->
+                        <template if:true={msg.isFile}>
+                            <div class="slds-box slds-box_xx-small" style="display:inline-block;max-width:85%;">
+                                <p>📎 <a onclick={handleFileClick} data-docid={msg.fileDocumentId}>{msg.body}</a></p>
+                            </div>
+                        </template>
+                    </div>
+                </template>
+            </div>
+
+            <!-- Input area (blocked when closed) -->
+            <template if:true={threadIsOpen}>
+                <div class="slds-p-horizontal_medium slds-p-bottom_medium">
+                    <lightning-textarea
+                        label=""
+                        placeholder="Digite sua mensagem..."
+                        value={messageBody}
+                        onchange={handleBodyChange}
+                        max-length="2000"
+                        rows="2">
+                    </lightning-textarea>
+                    <div class="slds-grid slds-grid_align-spread slds-m-top_x-small">
+                        <lightning-file-upload
+                            label="Anexar"
+                            name="fileUploader"
+                            accept={acceptedFormats}
+                            record-id={thread.id}
+                            onuploadfinished={handleUploadFinished}>
+                        </lightning-file-upload>
+                        <lightning-button
+                            label="Enviar"
+                            variant="brand"
+                            onclick={handleSend}
+                            disabled={isSending}>
+                        </lightning-button>
+                    </div>
+                </div>
+            </template>
+
+            <template if:true={threadIsClosed}>
+                <div class="slds-p-around_small">
+                    <p class="slds-text-color_weak slds-text-align_center">⚠️ Thread encerrada.</p>
+                </div>
+            </template>
+        </template>
+
+    </lightning-card>
+</template>

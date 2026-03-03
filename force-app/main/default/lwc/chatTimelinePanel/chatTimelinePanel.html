@@ -1,0 +1,85 @@
+<template>
+    <lightning-card title="Timeline de Interações" icon-name="utility:list">
+
+        <template if:true={isLoading}>
+            <div class="slds-align_absolute-center slds-p-around_medium">
+                <lightning-spinner alternative-text="Carregando..." size="small"></lightning-spinner>
+            </div>
+        </template>
+
+        <template if:true={errorMsg}>
+            <div class="slds-p-around_small">
+                <p class="slds-text-color_error">{errorMsg}</p>
+            </div>
+        </template>
+
+        <template if:false={thread}>
+            <template if:false={isLoading}>
+                <p class="slds-p-around_medium slds-text-color_weak">Nenhuma conversa encontrada para este registro.</p>
+            </template>
+        </template>
+
+        <template if:true={thread}>
+            <div class="slds-p-horizontal_medium slds-p-top_small">
+                <p class="slds-text-body_small">
+                    Status: <strong>{thread.status}</strong>
+                    &nbsp;|&nbsp; Motivo: <strong>{thread.reason}</strong>
+                </p>
+            </div>
+
+            <ul class="slds-timeline slds-p-around_medium">
+                <template for:each={messages} for:item="msg">
+                    <li key={msg.id} class="slds-timeline__item">
+                        <div class="slds-media slds-media_timeline">
+
+                            <!-- Icon by type -->
+                            <div class="slds-media__figure slds-media__figure_timeline">
+                                <template if:true={msg.isUserMessage}>
+                                    <lightning-icon icon-name="utility:comment" size="small"></lightning-icon>
+                                </template>
+                                <template if:true={msg.isStatusChange}>
+                                    <lightning-icon icon-name="utility:refresh" size="small"></lightning-icon>
+                                </template>
+                                <template if:true={msg.isFile}>
+                                    <lightning-icon icon-name="utility:attach" size="small"></lightning-icon>
+                                </template>
+                            </div>
+
+                            <div class="slds-media__body">
+                                <div class="slds-grid slds-grid_align-spread">
+                                    <span class="slds-text-body_small">
+                                        <strong>{msg.senderName}</strong>
+                                    </span>
+                                    <span class="slds-text-body_small slds-text-color_weak">{msg.formattedDate}</span>
+                                </div>
+
+                                <template if:true={msg.isUserMessage}>
+                                    <p class="slds-text-body_regular slds-m-top_xx-small">{msg.body}</p>
+                                </template>
+
+                                <template if:true={msg.isStatusChange}>
+                                    <p class="slds-text-body_small slds-text-color_weak slds-m-top_xx-small">🔄 {msg.body}</p>
+                                </template>
+
+                                <template if:true={msg.isFile}>
+                                    <p class="slds-m-top_xx-small">
+                                        📎 <a onclick={handleFileClick} data-docid={msg.fileDocumentId}>{msg.body}</a>
+                                    </p>
+                                </template>
+                            </div>
+                        </div>
+                    </li>
+                </template>
+            </ul>
+
+            <div class="slds-align_absolute-center slds-p-bottom_medium">
+                <lightning-button
+                    label="Carregar mais"
+                    onclick={handleLoadMore}
+                    disabled={isLoading}>
+                </lightning-button>
+            </div>
+        </template>
+
+    </lightning-card>
+</template>
