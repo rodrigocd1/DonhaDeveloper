@@ -1,0 +1,61 @@
+<template>
+    <div class="comm-timeline" onscroll={handleScroll}>
+
+        <!-- Load more trigger (top) -->
+        <template if:true={hasMoreMessages}>
+            <div class="comm-timeline__load-more">
+                <template if:true={isLoadingMore}>
+                    <lightning-spinner size="x-small" alternative-text="Loading more messages"></lightning-spinner>
+                </template>
+                <template if:false={isLoadingMore}>
+                    <button class="comm-timeline__load-btn" onclick={loadNextPage}>Load older messages</button>
+                </template>
+            </div>
+        </template>
+
+        <!-- Messages -->
+        <template for:each={messages} for:item="msg">
+            <div
+                key={msg.Id}
+                data-message-id={msg.Id}
+                class={msg.bubbleClass}
+            >
+                <!-- Avatar -->
+                <div class="comm-msg__avatar">
+                    <img src={msg.senderPhoto} alt={msg.senderName} class="comm-msg__photo" />
+                </div>
+
+                <!-- Bubble -->
+                <div class="comm-msg__content">
+                    <div class="comm-msg__meta">
+                        <span class="comm-msg__sender">{msg.senderName}</span>
+                        <span class="comm-msg__time">{msg.formattedTime}</span>
+                    </div>
+                    <div class="comm-msg__bubble">
+                        <template if:true={msg.Body__c}>
+                            <!-- eslint-disable-next-line @lwc/lwc/no-inner-html -->
+                            <p class="comm-msg__body" lwc:dom="manual" data-id={msg.Id}></p>
+                        </template>
+                        <template if:true={msg.HasAttachment__c}>
+                            <div class="comm-msg__attachment">
+                                <lightning-icon icon-name="doctype:attachment" size="x-small"></lightning-icon>
+                                <a href={msg.attachmentUrl} target="_blank">View attachment</a>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <!-- Empty state -->
+        <template if:true={isEmpty}>
+            <div class="comm-timeline__empty">
+                <lightning-icon icon-name="utility:chat" size="medium"></lightning-icon>
+                <p>No messages yet. Start the conversation!</p>
+            </div>
+        </template>
+
+        <!-- Bottom anchor for auto-scroll -->
+        <div class="comm-timeline__bottom" lwc:ref="bottomAnchor"></div>
+    </div>
+</template>

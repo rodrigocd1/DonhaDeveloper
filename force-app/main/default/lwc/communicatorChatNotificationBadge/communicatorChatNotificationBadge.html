@@ -1,0 +1,12 @@
+<template>
+    <template if:true={hasUnread}>
+        <button
+            class="comm-badge"
+            title="{unreadLabel}"
+            onclick={handleClick}
+            aria-label={unreadLabel}
+        >
+            {displayCount}
+        </button>
+    </template>
+</template>

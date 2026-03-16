@@ -1,0 +1,35 @@
+/* communicatorChatNotificationBadge */
+
+.comm-badge {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    min-width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 0.625rem;
+    background: #ea001e;
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 700;
+    border: 2px solid #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 0.3rem;
+    cursor: pointer;
+    line-height: 1;
+    box-shadow: 0 1px 4px rgba(0,0,0,.2);
+    animation: popIn 0.2s ease;
+    white-space: nowrap;
+}
+
+@keyframes popIn {
+    from { transform: scale(0); }
+    to   { transform: scale(1); }
+}
+
+:host {
+    position: absolute;
+    top: 0;
+    right: 0;
+}

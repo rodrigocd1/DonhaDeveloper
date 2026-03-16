@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Thread__c</fullName>
+    <label>Thread</label>
+    <type>Lookup</type>
+    <referenceTo>CommunicatorThread__c</referenceTo>
+    <relationshipName>Messages</relationshipName>
+    <relationshipLabel>Messages</relationshipLabel>
+    <required>false</required>
+    <deleteConstraint>Restrict</deleteConstraint>
+</CustomField>

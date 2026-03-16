@@ -1,0 +1,141 @@
+<template>
+    <!-- ── Botão flutuante ── -->
+    <div class="comm-fab-wrapper">
+        <button class={fabClass} title="Chat" onclick={handleToggle} aria-label="Toggle chat">
+            <lightning-icon icon-name={fabIcon} size="small" class="comm-fab__icon"></lightning-icon>
+        </button>
+
+        <!-- Badge de não lidos (visível só quando fechado) -->
+        <template if:true={showUnreadBadge}>
+            <span class="comm-fab-badge">{displayUnread}</span>
+        </template>
+    </div>
+
+    <!-- ── Painel do chat ── -->
+    <template if:true={isOpen}>
+        <div class="comm-fab-panel">
+
+            <!-- TELA 1: Seleção de Opportunity -->
+            <template if:false={showChat}>
+                <div class="comm-picker">
+
+                    <div class="comm-picker__header">
+                        <lightning-icon icon-name="utility:chat" size="x-small"></lightning-icon>
+                        <span>Communicator Chat</span>
+                        <button class="comm-picker__close" onclick={handleClose} title="Close">
+                            <lightning-icon icon-name="utility:close" size="x-small"></lightning-icon>
+                        </button>
+                    </div>
+
+                    <div class="comm-picker__body">
+                        <p class="comm-picker__label">Select an Opportunity to open the chat:</p>
+
+                        <lightning-record-picker
+                            label="Opportunity"
+                            placeholder="Search Opportunities..."
+                            object-api-name="Opportunity"
+                            onchange={handleOpportunitySelect}
+                            filter={opportunityFilter}
+                        ></lightning-record-picker>
+
+                        <!-- Recentes -->
+                        <template if:true={hasRecent}>
+                            <div class="comm-picker__recent">
+                                <p class="comm-picker__recent-label">Recent:</p>
+                                <ul class="comm-picker__recent-list">
+                                    <template for:each={recentOpportunities} for:item="opp">
+                                        <li key={opp.id}>
+                                            <button
+                                                class="comm-picker__recent-btn"
+                                                data-id={opp.id}
+                                                data-name={opp.name}
+                                                onclick={handleRecentClick}
+                                            >
+                                                <lightning-icon icon-name="standard:opportunity" size="x-small"></lightning-icon>
+                                                <span>{opp.name}</span>
+                                            </button>
+                                        </li>
+                                    </template>
+                                </ul>
+                            </div>
+                        </template>
+
+                        <!-- Loading -->
+                        <template if:true={isLoadingThread}>
+                            <div class="comm-picker__loading">
+                                <lightning-spinner size="x-small" alternative-text="Loading..."></lightning-spinner>
+                                <span>Opening chat...</span>
+                            </div>
+                        </template>
+
+                        <!-- Erro -->
+                        <template if:true={loadError}>
+                            <div class="comm-picker__error">
+                                <lightning-icon icon-name="utility:error" size="x-small" variant="error"></lightning-icon>
+                                <span>{loadError}</span>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </template>
+
+            <!-- TELA 2: Chat -->
+            <template if:true={showChat}>
+                <div class="comm-chat">
+
+                    <!-- Header -->
+                    <div class="comm-chat__header">
+                        <div class="comm-chat__header-left">
+                            <button class="comm-chat__back" onclick={handleBack} title="Back">
+                                <lightning-icon icon-name="utility:back" size="x-small"></lightning-icon>
+                            </button>
+                            <lightning-icon icon-name="standard:opportunity" size="x-small"></lightning-icon>
+                            <span class="comm-chat__title" title={opportunityName}>{opportunityName}</span>
+                        </div>
+                        <div class="comm-chat__header-actions">
+                            <lightning-button-icon
+                                icon-name="utility:search"
+                                variant="bare"
+                                alternative-text="Search"
+                                title="Search"
+                                onclick={handleToggleSearch}
+                            ></lightning-button-icon>
+                            <template if:true={unreadCount}>
+                                <span class="comm-chat__badge">{unreadCount}</span>
+                            </template>
+                            <lightning-button-icon
+                                icon-name="utility:close"
+                                variant="bare"
+                                alternative-text="Close"
+                                title="Close"
+                                onclick={handleClose}
+                            ></lightning-button-icon>
+                        </div>
+                    </div>
+
+                    <!-- Search -->
+                    <template if:true={showSearch}>
+                        <c-communicator-chat-search
+                            thread-id={threadId}
+                            onnavigatemessage={handleNavigateToMessage}
+                        ></c-communicator-chat-search>
+                    </template>
+
+                    <!-- Timeline -->
+                    <c-communicator-chat-timeline
+                        thread-id={threadId}
+                        highlight-message-id={highlightMessageId}
+                    ></c-communicator-chat-timeline>
+
+                    <!-- Input -->
+                    <c-communicator-chat-message-input
+                        thread-id={threadId}
+                        onmessagesent={handleMessageSent}
+                    ></c-communicator-chat-message-input>
+
+                </div>
+            </template>
+
+        </div>
+    </template>
+</template>

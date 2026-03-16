@@ -1,0 +1,47 @@
+<template>
+    <div class="comm-search">
+        <!-- Input -->
+        <div class="comm-search__bar">
+            <lightning-icon icon-name="utility:search" size="x-small" class="comm-search__icon"></lightning-icon>
+            <input
+                type="search"
+                class="comm-search__input"
+                placeholder="Search messages..."
+                value={keyword}
+                oninput={handleInput}
+                onkeydown={handleKeyDown}
+            />
+            <template if:true={isSearching}>
+                <lightning-spinner size="x-small" alternative-text="Searching..."></lightning-spinner>
+            </template>
+        </div>
+
+        <!-- Results -->
+        <template if:true={hasResults}>
+            <ul class="comm-search__results" role="listbox">
+                <template for:each={results} for:item="result">
+                    <li
+                        key={result.Id}
+                        class="comm-search__result"
+                        role="option"
+                        data-id={result.Id}
+                        onclick={handleResultClick}
+                    >
+                        <div class="comm-search__result-meta">
+                            <span class="comm-search__result-sender">{result.senderName}</span>
+                            <span class="comm-search__result-time">{result.formattedTime}</span>
+                        </div>
+                        <!-- eslint-disable-next-line @lwc/lwc/no-inner-html -->
+                        <p class="comm-search__result-body" data-id={result.Id}></p>
+                    </li>
+                </template>
+            </ul>
+            <div class="comm-search__count">{resultCountLabel}</div>
+        </template>
+
+        <!-- No results -->
+        <template if:true={showNoResults}>
+            <p class="comm-search__no-results">No messages found for "{keyword}"</p>
+        </template>
+    </div>
+</template>

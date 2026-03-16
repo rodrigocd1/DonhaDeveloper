@@ -1,0 +1,75 @@
+<template>
+    <div class={containerClass}>
+
+        <!-- Header (always visible so user can close) -->
+        <div class="comm-chat__header">
+            <span class="comm-chat__title">Chat</span>
+            <div class="comm-chat__header-actions">
+                <template if:true={showContent}>
+                    <lightning-button-icon
+                        icon-name="utility:search"
+                        variant="bare"
+                        alternative-text="Search"
+                        title="Search messages"
+                        onclick={handleToggleSearch}
+                    ></lightning-button-icon>
+                    <lightning-button-icon
+                        icon-name={maximizeIcon}
+                        variant="bare"
+                        alternative-text="Toggle maximize"
+                        title="Toggle maximize"
+                        onclick={handleToggleMaximize}
+                    ></lightning-button-icon>
+                </template>
+                <lightning-button-icon
+                    icon-name="utility:close"
+                    variant="bare"
+                    alternative-text="Close chat"
+                    title="Close chat"
+                    onclick={handleClose}
+                ></lightning-button-icon>
+            </div>
+        </div>
+
+        <!-- Error state -->
+        <template if:true={showError}>
+            <div class="comm-chat__error">
+                <lightning-icon icon-name="utility:error" size="small" variant="error"></lightning-icon>
+                <p>{errorMessage}</p>
+            </div>
+        </template>
+
+        <!-- Loading state -->
+        <template if:true={isLoading}>
+            <div class="comm-chat__loading">
+                <lightning-spinner alternative-text="Loading chat..." size="small"></lightning-spinner>
+            </div>
+        </template>
+
+        <!-- Main content -->
+        <template if:true={showContent}>
+
+            <!-- Search panel -->
+            <template if:true={showSearch}>
+                <c-communicator-chat-search
+                    thread-id={_threadId}
+                    onnavigatemessage={handleNavigateToMessage}
+                ></c-communicator-chat-search>
+            </template>
+
+            <!-- Timeline -->
+            <c-communicator-chat-timeline
+                thread-id={_threadId}
+                highlight-message-id={highlightMessageId}
+            ></c-communicator-chat-timeline>
+
+            <!-- Input -->
+            <c-communicator-chat-message-input
+                thread-id={_threadId}
+                onmessagesent={handleMessageSent}
+            ></c-communicator-chat-message-input>
+
+        </template>
+
+    </div>
+</template>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Role__c</fullName>
+    <label>Role</label>
+    <type>Picklist</type>
+    <required>false</required>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value><fullName>Broker</fullName><label>Broker</label><default>false</default></value>
+            <value><fullName>Advisory</fullName><label>Advisory</label><default>false</default></value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>
