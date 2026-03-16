@@ -1,0 +1,57 @@
+<template>
+    <div class="comm-room">
+
+        <!-- Cabeçalho -->
+        <div class="comm-room__header">
+            <div class="comm-room__header-left">
+                <button class="comm-room__back" onclick={handleBack} title="Voltar">
+                    <lightning-icon icon-name="utility:back" size="x-small" variant="inverse"></lightning-icon>
+                </button>
+                <lightning-icon icon-name="standard:opportunity" size="x-small"></lightning-icon>
+                <span class="comm-room__title" title={opportunityName}>{opportunityName}</span>
+            </div>
+            <div class="comm-room__header-right">
+                <lightning-button-icon
+                    icon-name="utility:search"
+                    variant="bare-inverse"
+                    alternative-text="Buscar mensagens"
+                    title="Buscar mensagens"
+                    onclick={handleToggleSearch}
+                ></lightning-button-icon>
+                <template if:true={unreadCount}>
+                    <span class="comm-room__badge">{unreadCount}</span>
+                </template>
+                <template if:true={showCloseBtn}>
+                    <lightning-button-icon
+                        icon-name="utility:close"
+                        variant="bare-inverse"
+                        alternative-text="Fechar"
+                        title="Fechar"
+                        onclick={handleClose}
+                    ></lightning-button-icon>
+                </template>
+            </div>
+        </div>
+
+        <!-- Busca -->
+        <template if:true={showSearch}>
+            <c-communicator-chat-search
+                thread-id={threadId}
+                onnavigatemessage={handleNavigateToMessage}
+            ></c-communicator-chat-search>
+        </template>
+
+        <!-- Timeline -->
+        <c-communicator-chat-timeline
+            thread-id={threadId}
+            highlight-message-id={highlightMessageId}
+        ></c-communicator-chat-timeline>
+
+        <!-- Input -->
+        <c-communicator-chat-message-input
+            thread-id={threadId}
+            onmessagesent={handleMessageSent}
+        ></c-communicator-chat-message-input>
+
+    </div>
+</template>

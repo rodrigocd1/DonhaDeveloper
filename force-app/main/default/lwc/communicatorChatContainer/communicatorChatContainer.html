@@ -1,37 +1,30 @@
 <template>
     <div class={containerClass}>
 
-        <!-- Header (always visible so user can close) -->
+        <!-- Cabeçalho -->
         <div class="comm-chat__header">
             <span class="comm-chat__title">Chat</span>
             <div class="comm-chat__header-actions">
                 <template if:true={showContent}>
                     <lightning-button-icon
                         icon-name="utility:search"
-                        variant="bare"
-                        alternative-text="Search"
-                        title="Search messages"
+                        variant="bare-inverse"
+                        alternative-text="Buscar mensagens"
+                        title="Buscar mensagens"
                         onclick={handleToggleSearch}
                     ></lightning-button-icon>
                     <lightning-button-icon
                         icon-name={maximizeIcon}
-                        variant="bare"
-                        alternative-text="Toggle maximize"
-                        title="Toggle maximize"
+                        variant="bare-inverse"
+                        alternative-text="Maximizar/restaurar"
+                        title="Maximizar/restaurar"
                         onclick={handleToggleMaximize}
                     ></lightning-button-icon>
                 </template>
-                <lightning-button-icon
-                    icon-name="utility:close"
-                    variant="bare"
-                    alternative-text="Close chat"
-                    title="Close chat"
-                    onclick={handleClose}
-                ></lightning-button-icon>
             </div>
         </div>
 
-        <!-- Error state -->
+        <!-- Erro -->
         <template if:true={showError}>
             <div class="comm-chat__error">
                 <lightning-icon icon-name="utility:error" size="small" variant="error"></lightning-icon>
@@ -39,17 +32,17 @@
             </div>
         </template>
 
-        <!-- Loading state -->
+        <!-- Carregando -->
         <template if:true={isLoading}>
             <div class="comm-chat__loading">
-                <lightning-spinner alternative-text="Loading chat..." size="small"></lightning-spinner>
+                <lightning-spinner alternative-text="Carregando chat..." size="small"></lightning-spinner>
             </div>
         </template>
 
-        <!-- Main content -->
+        <!-- Conteúdo principal -->
         <template if:true={showContent}>
 
-            <!-- Search panel -->
+            <!-- Painel de busca -->
             <template if:true={showSearch}>
                 <c-communicator-chat-search
                     thread-id={_threadId}

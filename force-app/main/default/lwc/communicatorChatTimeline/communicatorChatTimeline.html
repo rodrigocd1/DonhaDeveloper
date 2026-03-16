@@ -5,10 +5,10 @@
         <template if:true={hasMoreMessages}>
             <div class="comm-timeline__load-more">
                 <template if:true={isLoadingMore}>
-                    <lightning-spinner size="x-small" alternative-text="Loading more messages"></lightning-spinner>
+                    <lightning-spinner size="x-small" alternative-text="Carregando mensagens..."></lightning-spinner>
                 </template>
                 <template if:false={isLoadingMore}>
-                    <button class="comm-timeline__load-btn" onclick={loadNextPage}>Load older messages</button>
+                    <button class="comm-timeline__load-btn" onclick={loadNextPage}>Carregar mensagens anteriores</button>
                 </template>
             </div>
         </template>
@@ -39,7 +39,7 @@
                         <template if:true={msg.HasAttachment__c}>
                             <div class="comm-msg__attachment">
                                 <lightning-icon icon-name="doctype:attachment" size="x-small"></lightning-icon>
-                                <a href={msg.attachmentUrl} target="_blank">View attachment</a>
+                                <a href={msg.attachmentUrl} target="_blank">Ver anexo</a>
                             </div>
                         </template>
                     </div>
@@ -51,7 +51,7 @@
         <template if:true={isEmpty}>
             <div class="comm-timeline__empty">
                 <lightning-icon icon-name="utility:chat" size="medium"></lightning-icon>
-                <p>No messages yet. Start the conversation!</p>
+                <p>Nenhuma mensagem ainda. Inicie a conversa!</p>
             </div>
         </template>
 

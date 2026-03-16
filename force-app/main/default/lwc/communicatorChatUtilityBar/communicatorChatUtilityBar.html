@@ -12,11 +12,11 @@
 
                 <!-- Record Picker nativo -->
                 <div class="comm-utility__picker-body">
-                    <p class="comm-utility__picker-label">Select an Opportunity to open the chat:</p>
+                    <p class="comm-utility__picker-label">Selecione uma Oportunidade para abrir o chat:</p>
 
                     <lightning-record-picker
                         label="Opportunity"
-                        placeholder="Search Opportunities..."
+                        placeholder="Buscar Oportunidades..."
                         object-api-name="Opportunity"
                         value={selectedRecordId}
                         onchange={handleOpportunitySelect}
@@ -26,7 +26,7 @@
                     <!-- Recent opportunities -->
                     <template if:true={hasRecent}>
                         <div class="comm-utility__recent">
-                            <p class="comm-utility__recent-label">Recent:</p>
+                            <p class="comm-utility__recent-label">Recentes:</p>
                             <ul class="comm-utility__recent-list">
                                 <template for:each={recentOpportunities} for:item="opp">
                                     <li key={opp.id} class="comm-utility__recent-item">
@@ -49,8 +49,8 @@
                 <!-- Loading após seleção -->
                 <template if:true={isLoadingThread}>
                     <div class="comm-utility__loading">
-                        <lightning-spinner size="x-small" alternative-text="Loading chat..."></lightning-spinner>
-                        <span>Opening chat...</span>
+                        <lightning-spinner size="x-small" alternative-text="Carregando chat..."></lightning-spinner>
+                        <span>Abrindo chat...</span>
                     </div>
                 </template>
 
@@ -73,7 +73,7 @@
                 <div class="comm-chat__header">
                     <div class="comm-chat__header-left">
                         <button class="comm-utility__back-btn" onclick={handleBack} title="Back to search">
-                            <lightning-icon icon-name="utility:back" size="x-small"></lightning-icon>
+                            <lightning-icon icon-name="utility:back" size="x-small" variant="inverse"></lightning-icon>
                         </button>
                         <lightning-icon icon-name="standard:opportunity" size="x-small"></lightning-icon>
                         <span class="comm-chat__title" title={opportunityName}>{opportunityName}</span>
@@ -81,8 +81,8 @@
                     <div class="comm-chat__header-actions">
                         <lightning-button-icon
                             icon-name="utility:search"
-                            variant="bare"
-                            alternative-text="Search messages"
+                            variant="bare-inverse"
+                            alternative-text="Buscar mensagens"
                             title="Search"
                             onclick={handleToggleSearch}
                         ></lightning-button-icon>

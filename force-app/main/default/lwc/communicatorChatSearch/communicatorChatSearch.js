@@ -1,8 +1,8 @@
 import { LightningElement, api, track } from 'lwc';
 import searchMessages                    from '@salesforce/apex/CommunicatorChatController.searchMessages';
 
-const DEBOUNCE_MS      = 350;
-const MIN_KEYWORD_LEN  = 2;
+const DEBOUNCE_MS     = 350;
+const MIN_KEYWORD_LEN = 2;
 
 export default class CommunicatorChatSearch extends LightningElement {
 
@@ -30,8 +30,8 @@ export default class CommunicatorChatSearch extends LightningElement {
             this._executeSearch();
         }
         if (event.key === 'Escape') {
-            this.keyword  = '';
-            this.results  = [];
+            this.keyword   = '';
+            this.results   = [];
             this._searched = false;
         }
     }
@@ -39,14 +39,14 @@ export default class CommunicatorChatSearch extends LightningElement {
     handleResultClick(event) {
         const messageId = event.currentTarget.dataset.id;
         this.dispatchEvent(new CustomEvent('navigatemessage', {
-            detail:  { messageId },
-            bubbles: true,
+            detail:   { messageId },
+            bubbles:  true,
             composed: true
         }));
     }
 
     // ─────────────────────────────────────────
-    // Search
+    // Busca com debounce
     // ─────────────────────────────────────────
 
     _debounceSearch() {
@@ -68,11 +68,11 @@ export default class CommunicatorChatSearch extends LightningElement {
         this.isSearching = true;
         this._searched   = false;
         try {
-            const raw       = await searchMessages({ threadId: this.threadId, keyword: kw });
-            this.results    = this._enrichResults(raw, kw);
-            this._searched  = true;
+            const raw      = await searchMessages({ threadId: this.threadId, keyword: kw });
+            this.results   = this._enrichResults(raw);
+            this._searched = true;
         } catch (err) {
-            console.error('CommunicatorChatSearch error:', err);
+            console.error('CommunicatorChatSearch._executeSearch:', err);
             this.results = [];
         } finally {
             this.isSearching = false;
@@ -80,14 +80,16 @@ export default class CommunicatorChatSearch extends LightningElement {
     }
 
     // ─────────────────────────────────────────
-    // renderedCallback - inject highlighted HTML
+    // renderedCallback — injeta highlight no corpo
     // ─────────────────────────────────────────
 
     renderedCallback() {
-        if (!this.keyword) return;
+        if (!this.keyword || this.results.length === 0) return;
         this.results.forEach(r => {
-            const el = this.template.querySelector(`p.comm-search__result-body[data-id="${r.Id}"]`);
+            // Seletor consistente com o HTML: comm-search__item-body
+            const el = this.template.querySelector(`p.comm-search__item-body[data-id="${r.Id}"]`);
             if (el) {
+                // eslint-disable-next-line @lwc/lwc/no-inner-html
                 el.innerHTML = this._highlightKeyword(r.Body__c || '', this.keyword);
             }
         });
@@ -97,19 +99,21 @@ export default class CommunicatorChatSearch extends LightningElement {
     // Helpers
     // ─────────────────────────────────────────
 
-    _enrichResults(msgs, keyword) {
+    _enrichResults(msgs) {
         return msgs.map(m => ({
             ...m,
-            senderName:    m.Sender__r?.Name || 'Unknown',
-            formattedTime: m.SentAt__c ? new Date(m.SentAt__c).toLocaleString() : ''
+            senderName:    m.Sender__r?.Name || 'Desconhecido',
+            formattedTime: m.SentAt__c
+                ? new Date(m.SentAt__c).toLocaleString('pt-BR')
+                : ''
         }));
     }
 
     _highlightKeyword(text, keyword) {
         if (!text || !keyword) return this._escapeHtml(text);
-        const escaped    = this._escapeHtml(text);
-        const escapedKw  = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        const regex      = new RegExp(`(${escapedKw})`, 'gi');
+        const escaped   = this._escapeHtml(text);
+        const escapedKw = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const regex     = new RegExp(`(${escapedKw})`, 'gi');
         return escaped.replace(regex, '<mark class="comm-search__highlight">$1</mark>');
     }
 
@@ -130,11 +134,14 @@ export default class CommunicatorChatSearch extends LightningElement {
     }
 
     get showNoResults() {
-        return this._searched && !this.isSearching && this.results.length === 0 && this.keyword.trim().length >= MIN_KEYWORD_LEN;
+        return this._searched
+            && !this.isSearching
+            && this.results.length === 0
+            && this.keyword.trim().length >= MIN_KEYWORD_LEN;
     }
 
     get resultCountLabel() {
         const n = this.results.length;
-        return `${n} result${n !== 1 ? 's' : ''} found`;
+        return `${n} resultado${n !== 1 ? 's' : ''} encontrado${n !== 1 ? 's' : ''}`;
     }
 }

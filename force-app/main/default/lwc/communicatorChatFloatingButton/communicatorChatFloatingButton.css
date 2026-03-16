@@ -1,7 +1,7 @@
 /* communicatorChatFloatingButton */
 
 /* ─────────────────────────────────────
-   FAB Button
+   Botão FAB
 ───────────────────────────────────── */
 
 .comm-fab-wrapper {
@@ -44,7 +44,7 @@
     --slds-c-icon-color-foreground-default: #fff;
 }
 
-/* ── Badge ── */
+/* ── Badge não lidos ── */
 .comm-fab-badge {
     position: absolute;
     top: -4px;
@@ -68,7 +68,8 @@
 }
 
 /* ─────────────────────────────────────
-   Panel
+   Painel flutuante
+   SCROLL FIX: height fixo + display flex + min-height: 0
 ───────────────────────────────────── */
 
 .comm-fab-panel {
@@ -85,6 +86,7 @@
     background: #fff;
     display: flex;
     flex-direction: column;
+    min-height: 0;
 }
 
 @keyframes slideUp {
@@ -93,13 +95,14 @@
 }
 
 /* ─────────────────────────────────────
-   Tela 1 — Picker
+   Tela 1 — Seleção de Opportunity
 ───────────────────────────────────── */
 
 .comm-picker {
     display: flex;
     flex-direction: column;
     height: 100%;
+    min-height: 0;
 }
 
 .comm-picker__header {
@@ -140,6 +143,7 @@
     flex-direction: column;
     gap: 0.75rem;
     flex: 1;
+    min-height: 0;
     overflow-y: auto;
 }
 
@@ -194,7 +198,7 @@
     border-color: #0176d3;
 }
 
-/* ── Loading / Error ── */
+/* ── Carregando / Erro ── */
 .comm-picker__loading {
     display: flex;
     align-items: center;
@@ -218,15 +222,18 @@
 
 /* ─────────────────────────────────────
    Tela 2 — Chat
+   SCROLL FIX: flex column + min-height: 0 em todos os níveis
 ───────────────────────────────────── */
 
 .comm-chat {
     display: flex;
     flex-direction: column;
     height: 100%;
+    min-height: 0;
     overflow: hidden;
 }
 
+/* ── Cabeçalho ── */
 .comm-chat__header {
     display: flex;
     align-items: center;
@@ -305,4 +312,44 @@
         height: 100dvh;
         border-radius: 0;
     }
+}
+
+/* ── Ícones e botões brancos no cabeçalho azul ──────────────────
+   bare-inverse e variant=inverse garantem branco no Lightning.
+   Os tokens abaixo garantem branco também no Experience Cloud,
+   onde os tokens SLDS podem não cascatear corretamente.          */
+.comm-picker__header lightning-button-icon {
+    --slds-c-button-neutral-color-background: transparent;
+    --slds-c-button-neutral-color-border: transparent;
+    --slds-c-button-text-color: #fff;
+    --sds-c-button-text-color: #fff;
+    --lwc-colorTextIconDefault: #fff;
+    --slds-c-icon-color-foreground-default: #fff;
+}
+.comm-picker__header lightning-button-icon:hover {
+    --slds-c-button-neutral-color-background: rgba(255,255,255,0.18);
+}
+.comm-picker__header lightning-icon {
+    --lwc-colorTextIconDefault: #fff;
+    --slds-c-icon-color-foreground-default: #fff;
+}
+
+/* ── Ícones e botões brancos no cabeçalho azul ──────────────────
+   bare-inverse e variant=inverse garantem branco no Lightning.
+   Os tokens abaixo garantem branco também no Experience Cloud,
+   onde os tokens SLDS podem não cascatear corretamente.          */
+.comm-chat__header lightning-button-icon {
+    --slds-c-button-neutral-color-background: transparent;
+    --slds-c-button-neutral-color-border: transparent;
+    --slds-c-button-text-color: #fff;
+    --sds-c-button-text-color: #fff;
+    --lwc-colorTextIconDefault: #fff;
+    --slds-c-icon-color-foreground-default: #fff;
+}
+.comm-chat__header lightning-button-icon:hover {
+    --slds-c-button-neutral-color-background: rgba(255,255,255,0.18);
+}
+.comm-chat__header lightning-icon {
+    --lwc-colorTextIconDefault: #fff;
+    --slds-c-icon-color-foreground-default: #fff;
 }

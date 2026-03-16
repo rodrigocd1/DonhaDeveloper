@@ -171,4 +171,22 @@ public with sharing class CommunicatorChatController {
             throw new AuraHandledException(ex.getMessage());
         }
     }
+
+    /**
+     * @description Retorna o nome de uma Opportunity pelo Id.
+     *              Usado pelo picker para exibir o nome após seleção no lightning-record-picker.
+     * @param opportunityId Id da Opportunity.
+     * @return Nome da Opportunity.
+     */
+    @AuraEnabled(cacheable=true)
+    public static String getOpportunityName(Id opportunityId) {
+        try {
+            List<Opportunity> opps = [
+                SELECT Name FROM Opportunity WHERE Id = :opportunityId LIMIT 1
+            ];
+            return opps.isEmpty() ? '' : opps[0].Name;
+        } catch (Exception ex) {
+            throw new AuraHandledException(ex.getMessage());
+        }
+    }
 }

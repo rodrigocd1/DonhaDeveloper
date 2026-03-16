@@ -1,28 +1,12 @@
 <template>
     <div class="comm-input">
 
-        <!-- Attachment preview (após upload concluído) -->
-        <template if:true={uploadedFile}>
-            <div class="comm-input__attachment-preview">
-                <lightning-icon icon-name="doctype:attachment" size="x-small"></lightning-icon>
-                <span class="comm-input__attachment-name">{uploadedFile.name}</span>
-                <lightning-button-icon
-                    icon-name="utility:close"
-                    variant="bare"
-                    size="x-small"
-                    alternative-text="Remove attachment"
-                    onclick={handleRemoveAttachment}
-                ></lightning-button-icon>
-            </div>
-        </template>
-
-        <!-- Input row -->
-        <div class="comm-input__row">
-
-            <!-- lightning-file-upload nativo -->
+        <!-- Linha de anexo: upload + preview lado a lado -->
+        <div class="comm-input__attach-row">
             <div class="comm-input__attach-wrapper">
                 <lightning-file-upload
                     name="chatAttachment"
+                    label="Anexar arquivo"
                     accept={acceptedFormats}
                     record-id={threadId}
                     onuploadfinished={handleUploadFinished}
@@ -30,10 +14,28 @@
                 ></lightning-file-upload>
             </div>
 
-            <!-- Text area -->
+            <!-- Preview do arquivo selecionado -->
+            <template if:true={uploadedFile}>
+                <div class="comm-input__attachment-preview">
+                    <lightning-icon icon-name="doctype:attachment" size="x-small"></lightning-icon>
+                    <span class="comm-input__attachment-name">{uploadedFile.name}</span>
+                    <lightning-button-icon
+                        icon-name="utility:close"
+                        variant="bare"
+                        size="x-small"
+                        alternative-text="Remover anexo"
+                        title="Remover"
+                        onclick={handleRemoveAttachment}
+                    ></lightning-button-icon>
+                </div>
+            </template>
+        </div>
+
+        <!-- Linha de envio: textarea + botão -->
+        <div class="comm-input__row">
             <textarea
                 class="comm-input__textarea"
-                placeholder="Type a message..."
+                placeholder="Digite uma mensagem..."
                 value={messageText}
                 oninput={handleInput}
                 onkeydown={handleKeyDown}
@@ -41,23 +43,22 @@
                 disabled={isSending}
             ></textarea>
 
-            <!-- Send button -->
             <lightning-button-icon
                 icon-name="utility:send"
                 variant="brand"
                 size="medium"
-                alternative-text="Send message"
-                title="Send"
+                alternative-text="Enviar mensagem"
+                title="Enviar"
                 disabled={isSendDisabled}
                 onclick={handleSend}
             ></lightning-button-icon>
         </div>
 
-        <!-- Sending indicator -->
+        <!-- Indicador de envio -->
         <template if:true={isSending}>
             <div class="comm-input__uploading">
-                <lightning-spinner size="x-small" alternative-text="Sending..."></lightning-spinner>
-                <span>Sending...</span>
+                <lightning-spinner size="x-small" alternative-text="Enviando..."></lightning-spinner>
+                <span>Enviando...</span>
             </div>
         </template>
 

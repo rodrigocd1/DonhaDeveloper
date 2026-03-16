@@ -1,0 +1,128 @@
+/* communicatorChatRoom */
+
+:host {
+    display: flex;
+    flex-direction: column;
+    /* Garante que o host nunca cresça além do pai */
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.comm-room {
+    display: flex;
+    flex-direction: column;
+    /* height: 100% + overflow: hidden no host já contém o filho */
+    height: 100%;
+    min-height: 0;
+}
+
+/* ── Cabeçalho — NUNCA rola ── */
+.comm-room__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 0.75rem;
+    background: #0176d3;
+    color: #fff;
+    /* flex-shrink: 0 impede que o header seja comprimido ou role */
+    flex-shrink: 0;
+    min-height: 2.75rem;
+    gap: 0.5rem;
+    /* z-index garante que fique acima da timeline ao maximizar */
+    position: relative;
+    z-index: 1;
+}
+
+.comm-room__header-left {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    overflow: hidden;
+    flex: 1;
+    min-width: 0;
+}
+
+.comm-room__title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.comm-room__header-right {
+    display: flex;
+    align-items: center;
+    gap: 0.15rem;
+    flex-shrink: 0;
+}
+
+/* ── Botão voltar ── */
+.comm-room__back {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    padding: 0.2rem;
+    border-radius: 0.25rem;
+    flex-shrink: 0;
+    transition: background 0.12s;
+    /* Força o lightning-icon filho a herdar branco */
+    --lwc-colorTextIconDefault: #fff;
+    --slds-c-icon-color-foreground-default: #fff;
+}
+
+.comm-room__back:hover {
+    background: rgba(255,255,255,0.2);
+}
+
+/* ── Badge ── */
+.comm-room__badge {
+    background: #ea001e;
+    color: #fff;
+    border-radius: 0.75rem;
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 0.1rem 0.35rem;
+    min-width: 1.1rem;
+    text-align: center;
+    line-height: 1.4;
+}
+
+/* ── Ícones brancos no cabeçalho ──
+   lightning-button-icon usa tokens SLDS próprios que ignoram
+   o color do pai — é preciso sobrescrever via CSS tokens       */
+.comm-room__header-right lightning-button-icon {
+    --slds-c-button-neutral-color-background: transparent;
+    --slds-c-button-neutral-color-border: transparent;
+    --slds-c-button-text-color: #fff;
+    --sds-c-button-text-color: #fff;
+    --lwc-colorTextIconDefault: #fff;
+}
+
+.comm-room__header-right lightning-button-icon:hover {
+    --slds-c-button-neutral-color-background: rgba(255,255,255,0.15);
+}
+
+/* ── Ícones e botões brancos no cabeçalho azul ──────────────────
+   bare-inverse e variant=inverse garantem branco no Lightning.
+   Os tokens abaixo garantem branco também no Experience Cloud,
+   onde os tokens SLDS podem não cascatear corretamente.          */
+.comm-room__header lightning-button-icon {
+    --slds-c-button-neutral-color-background: transparent;
+    --slds-c-button-neutral-color-border: transparent;
+    --slds-c-button-text-color: #fff;
+    --sds-c-button-text-color: #fff;
+    --lwc-colorTextIconDefault: #fff;
+    --slds-c-icon-color-foreground-default: #fff;
+}
+.comm-room__header lightning-button-icon:hover {
+    --slds-c-button-neutral-color-background: rgba(255,255,255,0.18);
+}
+.comm-room__header lightning-icon {
+    --lwc-colorTextIconDefault: #fff;
+    --slds-c-icon-color-foreground-default: #fff;
+}

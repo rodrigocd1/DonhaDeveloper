@@ -1,0 +1,65 @@
+<template>
+    <div class="comm-picker">
+
+        <!-- Cabeçalho -->
+        <div class="comm-picker__header">
+            <lightning-icon icon-name="utility:chat" size="x-small"></lightning-icon>
+            <span>Communicator Chat</span>
+            <template if:true={showCloseBtn}>
+                <button class="comm-picker__close" onclick={handleClose} title="Fechar">
+                    <lightning-icon icon-name="utility:close" size="x-small" variant="inverse"></lightning-icon>
+                </button>
+            </template>
+        </div>
+
+        <!-- Corpo -->
+        <div class="comm-picker__body">
+            <p class="comm-picker__label">Selecione uma Oportunidade para abrir o chat:</p>
+
+            <lightning-record-picker
+                label="Oportunidade"
+                placeholder="Buscar Oportunidades..."
+                object-api-name="Opportunity"
+                onchange={handleOpportunitySelect}
+                filter={opportunityFilter}
+            ></lightning-record-picker>
+
+            <!-- Recentes -->
+            <template if:true={hasRecent}>
+                <p class="comm-picker__recent-label">Recentes:</p>
+                <ul class="comm-picker__recent-list">
+                    <template for:each={recentOpportunities} for:item="opp">
+                        <li key={opp.id}>
+                            <button
+                                class="comm-picker__recent-btn"
+                                data-id={opp.id}
+                                data-name={opp.name}
+                                onclick={handleRecentClick}
+                            >
+                                <lightning-icon icon-name="standard:opportunity" size="x-small"></lightning-icon>
+                                <span>{opp.name}</span>
+                            </button>
+                        </li>
+                    </template>
+                </ul>
+            </template>
+
+            <!-- Carregando -->
+            <template if:true={isLoading}>
+                <div class="comm-picker__loading">
+                    <lightning-spinner size="x-small" alternative-text="Abrindo chat..."></lightning-spinner>
+                    <span>Abrindo chat...</span>
+                </div>
+            </template>
+
+            <!-- Erro -->
+            <template if:true={errorMessage}>
+                <div class="comm-picker__error">
+                    <lightning-icon icon-name="utility:error" size="x-small" variant="error"></lightning-icon>
+                    <span>{errorMessage}</span>
+                </div>
+            </template>
+        </div>
+
+    </div>
+</template>

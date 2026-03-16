@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>59.0</apiVersion>
+    <isExposed>true</isExposed>
+    <targets>
+        <target>lightning__UtilityBar</target>
+        <target>lightning__RecordPage</target>
+        <target>lightning__AppPage</target>
+        <target>lightning__HomePage</target>
+        <target>lightningCommunity__Page</target>
+        <target>lightningCommunity__Default</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__UtilityBar">
+            <property
+                name="mode"
+                type="String"
+                label="Modo"
+                description="Modo de renderização: fab (botão flutuante) ou utility (painel da barra)"
+                default="utility"
+            />
+        </targetConfig>
+        <targetConfig targets="lightningCommunity__Default,lightning__RecordPage,lightning__AppPage,lightning__HomePage">
+            <property
+                name="mode"
+                type="String"
+                label="Modo"
+                description="Modo de renderização: fab (botão flutuante) ou utility (painel da barra)"
+                default="fab"
+            />
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

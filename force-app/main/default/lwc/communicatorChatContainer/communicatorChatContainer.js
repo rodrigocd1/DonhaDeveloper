@@ -91,11 +91,6 @@ export default class CommunicatorChatContainer extends LightningElement {
         this.isMaximized = !this.isMaximized;
     }
 
-    handleClose() {
-        this._stopPolling();
-        this.dispatchEvent(new CustomEvent('close'));
-    }
-
     handleMessageSent() {
         this.template.querySelector('c-communicator-chat-timeline')?.scrollToBottom();
         markThreadAsRead({ threadId: this._threadId }).catch(console.error);

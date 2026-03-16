@@ -1,7 +1,7 @@
 <template>
     <!-- ── Botão flutuante ── -->
     <div class="comm-fab-wrapper">
-        <button class={fabClass} title="Chat" onclick={handleToggle} aria-label="Toggle chat">
+        <button class={fabClass} title="Chat" onclick={handleToggle} aria-label="Abrir/fechar chat">
             <lightning-icon icon-name={fabIcon} size="small" class="comm-fab__icon"></lightning-icon>
         </button>
 
@@ -15,33 +15,33 @@
     <template if:true={isOpen}>
         <div class="comm-fab-panel">
 
-            <!-- TELA 1: Seleção de Opportunity -->
+            <!-- TELA 1: Seleção de Oportunidade -->
             <template if:false={showChat}>
                 <div class="comm-picker">
 
                     <div class="comm-picker__header">
                         <lightning-icon icon-name="utility:chat" size="x-small"></lightning-icon>
                         <span>Communicator Chat</span>
-                        <button class="comm-picker__close" onclick={handleClose} title="Close">
-                            <lightning-icon icon-name="utility:close" size="x-small"></lightning-icon>
+                        <button class="comm-picker__close" onclick={handleFechar} title="Fechar">
+                            <lightning-icon icon-name="utility:close" size="x-small" variant="inverse"></lightning-icon>
                         </button>
                     </div>
 
                     <div class="comm-picker__body">
-                        <p class="comm-picker__label">Select an Opportunity to open the chat:</p>
+                        <p class="comm-picker__label">Selecione uma Oportunidade para abrir o chat:</p>
 
                         <lightning-record-picker
-                            label="Opportunity"
-                            placeholder="Search Opportunities..."
-                            object-api-name="Opportunity"
-                            onchange={handleOpportunitySelect}
+                            label="Oportunidade"
+                            placeholder="Buscar Oportunidades..."
+                            object-api-name="Oportunidade"
+                            onchange={handleOportunidadeSelect}
                             filter={opportunityFilter}
                         ></lightning-record-picker>
 
                         <!-- Recentes -->
                         <template if:true={hasRecent}>
                             <div class="comm-picker__recent">
-                                <p class="comm-picker__recent-label">Recent:</p>
+                                <p class="comm-picker__recent-label">Recentes:</p>
                                 <ul class="comm-picker__recent-list">
                                     <template for:each={recentOpportunities} for:item="opp">
                                         <li key={opp.id}>
@@ -64,7 +64,7 @@
                         <template if:true={isLoadingThread}>
                             <div class="comm-picker__loading">
                                 <lightning-spinner size="x-small" alternative-text="Loading..."></lightning-spinner>
-                                <span>Opening chat...</span>
+                                <span>Abrindo chat...</span>
                             </div>
                         </template>
 
@@ -86,8 +86,8 @@
                     <!-- Header -->
                     <div class="comm-chat__header">
                         <div class="comm-chat__header-left">
-                            <button class="comm-chat__back" onclick={handleBack} title="Back">
-                                <lightning-icon icon-name="utility:back" size="x-small"></lightning-icon>
+                            <button class="comm-chat__back" onclick={handleVoltar} title="Voltar">
+                                <lightning-icon icon-name="utility:back" size="x-small" variant="inverse"></lightning-icon>
                             </button>
                             <lightning-icon icon-name="standard:opportunity" size="x-small"></lightning-icon>
                             <span class="comm-chat__title" title={opportunityName}>{opportunityName}</span>
@@ -95,26 +95,26 @@
                         <div class="comm-chat__header-actions">
                             <lightning-button-icon
                                 icon-name="utility:search"
-                                variant="bare"
-                                alternative-text="Search"
-                                title="Search"
-                                onclick={handleToggleSearch}
+                                variant="bare-inverse"
+                                alternative-text="Buscar"
+                                title="Buscar"
+                                onclick={handleToggleBuscar}
                             ></lightning-button-icon>
                             <template if:true={unreadCount}>
                                 <span class="comm-chat__badge">{unreadCount}</span>
                             </template>
                             <lightning-button-icon
                                 icon-name="utility:close"
-                                variant="bare"
-                                alternative-text="Close"
-                                title="Close"
-                                onclick={handleClose}
+                                variant="bare-inverse"
+                                alternative-text="Fechar"
+                                title="Fechar"
+                                onclick={handleFechar}
                             ></lightning-button-icon>
                         </div>
                     </div>
 
-                    <!-- Search -->
-                    <template if:true={showSearch}>
+                    <!-- Buscar -->
+                    <template if:true={showBuscar}>
                         <c-communicator-chat-search
                             thread-id={threadId}
                             onnavigatemessage={handleNavigateToMessage}

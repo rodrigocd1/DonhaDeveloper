@@ -1,0 +1,70 @@
+<template>
+
+    <!-- ══════════════════════════════════════
+         MODO: Botão Flutuante (Experience Cloud)
+         Renderiza FAB + painel por cima da página
+    ══════════════════════════════════════ -->
+    <template if:true={isFabMode}>
+
+        <!-- Botão FAB -->
+        <div class="comm-fab-wrapper">
+            <button class={fabClass} title="Chat" onclick={handleFabToggle} aria-label="Abrir/fechar chat">
+                <lightning-icon icon-name={fabIcon} size="small" class="comm-fab__icon"></lightning-icon>
+            </button>
+            <template if:true={showUnreadBadge}>
+                <span class="comm-fab__badge">{displayUnread}</span>
+            </template>
+        </div>
+
+        <!-- Painel flutuante -->
+        <template if:true={isOpen}>
+            <div class="comm-fab__panel">
+                <template if:false={showChat}>
+                    <c-communicator-chat-picker
+                        onoppselected={handleOppSelected}
+                        onclose={handleFabClose}
+                        show-close-btn
+                    ></c-communicator-chat-picker>
+                </template>
+                <template if:true={showChat}>
+                    <c-communicator-chat-room
+                        thread-id={threadId}
+                        opportunity-name={opportunityName}
+                        unread-count={unreadCount}
+                        onback={handleBack}
+                        onclose={handleFabClose}
+                        onmessagesent={handleMessageSent}
+                        show-close-btn
+                    ></c-communicator-chat-room>
+                </template>
+            </div>
+        </template>
+
+    </template>
+
+    <!-- ══════════════════════════════════════
+         MODO: Utility Bar (Lightning Experience)
+         Renderiza direto no painel da utility bar
+    ══════════════════════════════════════ -->
+    <template if:true={isUtilityMode}>
+
+        <div class="comm-utility">
+            <template if:false={showChat}>
+                <c-communicator-chat-picker
+                    onoppselected={handleOppSelected}
+                ></c-communicator-chat-picker>
+            </template>
+            <template if:true={showChat}>
+                <c-communicator-chat-room
+                    thread-id={threadId}
+                    opportunity-name={opportunityName}
+                    unread-count={unreadCount}
+                    onback={handleBack}
+                    onmessagesent={handleMessageSent}
+                ></c-communicator-chat-room>
+            </template>
+        </div>
+
+    </template>
+
+</template>

@@ -1,47 +1,50 @@
 <template>
     <div class="comm-search">
-        <!-- Input -->
+
+        <!-- Campo de busca -->
         <div class="comm-search__bar">
             <lightning-icon icon-name="utility:search" size="x-small" class="comm-search__icon"></lightning-icon>
             <input
                 type="search"
                 class="comm-search__input"
-                placeholder="Search messages..."
+                placeholder="Buscar mensagens..."
                 value={keyword}
                 oninput={handleInput}
                 onkeydown={handleKeyDown}
             />
             <template if:true={isSearching}>
-                <lightning-spinner size="x-small" alternative-text="Searching..."></lightning-spinner>
+                <lightning-spinner size="x-small" alternative-text="Buscando..."></lightning-spinner>
             </template>
         </div>
 
-        <!-- Results -->
+        <!-- Resultados -->
         <template if:true={hasResults}>
-            <ul class="comm-search__results" role="listbox">
+            <ul class="comm-search__list" role="listbox">
                 <template for:each={results} for:item="result">
                     <li
                         key={result.Id}
-                        class="comm-search__result"
+                        class="comm-search__item"
                         role="option"
                         data-id={result.Id}
                         onclick={handleResultClick}
                     >
-                        <div class="comm-search__result-meta">
-                            <span class="comm-search__result-sender">{result.senderName}</span>
-                            <span class="comm-search__result-time">{result.formattedTime}</span>
+                        <div class="comm-search__item-meta">
+                            <span class="comm-search__item-sender">{result.senderName}</span>
+                            <span class="comm-search__item-time">{result.formattedTime}</span>
                         </div>
-                        <!-- eslint-disable-next-line @lwc/lwc/no-inner-html -->
-                        <p class="comm-search__result-body" data-id={result.Id}></p>
+                        <p class="comm-search__item-body" data-id={result.Id}></p>
                     </li>
                 </template>
             </ul>
             <div class="comm-search__count">{resultCountLabel}</div>
         </template>
 
-        <!-- No results -->
+        <!-- Sem resultados -->
         <template if:true={showNoResults}>
-            <p class="comm-search__no-results">No messages found for "{keyword}"</p>
+            <p class="comm-search__empty">
+                Nenhuma mensagem encontrada para &quot;{keyword}&quot;
+            </p>
         </template>
+
     </div>
 </template>

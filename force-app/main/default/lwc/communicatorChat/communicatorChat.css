@@ -1,0 +1,118 @@
+/* communicatorChat */
+
+/* ─────────────────────────────────────
+   Modo FAB — botão flutuante
+───────────────────────────────────── */
+
+.comm-fab-wrapper {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 8000;
+}
+
+.comm-fab {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    background: #0176d3;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(1,118,211,.45);
+    transition: background 0.2s, transform 0.2s;
+}
+
+.comm-fab:hover {
+    background: #005fb2;
+    transform: scale(1.06);
+}
+
+.comm-fab--active {
+    background: #444;
+    box-shadow: 0 4px 12px rgba(0,0,0,.25);
+}
+
+.comm-fab--active:hover {
+    background: #222;
+}
+
+.comm-fab__icon {
+    --slds-c-icon-color-foreground-default: #fff;
+}
+
+.comm-fab__badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background: #ea001e;
+    color: #fff;
+    border-radius: 0.75rem;
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 0.1rem 0.35rem;
+    min-width: 1.1rem;
+    text-align: center;
+    border: 2px solid #fff;
+    line-height: 1.4;
+    animation: popIn 0.2s ease;
+}
+
+@keyframes popIn {
+    from { transform: scale(0); }
+    to   { transform: scale(1); }
+}
+
+/* Painel flutuante */
+.comm-fab__panel {
+    position: fixed;
+    bottom: 6.5rem;
+    right: 2rem;
+    width: 400px;
+    height: 580px;
+    z-index: 8001;
+    border-radius: 0.75rem;
+    box-shadow: 0 8px 32px rgba(0,0,0,.2);
+    overflow: hidden;
+    animation: slideUp 0.2s ease;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─────────────────────────────────────
+   Modo Utility Bar
+───────────────────────────────────── */
+
+.comm-utility {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+    background: #fff;
+    font-family: 'Salesforce Sans', Arial, sans-serif;
+}
+
+/* ── Mobile ── */
+@media (max-width: 767px) {
+    .comm-fab-wrapper {
+        bottom: 1rem;
+        right: 1rem;
+    }
+
+    .comm-fab__panel {
+        bottom: 0;
+        right: 0;
+        width: 100vw;
+        height: 100dvh;
+        border-radius: 0;
+    }
+}

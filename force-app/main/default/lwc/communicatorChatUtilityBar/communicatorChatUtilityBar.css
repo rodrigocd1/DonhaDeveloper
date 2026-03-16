@@ -203,3 +203,23 @@
     text-align: center;
     line-height: 1.4;
 }
+
+/* ── Ícones e botões brancos no cabeçalho azul ──────────────────
+   bare-inverse e variant=inverse garantem branco no Lightning.
+   Os tokens abaixo garantem branco também no Experience Cloud,
+   onde os tokens SLDS podem não cascatear corretamente.          */
+.comm-chat__header lightning-button-icon {
+    --slds-c-button-neutral-color-background: transparent;
+    --slds-c-button-neutral-color-border: transparent;
+    --slds-c-button-text-color: #fff;
+    --sds-c-button-text-color: #fff;
+    --lwc-colorTextIconDefault: #fff;
+    --slds-c-icon-color-foreground-default: #fff;
+}
+.comm-chat__header lightning-button-icon:hover {
+    --slds-c-button-neutral-color-background: rgba(255,255,255,0.18);
+}
+.comm-chat__header lightning-icon {
+    --lwc-colorTextIconDefault: #fff;
+    --slds-c-icon-color-foreground-default: #fff;
+}
