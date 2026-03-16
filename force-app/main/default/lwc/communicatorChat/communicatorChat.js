@@ -1,9 +1,10 @@
-import { LightningElement, api, track } from 'lwc';
-import getOrCreateThread                 from '@salesforce/apex/CommunicatorChatController.getOrCreateThread';
-import getUnreadCount                    from '@salesforce/apex/CommunicatorChatController.getUnreadCount';
-import markThreadAsRead                  from '@salesforce/apex/CommunicatorChatController.markThreadAsRead';
+import { LightningElement, api, track, wire } from 'lwc';
+import getOrCreateThread from '@salesforce/apex/CommunicatorChatController.getOrCreateThread';
+import getUnreadCount    from '@salesforce/apex/CommunicatorChatController.getUnreadCount';
+import markThreadAsRead  from '@salesforce/apex/CommunicatorChatController.markThreadAsRead';
+import getSettings       from '@salesforce/apex/CommunicatorChatController.getSettings';
 
-const POLL_INTERVAL_MS = 6000;
+const DEFAULT_POLL_MS = 6000;
 const MODE_FAB         = 'fab';
 const MODE_UTILITY     = 'utility';
 
@@ -17,7 +18,15 @@ export default class CommunicatorChat extends LightningElement {
      */
     @api mode = MODE_FAB;
 
+
+
     @track isOpen          = false;
+    @track _settings       = null;
+
+    @wire(getSettings)
+    wiredSettings({ data }) {
+        if (data) this._settings = data;
+    }
     @track showChat        = false;
     @track threadId        = null;
     @track opportunityName = '';
@@ -50,11 +59,11 @@ export default class CommunicatorChat extends LightningElement {
     // ─────────────────────────────────────────
 
     async handleOppSelected(event) {
-        const { recordId, name } = event.detail;
+        const { recordId, name, objectType } = event.detail;
         this.opportunityName = name;
 
         try {
-            const thread  = await getOrCreateThread({ opportunityId: recordId });
+            const thread  = await getOrCreateThread({ recordId: recordId, objectType: objectType || '' });
             this.threadId = thread.Id;
             this.showChat = true;
             this._startPolling();
@@ -88,6 +97,7 @@ export default class CommunicatorChat extends LightningElement {
 
     _startPolling() {
         this._stopPolling();
+        const intervalMs = this._settings?.pollingIntervalMs || DEFAULT_POLL_MS;
         this._pollTimer = setInterval(async () => {
             // Atualiza a timeline
             this.template.querySelector('c-communicator-chat-room')?.refresh();
@@ -97,7 +107,7 @@ export default class CommunicatorChat extends LightningElement {
                     this.unreadCount = await getUnreadCount({ threadId: this.threadId });
                 } catch (e) { /* silencioso */ }
             }
-        }, POLL_INTERVAL_MS);
+        }, intervalMs);
     }
 
     _stopPolling() {

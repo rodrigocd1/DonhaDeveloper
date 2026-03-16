@@ -6,12 +6,9 @@
 public class CommunicatorDTOs {
 
     // ─────────────────────────────────────────
-    // Outbound DTOs
+    // Integration — Outbound
     // ─────────────────────────────────────────
 
-    /**
-     * @description DTO for outbound new message event notifications.
-     */
     public class MessageEventDTO {
         @AuraEnabled public String  threadExternalId;
         @AuraEnabled public String  messageId;
@@ -23,21 +20,15 @@ public class CommunicatorDTOs {
     }
 
     // ─────────────────────────────────────────
-    // Inbound DTOs
+    // Integration — Inbound
     // ─────────────────────────────────────────
 
-    /**
-     * @description DTO for external message history response.
-     */
     public class ExternalHistoryDTO {
-        public String              threadId;
+        public String                   threadId;
         public List<ExternalMessageDTO> messages;
-        public Integer             totalCount;
+        public Integer                  totalCount;
     }
 
-    /**
-     * @description DTO for a single external message.
-     */
     public class ExternalMessageDTO {
         public String  externalId;
         public String  body;
@@ -47,12 +38,41 @@ public class CommunicatorDTOs {
         public Boolean hasAttachment;
     }
 
-    /**
-     * @description DTO for integration HTTP response.
-     */
     public class IntegrationResponseDTO {
         @AuraEnabled public Integer statusCode;
         @AuraEnabled public Boolean success;
         @AuraEnabled public String  rawBody;
+    }
+
+    // ─────────────────────────────────────────
+    // Record Search
+    // ─────────────────────────────────────────
+
+    /** Group of search results for one SObject type. */
+    public class RecordResultDTO {
+        @AuraEnabled public String              objectApiName;
+        @AuraEnabled public String              objectLabel;
+        @AuraEnabled public List<RecordItemDTO> records;
+    }
+
+    /** Single record result item. */
+    public class RecordItemDTO {
+        @AuraEnabled public String recordId;
+        @AuraEnabled public String name;
+        @AuraEnabled public String objectType;
+    }
+
+    // ─────────────────────────────────────────
+    // Configuration
+    // ─────────────────────────────────────────
+
+    /** Settings read from CommunicatorConfig__mdt, sent to LWC on init. */
+    public class SettingsDTO {
+        @AuraEnabled public List<String> objectApiNames;
+        @AuraEnabled public Boolean      filterOpenOnly;
+        @AuraEnabled public Integer      maxSearchResults;
+        @AuraEnabled public Integer      maxRecentRecords;
+        @AuraEnabled public Integer      pollingIntervalMs;
+        @AuraEnabled public Integer      messagesPerPage;
     }
 }

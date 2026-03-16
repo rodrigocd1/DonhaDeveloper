@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>FilterOpenOnly__c</fullName>
+    <label>Filter Open Records Only</label>
+    <description>When enabled, filters out closed records (IsClosed=false) for objects that support it (Opportunity, Case). Has no effect on other objects.</description>
+    <type>Checkbox</type>
+    <defaultValue>true</defaultValue>
+</CustomField>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ObjectApiNames__c</fullName>
+    <label>Object API Names</label>
+    <description>Comma-separated list of SObject API names to include in chat search. Example: Opportunity,Account,Case</description>
+    <type>TextArea</type>
+    <required>true</required>
+</CustomField>

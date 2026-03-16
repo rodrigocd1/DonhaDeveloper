@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>MaxRecentRecords__c</fullName>
+    <label>Max Recent Records</label>
+    <description>Maximum number of recently accessed records to show in the picker. Stored in the user browser localStorage.</description>
+    <type>Number</type>
+    <precision>2</precision>
+    <scale>0</scale>
+    <required>true</required>
+    <defaultValue>5</defaultValue>
+</CustomField>

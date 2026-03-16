@@ -20,11 +20,11 @@ private class CommunicatorChatControllerTest {
         Opportunity opp = [SELECT Id FROM Opportunity LIMIT 1];
 
         Test.startTest();
-        CommunicatorThread__c thread = CommunicatorChatController.getOrCreateThread(opp.Id);
+        CommunicatorThread__c thread = CommunicatorChatController.getOrCreateThread(String.valueOf(opp.Id), 'Opportunity');
         Test.stopTest();
 
         Assert.isNotNull(thread);
-        Assert.areEqual(opp.Id, thread.Opportunity__c);
+        Assert.areEqual(String.valueOf(opp.Id), thread.RecordId__c);
         Assert.areEqual('Active', thread.Status__c);
     }
 
@@ -34,7 +34,7 @@ private class CommunicatorChatControllerTest {
         CommunicatorThread__c existing = CommunicatorTestFactory.createThread(opp.Id);
 
         Test.startTest();
-        CommunicatorThread__c thread = CommunicatorChatController.getOrCreateThread(opp.Id);
+        CommunicatorThread__c thread = CommunicatorChatController.getOrCreateThread(String.valueOf(opp.Id), 'Opportunity');
         Test.stopTest();
 
         Assert.areEqual(existing.Id, thread.Id);
@@ -44,7 +44,7 @@ private class CommunicatorChatControllerTest {
     static void testGetOrCreateThread_invalidOpportunity_throwsException() {
         try {
             Test.startTest();
-            CommunicatorChatController.getOrCreateThread('006000000000001AAA');
+            CommunicatorChatController.getOrCreateThread('006000000000001AAA', 'Opportunity');
             Test.stopTest();
             Assert.fail('Expected AuraHandledException');
         } catch (AuraHandledException ex) {

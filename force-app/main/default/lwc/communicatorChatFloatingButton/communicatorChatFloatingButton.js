@@ -83,7 +83,7 @@ export default class CommunicatorChatFloatingButton extends LightningElement {
         this.opportunityName  = name;
 
         try {
-            const thread  = await getOrCreateThread({ opportunityId: recordId });
+            const thread  = await getOrCreateThread({ recordId: recordId, objectType: '' });
             this.threadId = thread.Id;
             this.showChat = true;
             this._saveRecent(recordId, name);

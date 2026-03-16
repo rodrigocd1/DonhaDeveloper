@@ -14,38 +14,83 @@
 
         <!-- Corpo -->
         <div class="comm-picker__body">
-            <p class="comm-picker__label">Selecione uma Oportunidade para abrir o chat:</p>
 
-            <lightning-record-picker
-                label="Oportunidade"
-                placeholder="Buscar Oportunidades..."
-                object-api-name="Opportunity"
-                onchange={handleOpportunitySelect}
-                filter={opportunityFilter}
-            ></lightning-record-picker>
+            <!-- Campo de busca -->
+            <div class="comm-picker__search-bar">
+                <lightning-icon icon-name="utility:search" size="x-small" class="comm-picker__search-icon"></lightning-icon>
+                <input
+                    type="search"
+                    class="comm-picker__search-input"
+                    placeholder={searchPlaceholder}
+                    value={keyword}
+                    oninput={handleSearchInput}
+                    onkeydown={handleSearchKeyDown}
+                />
+                <template if:true={isSearching}>
+                    <lightning-spinner size="x-small" alternative-text="Buscando..."></lightning-spinner>
+                </template>
+            </div>
 
-            <!-- Recentes -->
-            <template if:true={hasRecent}>
-                <p class="comm-picker__recent-label">Recentes:</p>
-                <ul class="comm-picker__recent-list">
-                    <template for:each={recentOpportunities} for:item="opp">
-                        <li key={opp.id}>
-                            <button
-                                class="comm-picker__recent-btn"
-                                data-id={opp.id}
-                                data-name={opp.name}
-                                onclick={handleRecentClick}
-                            >
-                                <lightning-icon icon-name="standard:opportunity" size="x-small"></lightning-icon>
-                                <span>{opp.name}</span>
-                            </button>
-                        </li>
+            <!-- Resultados agrupados por objeto -->
+            <template if:true={hasSearchResults}>
+                <div class="comm-picker__results">
+                    <template for:each={searchResults} for:item="group">
+                        <div key={group.objectApiName} class="comm-picker__result-group">
+                            <p class="comm-picker__group-label">{group.objectLabel}</p>
+                            <ul class="comm-picker__result-list">
+                                <template for:each={group.records} for:item="record">
+                                    <li key={record.recordId}>
+                                        <button
+                                            class="comm-picker__result-btn"
+                                            data-id={record.recordId}
+                                            data-name={record.name}
+                                            data-objecttype={record.objectType}
+                                            onclick={handleRecordSelect}
+                                        >
+                                            <lightning-icon icon-name={group.iconName} size="x-small"></lightning-icon>
+                                            <span>{record.name}</span>
+                                        </button>
+                                    </li>
+                                </template>
+                            </ul>
+                        </div>
                     </template>
-                </ul>
+                </div>
             </template>
 
-            <!-- Carregando -->
-            <template if:true={isLoading}>
+            <!-- Sem resultados -->
+            <template if:true={showNoResults}>
+                <p class="comm-picker__no-results">Nenhum registro encontrado para &quot;{keyword}&quot;</p>
+            </template>
+
+            <!-- Recentes -->
+            <template if:true={showRecent}>
+                <div class="comm-picker__recent">
+                    <p class="comm-picker__recent-label">Recentes:</p>
+                    <ul class="comm-picker__recent-list">
+                        <template for:each={recentRecords} for:item="rec">
+                            <li key={rec.id}>
+                                <button
+                                    class="comm-picker__recent-btn"
+                                    data-id={rec.id}
+                                    data-name={rec.name}
+                                    data-objecttype={rec.objectType}
+                                    onclick={handleRecordSelect}
+                                >
+                                    <lightning-icon icon-name="standard:recent" size="x-small"></lightning-icon>
+                                    <div class="comm-picker__recent-info">
+                                        <span class="comm-picker__recent-name">{rec.name}</span>
+                                        <span class="comm-picker__recent-type">{rec.objectType}</span>
+                                    </div>
+                                </button>
+                            </li>
+                        </template>
+                    </ul>
+                </div>
+            </template>
+
+            <!-- Carregando thread -->
+            <template if:true={isLoadingThread}>
                 <div class="comm-picker__loading">
                     <lightning-spinner size="x-small" alternative-text="Abrindo chat..."></lightning-spinner>
                     <span>Abrindo chat...</span>
@@ -59,7 +104,7 @@
                     <span>{errorMessage}</span>
                 </div>
             </template>
-        </div>
 
+        </div>
     </div>
 </template>

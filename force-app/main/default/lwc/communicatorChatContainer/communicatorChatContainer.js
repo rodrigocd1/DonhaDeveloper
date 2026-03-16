@@ -49,7 +49,7 @@ export default class CommunicatorChatContainer extends LightningElement {
         }
         try {
             this.isLoading = true;
-            const thread   = await getOrCreateThread({ opportunityId: this.recordId });
+            const thread   = await getOrCreateThread({ recordId: this.recordId, objectType: '' });
             this._threadId = thread.Id;
             this._onThreadReady();
         } catch (err) {

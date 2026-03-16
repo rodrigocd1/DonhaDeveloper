@@ -21,10 +21,11 @@ public class CommunicatorTestFactory {
         return opp;
     }
 
-    public static CommunicatorThread__c createThread(Id opportunityId) {
+    public static CommunicatorThread__c createThread(Id recordId) {
         CommunicatorThread__c thread = new CommunicatorThread__c(
-            Opportunity__c = opportunityId,
-            Status__c      = 'Active'
+            RecordId__c   = String.valueOf(recordId),
+            RecordType__c = 'Opportunity',
+            Status__c     = 'Active'
         );
         insert thread;
         return thread;

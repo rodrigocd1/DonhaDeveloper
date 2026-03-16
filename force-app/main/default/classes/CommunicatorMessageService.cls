@@ -120,11 +120,8 @@ public with sharing class CommunicatorMessageService {
     }
 
     private static void linkContentDocument(Id contentDocumentId, Id threadId) {
-        List<CommunicatorThread__c> threads = [
-            SELECT Id, Opportunity__c FROM CommunicatorThread__c WHERE Id = :threadId LIMIT 1
-        ];
-        if (threads.isEmpty()) return;
-
+        // lightning-file-upload already creates ContentDocumentLink via record-id prop.
+        // This method is kept for manual/programmatic upload scenarios.
         ContentDocumentLink cdl = new ContentDocumentLink(
             ContentDocumentId = contentDocumentId,
             LinkedEntityId    = threadId,

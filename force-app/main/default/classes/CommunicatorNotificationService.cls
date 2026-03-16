@@ -30,7 +30,7 @@ public with sharing class CommunicatorNotificationService {
         }
 
         List<CommunicatorThread__c> threads = [
-            SELECT Id, Opportunity__r.Name
+            SELECT Id, RecordId__c, RecordType__c
             FROM CommunicatorThread__c
             WHERE Id = :threadId
             LIMIT 1
@@ -134,7 +134,8 @@ public with sharing class CommunicatorNotificationService {
     }
 
     private static String buildTargetPageRef(CommunicatorThread__c thread) {
-        if (thread == null) return '{}';
-        return '{"type":"standard__recordPage","attributes":{"recordId":"' + thread.Id + '","actionName":"view"}}';
+        if (thread == null || String.isBlank(thread.RecordId__c)) return '{}';
+        // Navigate to the linked record (generic — works for any SObject)
+        return '{"type":"standard__recordPage","attributes":{"recordId":"' + thread.RecordId__c + '","actionName":"view"}}';
     }
 }

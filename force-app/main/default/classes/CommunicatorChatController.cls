@@ -2,6 +2,8 @@
  * @description Controller layer for the Communicator Chat system.
  *              Exposes AuraEnabled methods consumed by LWC components.
  *              All business logic is delegated to service classes.
+ *
+ *              Thread is record-agnostic: any SObject Id can be used.
  */
 public with sharing class CommunicatorChatController {
 
@@ -10,14 +12,16 @@ public with sharing class CommunicatorChatController {
     // ─────────────────────────────────────────
 
     /**
-     * @description Returns or creates the thread for a given Opportunity.
-     * @param opportunityId The Opportunity record Id.
+     * @description Returns or creates the thread for a given record Id.
+     * @param recordId   Id of any SObject (Opportunity, Account, Case, etc.)
+     * @param objectType API name of the SObject. Defaults to empty string if not provided.
      * @return CommunicatorThread__c record.
      */
     @AuraEnabled(cacheable=false)
-    public static CommunicatorThread__c getOrCreateThread(Id opportunityId) {
+    public static CommunicatorThread__c getOrCreateThread(String recordId, String objectType) {
         try {
-            return CommunicatorThreadService.getOrCreateThread(opportunityId);
+            String objType = String.isBlank(objectType) ? '' : objectType;
+            return CommunicatorThreadService.getOrCreateThread(recordId, objType);
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());
         }
@@ -27,13 +31,6 @@ public with sharing class CommunicatorChatController {
     // Messages
     // ─────────────────────────────────────────
 
-    /**
-     * @description Returns a paginated list of messages for a thread.
-     * @param threadId   Thread record Id.
-     * @param pageSize   Number of messages per page.
-     * @param offsetVal  Offset for pagination.
-     * @return List of CommunicatorMessage__c records.
-     */
     @AuraEnabled(cacheable=false)
     public static List<CommunicatorMessage__c> getMessages(Id threadId, Integer pageSize, Integer offsetVal) {
         try {
@@ -43,12 +40,6 @@ public with sharing class CommunicatorChatController {
         }
     }
 
-    /**
-     * @description Sends a new text message in a thread.
-     * @param threadId    Thread record Id.
-     * @param messageBody Text content of the message.
-     * @return The saved CommunicatorMessage__c record.
-     */
     @AuraEnabled(cacheable=false)
     public static CommunicatorMessage__c sendMessage(Id threadId, String messageBody) {
         try {
@@ -58,13 +49,6 @@ public with sharing class CommunicatorChatController {
         }
     }
 
-    /**
-     * @description Sends a message with a file attachment.
-     * @param threadId         Thread record Id.
-     * @param messageBody      Optional text content.
-     * @param contentDocumentId ContentDocument Id of the uploaded file.
-     * @return The saved CommunicatorMessage__c record.
-     */
     @AuraEnabled(cacheable=false)
     public static CommunicatorMessage__c sendMessageWithAttachment(Id threadId, String messageBody, Id contentDocumentId) {
         try {
@@ -74,11 +58,6 @@ public with sharing class CommunicatorChatController {
         }
     }
 
-    /**
-     * @description Returns the total message count for a thread (for pagination).
-     * @param threadId Thread record Id.
-     * @return Integer count.
-     */
     @AuraEnabled(cacheable=false)
     public static Integer getMessageCount(Id threadId) {
         try {
@@ -88,16 +67,20 @@ public with sharing class CommunicatorChatController {
         }
     }
 
+    @AuraEnabled(cacheable=false)
+    public static List<CommunicatorMessage__c> pollNewMessages(Id threadId, String lastTimestamp) {
+        try {
+            DateTime sinceDateTime = (DateTime) JSON.deserialize('"' + lastTimestamp + '"', DateTime.class);
+            return CommunicatorMessageService.getMessagesSince(threadId, sinceDateTime);
+        } catch (Exception ex) {
+            throw new AuraHandledException(ex.getMessage());
+        }
+    }
+
     // ─────────────────────────────────────────
     // Search
     // ─────────────────────────────────────────
 
-    /**
-     * @description Searches messages inside a thread by keyword.
-     * @param threadId Thread record Id.
-     * @param keyword  Search keyword.
-     * @return List of matching CommunicatorMessage__c records.
-     */
     @AuraEnabled(cacheable=false)
     public static List<CommunicatorMessage__c> searchMessages(Id threadId, String keyword) {
         try {
@@ -111,11 +94,6 @@ public with sharing class CommunicatorChatController {
     // Notifications
     // ─────────────────────────────────────────
 
-    /**
-     * @description Returns unread message count for the current user in a thread.
-     * @param threadId Thread record Id.
-     * @return Integer unread count.
-     */
     @AuraEnabled(cacheable=false)
     public static Integer getUnreadCount(Id threadId) {
         try {
@@ -125,10 +103,6 @@ public with sharing class CommunicatorChatController {
         }
     }
 
-    /**
-     * @description Marks all messages in a thread as read for the current user.
-     * @param threadId Thread record Id.
-     */
     @AuraEnabled(cacheable=false)
     public static void markThreadAsRead(Id threadId) {
         try {
@@ -142,11 +116,6 @@ public with sharing class CommunicatorChatController {
     // Participants
     // ─────────────────────────────────────────
 
-    /**
-     * @description Returns all active participants for a thread.
-     * @param threadId Thread record Id.
-     * @return List of CommunicatorParticipant__c records.
-     */
     @AuraEnabled(cacheable=false)
     public static List<CommunicatorParticipant__c> getParticipants(Id threadId) {
         try {
@@ -156,35 +125,72 @@ public with sharing class CommunicatorChatController {
         }
     }
 
+    // ─────────────────────────────────────────
+    // Record name (generic — any SObject)
+    // ─────────────────────────────────────────
+
     /**
-     * @description Returns new messages created after the given timestamp (polling).
-     * @param threadId      Thread record Id.
-     * @param lastTimestamp ISO-formatted DateTime string of the last known message.
-     * @return List of new CommunicatorMessage__c records.
+     * @description Returns the Name field of any SObject record dynamically.
+     *              Used by LWC pickers to display record names without
+     *              hardcoding the object type.
+     * @param recordId Id of any SObject with a Name field.
+     * @return The Name field value.
      */
-    @AuraEnabled(cacheable=false)
-    public static List<CommunicatorMessage__c> pollNewMessages(Id threadId, String lastTimestamp) {
+    @AuraEnabled(cacheable=true)
+    public static String getRecordName(String recordId) {
         try {
-            DateTime sinceDateTime = (DateTime) JSON.deserialize('"' + lastTimestamp + '"', DateTime.class);
-            return CommunicatorMessageService.getMessagesSince(threadId, sinceDateTime);
+            if (String.isBlank(recordId)) return '';
+
+            Id sfId = (Id) recordId;
+            Schema.SObjectType sObjectType = sfId.getSObjectType();
+            String objectName = sObjectType.getDescribe().getName();
+
+            List<SObject> records = Database.query(
+                'SELECT Name FROM ' + objectName + ' WHERE Id = :sfId LIMIT 1'
+            );
+            return records.isEmpty() ? '' : (String) records[0].get('Name');
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());
         }
     }
 
+    // ─────────────────────────────────────────
+    // Configuration
+    // ─────────────────────────────────────────
+
     /**
-     * @description Retorna o nome de uma Opportunity pelo Id.
-     *              Usado pelo picker para exibir o nome após seleção no lightning-record-picker.
-     * @param opportunityId Id da Opportunity.
-     * @return Nome da Opportunity.
+     * @description Returns all Communicator settings from CommunicatorConfig__mdt.
+     *              Cached per transaction. Used by LWC to read config on init.
      */
     @AuraEnabled(cacheable=true)
-    public static String getOpportunityName(Id opportunityId) {
+    public static CommunicatorDTOs.SettingsDTO getSettings() {
         try {
-            List<Opportunity> opps = [
-                SELECT Name FROM Opportunity WHERE Id = :opportunityId LIMIT 1
-            ];
-            return opps.isEmpty() ? '' : opps[0].Name;
+            CommunicatorDTOs.SettingsDTO dto = new CommunicatorDTOs.SettingsDTO();
+            dto.objectApiNames    = CommunicatorConfigService.getObjectApiNames();
+            dto.filterOpenOnly    = CommunicatorConfigService.getFilterOpenOnly();
+            dto.maxSearchResults  = CommunicatorConfigService.getMaxSearchResults();
+            dto.maxRecentRecords  = CommunicatorConfigService.getMaxRecentRecords();
+            dto.pollingIntervalMs = CommunicatorConfigService.getPollingIntervalMs();
+            dto.messagesPerPage   = CommunicatorConfigService.getMessagesPerPage();
+            return dto;
+        } catch (Exception ex) {
+            throw new AuraHandledException(ex.getMessage());
+        }
+    }
+
+    // ─────────────────────────────────────────
+    // Multi-object record search
+    // ─────────────────────────────────────────
+
+    /**
+     * @description Searches for records across all configured SObject types.
+     * @param keyword Search term.
+     * @return List of CommunicatorDTOs.RecordResultDTO grouped by object type.
+     */
+    @AuraEnabled(cacheable=false)
+    public static List<CommunicatorDTOs.RecordResultDTO> searchRecords(String keyword) {
+        try {
+            return CommunicatorRecordSearchService.searchRecords(keyword);
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());
         }

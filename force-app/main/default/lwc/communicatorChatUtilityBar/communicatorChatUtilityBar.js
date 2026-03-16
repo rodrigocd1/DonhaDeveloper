@@ -80,7 +80,7 @@ export default class CommunicatorChatUtilityBar extends LightningElement {
         this.opportunityName  = name;
 
         try {
-            const thread   = await getOrCreateThread({ opportunityId: recordId });
+            const thread   = await getOrCreateThread({ recordId: recordId, objectType: objectType });
             this.threadId  = thread.Id;
             this.showChat  = true;
 
