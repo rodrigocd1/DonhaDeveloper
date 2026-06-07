@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <defaultValue>false</defaultValue>
+    <fullName>Game_Is_Beta_Tester__c</fullName>
+    <label>Game Is Beta Tester</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

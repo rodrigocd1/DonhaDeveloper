@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <deleteConstraint>SetNull</deleteConstraint>
+    <fullName>Game_Player_Account__c</fullName>
+    <label>Game Player Account</label>
+    <referenceTo>Account</referenceTo>
+    <relationshipLabel>Game Player Cases</relationshipLabel>
+    <relationshipName>GamePlayerCases</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

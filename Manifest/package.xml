@@ -1,6 +1,53 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
 	<types>
+		<members>Account.Game_Apple_Id__c</members>
+		<members>Account.Game_Config_JSON__c</members>
+		<members>Account.Game_Display_Name__c</members>
+		<members>Account.Game_Feedback_JSON__c</members>
+		<members>Account.Game_Google_Id__c</members>
+		<members>Account.Game_Is_Beta_Tester__c</members>
+		<members>Account.Game_Last_Device_Id__c</members>
+		<members>Account.Game_Last_Login_At__c</members>
+		<members>Account.Game_Login_Provider__c</members>
+		<members>Account.Game_Nerves_Of_Steel_JSON__c</members>
+		<members>Account.Game_Passe_VIP_Active__c</members>
+		<members>Account.Game_Passe_VIP_Expires_At__c</members>
+		<members>Account.Game_Player_Id__c</members>
+		<members>Account.Game_Profile_JSON__c</members>
+		<members>Account.Game_Progress_JSON__c</members>
+		<members>Account.Game_Ranked_JSON__c</members>
+		<members>Account.Game_Ranked_Points__c</members>
+		<members>Account.Game_Ranked_Rank__c</members>
+		<members>Account.Game_Recovery_Code_Created_At__c</members>
+		<members>Account.Game_Recovery_Hash__c</members>
+		<members>Account.Game_Rewards_JSON__c</members>
+		<members>Account.Game_Steam_Id__c</members>
+		<members>Account.Game_Timer_Attack_JSON__c</members>
+		<members>Account.Game_Use_SSO_Photo_In_Ranking__c</members>
+		<members>Case.Game_Ai_Average_Time_Ms__c</members>
+		<members>Case.Game_Ai_Max_Time_Ms__c</members>
+		<members>Case.Game_Ai_Score__c</members>
+		<members>Case.Game_App_Version__c</members>
+		<members>Case.Game_Board_Name__c</members>
+		<members>Case.Game_Device_Info__c</members>
+		<members>Case.Game_Difficulty__c</members>
+		<members>Case.Game_Feedback_Category__c</members>
+		<members>Case.Game_Feedback_Comment__c</members>
+		<members>Case.Game_Feedback_Stars__c</members>
+		<members>Case.Game_Lab_Payload_JSON__c</members>
+		<members>Case.Game_Match_Duration_Seconds__c</members>
+		<members>Case.Game_Mode__c</members>
+		<members>Case.Game_Player_Account__c</members>
+		<members>Case.Game_Player_Id__c</members>
+		<members>Case.Game_Player_Score__c</members>
+		<members>Case.Game_Powers_Used_JSON__c</members>
+		<members>Case.Game_Result__c</members>
+		<members>Case.Game_Source__c</members>
+		<members>Case.Game_Stage_Number__c</members>
+		<name>CustomField</name>
+	</types>
+	<types>
 		<members>*</members>
 		<name>ApexClass</name>
 	</types>
