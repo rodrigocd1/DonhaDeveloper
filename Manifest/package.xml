@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
 	<types>
 		<members>Account.Game_Apple_Id__c</members>
@@ -48,6 +48,8 @@
 		<name>CustomField</name>
 	</types>
 	<types>
+		<members>PesquisasCorretorCheckinService</members>
+		<members>PesquisasCorretorCheckinServiceTest</members>
 		<members>PesquisasPortalController</members>
 		<members>PesquisasPortalControllerTest</members>
 		<members>PesquisasPortalDTOs</members>
@@ -67,8 +69,10 @@
 		<name>AutoResponseRules</name>
 	</types>
 	<types>
+		<members>Checkin_Corretor__c</members>
 		<members>Empreendimento__c</members>
 		<members>Lead</members>
+		<members>Loja__c</members>
 		<name>CustomObject</name>
 	</types>
 	<types>
@@ -76,6 +80,9 @@
 		<name>CustomNotificationType</name>
 	</types>
 	<types>
+		<members>Checkin_Corretor__c.CPF_Normalizado__c</members>
+		<members>Checkin_Corretor__c.Data_Hora_Checkin__c</members>
+		<members>Checkin_Corretor__c.Loja__c</members>
 		<members>Account.LeadTipoRegistro__c</members>
 		<members>Activity.Empreendimento__c</members>
 		<members>Activity.Estrelas_Avaliacao__c</members>
@@ -97,6 +104,11 @@
 		<members>Lead.Periodo_Preferido__c</members>
 		<members>Lead.Regiao_Desejada__c</members>
 		<members>Lead.Telefone_Normalizado__c</members>
+		<members>Loja__c.Ativa__c</members>
+		<members>Loja__c.Codigo__c</members>
+		<members>Loja__c.Endereco__c</members>
+		<members>Loja__c.Loja_Padrao__c</members>
+		<members>Loja__c.Ordem_Exibicao__c</members>
 		<members>Visita_Expers__c.Lead__c</members>
 		<members>Visita__c.Lead__c</members>
 		<name>CustomField</name>
@@ -146,11 +158,16 @@
 		<name>Profile</name>
 	</types>
 	<types>
+		<members>Pesquisas_Checkin_Corretor_Acesso</members>
+		<name>PermissionSet</name>
+	</types>
+	<types>
 		<members>NewLead</members>
 		<name>QuickAction</name>
 	</types>
 	<types>
 		<members>Lead</members>
+		<members>Loja__c</members>
 		<name>SharingRules</name>
 	</types>
 	<types>
@@ -186,14 +203,18 @@
 	<types>
 		<members>pesquisasAgendamento</members>
 		<members>pesquisasAvaliacao</members>
+		<members>pesquisasCorretorCheckinCard</members>
+		<members>pesquisasCorretorCheckinPage</members>
 		<members>pesquisasHome</members>
 		<members>pesquisasIdentificacao</members>
 		<members>pesquisasPortal</members>
 		<members>pesquisasRecepcao</members>
+		<members>pesquisasQrCode</members>
 		<members>*</members>
 		<name>LightningComponentBundle</name>
 	</types>
 	<types>
+		<members>qrcode</members>
 		<members>*</members>
 		<name>StaticResource</name>
 	</types>

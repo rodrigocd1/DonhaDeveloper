@@ -1,4 +1,17 @@
 public class PesquisasPortalDTOs {
+    public class LojaOption {
+        @AuraEnabled public String codigo { get; set; }
+        @AuraEnabled public String nome { get; set; }
+        @AuraEnabled public String endereco { get; set; }
+        @AuraEnabled public Boolean padrao { get; set; }
+    }
+
+    public class CheckinCorretorInput {
+        @AuraEnabled public String cpf { get; set; }
+        @AuraEnabled public String codigoLoja { get; set; }
+        @AuraEnabled public String honeypot { get; set; }
+    }
+
     public class EmpreendimentoOption {
         @AuraEnabled public Id id { get; set; }
         @AuraEnabled public String nome { get; set; }

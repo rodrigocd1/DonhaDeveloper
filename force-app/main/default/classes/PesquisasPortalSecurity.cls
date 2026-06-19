@@ -51,6 +51,14 @@ public class PesquisasPortalSecurity {
         return cpf.endsWith(String.valueOf(primeiro) + String.valueOf(segundo));
     }
 
+    public static String normalizarCpfObrigatorio(String cpf) {
+        String normalizado = normalizarDigitos(cpf);
+        if (!cpfValido(normalizado)) {
+            throw new PortalException('Informe um CPF válido.');
+        }
+        return normalizado;
+    }
+
     @TestVisible
     private static String normalizarDigitos(String valor) {
         return String.isBlank(valor) ? null : valor.replaceAll('\\D', '');

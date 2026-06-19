@@ -30,6 +30,11 @@
   transform: translateY(-0.2rem);
 }
 
+.corretor-checkin {
+  display: block;
+  margin-top: 1.5rem;
+}
+
 .title {
   margin-top: 1.5rem;
   color: #173f73;

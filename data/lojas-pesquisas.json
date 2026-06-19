@@ -1,0 +1,166 @@
+{
+  "records": [
+    {
+      "attributes": { "type": "Loja__c", "referenceId": "Loja1" },
+      "Name": "Loja Zona Leste",
+      "Codigo__c": "LOJA-ZONA-LESTE",
+      "Endereco__c": "Av. Jacu Pêssego (esquina com a Rua Agrimensor Sugaya, 7)",
+      "Ativa__c": true,
+      "Loja_Padrao__c": false,
+      "Ordem_Exibicao__c": 1
+    },
+    {
+      "attributes": { "type": "Loja__c", "referenceId": "Loja2" },
+      "Name": "Loja Shopping Itaquera",
+      "Codigo__c": "LOJA-SHOPPING-ITAQUERA",
+      "Endereco__c": "Av. José Pinheiro Borges, S/N",
+      "Ativa__c": true,
+      "Loja_Padrao__c": false,
+      "Ordem_Exibicao__c": 2
+    },
+    {
+      "attributes": { "type": "Loja__c", "referenceId": "Loja3" },
+      "Name": "Loja Anhaia Mello",
+      "Codigo__c": "LOJA-ANHAIA-MELLO",
+      "Endereco__c": "Av. Professor Luiz Ignácio Anhaia Mello, 4001",
+      "Ativa__c": true,
+      "Loja_Padrao__c": false,
+      "Ordem_Exibicao__c": 3
+    },
+    {
+      "attributes": { "type": "Loja__c", "referenceId": "Loja4" },
+      "Name": "Central Pinheiros",
+      "Codigo__c": "CENTRAL-PINHEIROS",
+      "Endereco__c": "Rua Cardeal Arcoverde, 2811 - 5º andar - Pinheiros",
+      "Ativa__c": true,
+      "Loja_Padrao__c": false,
+      "Ordem_Exibicao__c": 4
+    },
+    {
+      "attributes": { "type": "Loja__c", "referenceId": "Loja5" },
+      "Name": "Shopping de Imóveis",
+      "Codigo__c": "SHOPPING-DE-IMOVEIS",
+      "Endereco__c": "Rua Jose Rafaeli, 100 - Socorro",
+      "Ativa__c": true,
+      "Loja_Padrao__c": false,
+      "Ordem_Exibicao__c": 5
+    },
+    {
+      "attributes": { "type": "Loja__c", "referenceId": "Loja6" },
+      "Name": "Loja Tatuapé",
+      "Codigo__c": "LOJA-TATUAPE",
+      "Endereco__c": "Rua Tuiuti, 2147 - Tatuapé",
+      "Ativa__c": true,
+      "Loja_Padrao__c": false,
+      "Ordem_Exibicao__c": 6
+    },
+    {
+      "attributes": { "type": "Loja__c", "referenceId": "Loja7" },
+      "Name": "Loja Morumbi",
+      "Codigo__c": "LOJA-MORUMBI",
+      "Endereco__c": "Av. Giovanni Gronchi, 2967",
+      "Ativa__c": true,
+      "Loja_Padrao__c": true,
+      "Ordem_Exibicao__c": 7
+    },
+    {
+      "attributes": { "type": "Loja__c", "referenceId": "Loja8" },
+      "Name": "Loja Marquês",
+      "Codigo__c": "LOJA-MARQUES",
+      "Endereco__c": "Av. Marquês de S. Vicente, 1200 - Várzea da Barra Funda",
+      "Ativa__c": true,
+      "Loja_Padrao__c": false,
+      "Ordem_Exibicao__c": 8
+    },
+    {
+      "attributes": { "type": "Loja__c", "referenceId": "Loja9" },
+      "Name": "Loja Sabará",
+      "Codigo__c": "LOJA-SABARA",
+      "Endereco__c": "Av. Nossa Sra. do Sabará, 4780",
+      "Ativa__c": true,
+      "Loja_Padrao__c": false,
+      "Ordem_Exibicao__c": 9
+    },
+    {
+      "attributes": { "type": "Loja__c", "referenceId": "Loja10" },
+      "Name": "Start Joy",
+      "Codigo__c": "START-JOY",
+      "Endereco__c": "Rua Marechal Deodoro, 460 - Acesso estacionamento: Av. Faria Lima, 399 São Bernardo do Campo, São Paulo - SP",
+      "Ativa__c": true,
+      "Loja_Padrao__c": false,
+      "Ordem_Exibicao__c": 10
+    },
+    {
+      "attributes": { "type": "Loja__c", "referenceId": "Loja11" },
+      "Name": "Vila Boulevard Mooca",
+      "Codigo__c": "VILA-BOULEVARD-MOOCA",
+      "Endereco__c": "R. João Antônio de Oliveira, 179",
+      "Ativa__c": true,
+      "Loja_Padrao__c": false,
+      "Ordem_Exibicao__c": 11
+    },
+    {
+      "attributes": { "type": "Loja__c", "referenceId": "Loja12" },
+      "Name": "Loja Largo do Arouche",
+      "Codigo__c": "LOJA-LARGO-DO-AROUCHE",
+      "Endereco__c": "Largo do Arouche, 12",
+      "Ativa__c": true,
+      "Loja_Padrao__c": false,
+      "Ordem_Exibicao__c": 12
+    },
+    {
+      "attributes": { "type": "Loja__c", "referenceId": "Loja13" },
+      "Name": "Loja Jaçanã",
+      "Codigo__c": "LOJA-JACANA",
+      "Endereco__c": "Avenida Guapira, 1638",
+      "Ativa__c": true,
+      "Loja_Padrao__c": false,
+      "Ordem_Exibicao__c": 13
+    },
+    {
+      "attributes": { "type": "Loja__c", "referenceId": "Loja14" },
+      "Name": "Loja Shopping Interlagos",
+      "Codigo__c": "LOJA-SHOPPING-INTERLAGOS",
+      "Endereco__c": "Av. Interlagos, 2255",
+      "Ativa__c": true,
+      "Loja_Padrao__c": false,
+      "Ordem_Exibicao__c": 14
+    },
+    {
+      "attributes": { "type": "Loja__c", "referenceId": "Loja15" },
+      "Name": "Loja Butantã",
+      "Codigo__c": "LOJA-BUTANTA",
+      "Endereco__c": "Av. Min. Laudo Ferreira de Camargo, 80 - Jardim Peri Peri - São Paulo/SP",
+      "Ativa__c": true,
+      "Loja_Padrao__c": false,
+      "Ordem_Exibicao__c": 15
+    },
+    {
+      "attributes": { "type": "Loja__c", "referenceId": "Loja16" },
+      "Name": "Loja Guido Caloi",
+      "Codigo__c": "LOJA-GUIDO-CALOI",
+      "Endereco__c": "Avenida Guido Caloi, 1002 - Santo Amaro",
+      "Ativa__c": true,
+      "Loja_Padrao__c": false,
+      "Ordem_Exibicao__c": 16
+    },
+    {
+      "attributes": { "type": "Loja__c", "referenceId": "Loja17" },
+      "Name": "Loja Sacomã",
+      "Codigo__c": "LOJA-SACOMA",
+      "Endereco__c": "Avenida Nossa Senhora das Mercês, 430",
+      "Ativa__c": true,
+      "Loja_Padrao__c": false,
+      "Ordem_Exibicao__c": 17
+    },
+    {
+      "attributes": { "type": "Loja__c", "referenceId": "Loja18" },
+      "Name": "Loja Duetto São Domingos",
+      "Codigo__c": "LOJA-DUETTO-SAO-DOMINGOS",
+      "Endereco__c": "Av. Elísio Cordeiro de Siqueira, 222 - Parque São Domingos, São Paulo - SP",
+      "Ativa__c": true,
+      "Loja_Padrao__c": false,
+      "Ordem_Exibicao__c": 18
+    }
+  ]
+}

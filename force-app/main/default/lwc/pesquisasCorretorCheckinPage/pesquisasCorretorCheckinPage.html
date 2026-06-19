@@ -1,0 +1,102 @@
+<template>
+  <main class="page-shell">
+    <section class="form-card" aria-labelledby="checkin-title">
+      <header>
+        <p class="eyebrow">COMUNIDADE PESQUISAS</p>
+        <h1 id="checkin-title">Check-in do Corretor</h1>
+        <p>Informe seu CPF e confirme a loja para registrar sua chegada.</p>
+      </header>
+
+      <template lwc:if={isLoading}>
+        <div class="loading">
+          <lightning-spinner
+            alternative-text="Carregando lojas"
+            size="medium"
+          ></lightning-spinner>
+        </div>
+      </template>
+
+      <template lwc:elseif={loadError}>
+        <div class="feedback feedback-error" role="alert">
+          <p>{loadError}</p>
+          <lightning-button
+            label="Tentar novamente"
+            onclick={loadStores}
+          ></lightning-button>
+        </div>
+      </template>
+
+      <template lwc:else>
+        <div class="store-block">
+          <div class="store-heading">
+            <div>
+              <span class="label">Loja selecionada</span>
+              <h2>{selectedStore.nome}</h2>
+            </div>
+            <button class="change-store" type="button" onclick={toggleSelector}>
+              Essa não é a loja correta?
+            </button>
+          </div>
+          <p class="address">{selectedStore.endereco}</p>
+          <template lwc:if={showSelector}>
+            <lightning-combobox
+              class="store-selector"
+              label="Escolha outra loja"
+              value={selectedStore.codigo}
+              options={storeOptions}
+              onchange={handleStoreChange}
+            ></lightning-combobox>
+          </template>
+          <template lwc:if={storeWarning}>
+            <p class="warning" role="status">{storeWarning}</p>
+          </template>
+        </div>
+
+        <form onsubmit={handleSubmit} novalidate>
+          <lightning-input
+            class="cpf-input"
+            type="tel"
+            label="CPF do corretor"
+            value={cpf}
+            placeholder="000.000.000-00"
+            maxlength="14"
+            required
+            onchange={handleCpfChange}
+          ></lightning-input>
+          <input
+            class="honeypot"
+            type="text"
+            name="website"
+            tabindex="-1"
+            autocomplete="off"
+            aria-hidden="true"
+            onchange={handleHoneypotChange}
+          />
+          <lightning-button
+            class="submit"
+            type="submit"
+            variant="brand"
+            label={submitLabel}
+            disabled={isSubmitting}
+          ></lightning-button>
+        </form>
+
+        <template lwc:if={successMessage}>
+          <div class="feedback feedback-success" role="status">
+            <lightning-icon
+              icon-name="utility:success"
+              size="small"
+              variant="success"
+            ></lightning-icon>
+            <p>{successMessage}</p>
+          </div>
+        </template>
+        <template lwc:if={submitError}>
+          <div class="feedback feedback-error" role="alert">
+            <p>{submitError}</p>
+          </div>
+        </template>
+      </template>
+    </section>
+  </main>
+</template>

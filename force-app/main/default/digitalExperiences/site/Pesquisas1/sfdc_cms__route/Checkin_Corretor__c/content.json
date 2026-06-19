@@ -1,0 +1,12 @@
+{
+  "type": "sfdc_cms__route",
+  "title": "Check-in do Corretor",
+  "contentBody": {
+    "activeViewId": "checkinCorretor",
+    "configurationTags": [],
+    "pageAccess": "UseParent",
+    "routeType": "custom-checkin-corretor",
+    "urlPrefix": "checkin-corretor"
+  },
+  "urlName": "checkin-corretor"
+}

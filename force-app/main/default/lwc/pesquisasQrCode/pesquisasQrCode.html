@@ -1,0 +1,16 @@
+<template>
+  <div class="qr-container">
+    <template lwc:if={imageUrl}>
+      <img src={imageUrl} alt={alternativeText} />
+    </template>
+    <template lwc:elseif={errorMessage}>
+      <p role="status">{errorMessage}</p>
+    </template>
+    <template lwc:else>
+      <lightning-spinner
+        alternative-text="Gerando QR Code"
+        size="small"
+      ></lightning-spinner>
+    </template>
+  </div>
+</template>
