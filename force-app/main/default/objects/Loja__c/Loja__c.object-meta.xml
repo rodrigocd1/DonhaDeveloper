@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <deploymentStatus>Deployed</deploymentStatus>
+    <description
+  >Lojas públicas disponíveis para o check-in do corretor na Comunidade Pesquisas.</description>
+    <enableActivities>false</enableActivities>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>false</enableHistory>
+    <enableReports>true</enableReports>
+    <externalSharingModel>Read</externalSharingModel>
+    <label>Loja</label>
+    <nameField>
+        <label>Nome da Loja</label>
+        <type>Text</type>
+    </nameField>
+    <pluralLabel>Lojas</pluralLabel>
+    <sharingModel>Read</sharingModel>
+</CustomObject>

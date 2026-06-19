@@ -2,10 +2,19 @@
 private class PesquisasPortalControllerTest {
     @TestSetup
     static void criarDados() {
+        atribuirPermissaoAoUsuarioDeTeste();
         insert new Empreendimento__c(
             Name = 'Empreendimento Controller',
             Codigo__c = 'CTRL-001',
             Ativo__c = true
+        );
+        insert new Loja__c(
+            Name = 'Loja Controller',
+            Codigo__c = 'LOJA-CONTROLLER',
+            Endereco__c = 'Endereço Controller',
+            Ativa__c = true,
+            Loja_Padrao__c = true,
+            Ordem_Exibicao__c = 1
         );
     }
 
@@ -84,6 +93,63 @@ private class PesquisasPortalControllerTest {
             Assert.fail('Era esperado erro de cadastro.');
         } catch (AuraHandledException erro) {
             Assert.isTrue(erro.getMessage().contains('nome'));
+        }
+    }
+
+    private static void atribuirPermissaoAoUsuarioDeTeste() {
+        PermissionSet permissao = [
+            SELECT Id
+            FROM PermissionSet
+            WHERE Name = 'Pesquisas_Checkin_Corretor_Acesso'
+            LIMIT 1
+        ];
+        if ([
+            SELECT COUNT()
+            FROM PermissionSetAssignment
+            WHERE AssigneeId = :UserInfo.getUserId() AND PermissionSetId = :permissao.Id
+        ] > 0) {
+            return;
+        }
+        System.runAs(new User(Id = UserInfo.getUserId())) {
+            insert new PermissionSetAssignment(
+                AssigneeId = UserInfo.getUserId(),
+                PermissionSetId = permissao.Id
+            );
+        }
+    }
+
+    @IsTest
+    static void deveExporLojasECheckinDoCorretor() {
+        PesquisasPortalDTOs.CheckinCorretorInput input =
+            new PesquisasPortalDTOs.CheckinCorretorInput();
+        input.cpf = '529.982.247-25';
+        input.codigoLoja = 'LOJA-CONTROLLER';
+
+        Test.startTest();
+        PesquisasPortalDTOs.LojaOption padrao = PesquisasPortalController.obterLojaPadrao();
+        List<PesquisasPortalDTOs.LojaOption> lojas =
+            PesquisasPortalController.listarLojasAtivas();
+        PesquisasPortalDTOs.OperationResult resultado =
+            PesquisasPortalController.confirmarCheckinCorretor(input);
+        Test.stopTest();
+
+        Assert.areEqual('LOJA-CONTROLLER', padrao.codigo);
+        Assert.areEqual(1, lojas.size());
+        Assert.isTrue(resultado.sucesso);
+        Assert.areEqual(1, [SELECT COUNT() FROM Checkin_Corretor__c]);
+    }
+
+    @IsTest
+    static void deveConverterErroDoCheckinDoCorretor() {
+        PesquisasPortalDTOs.CheckinCorretorInput input =
+            new PesquisasPortalDTOs.CheckinCorretorInput();
+        input.cpf = '111.111.111-11';
+        input.codigoLoja = 'LOJA-CONTROLLER';
+        try {
+            PesquisasPortalController.confirmarCheckinCorretor(input);
+            Assert.fail('Era esperado um AuraHandledException.');
+        } catch (AuraHandledException erro) {
+            Assert.isTrue(erro.getMessage().contains('CPF válido'));
         }
     }
 }

@@ -1,0 +1,28 @@
+.qr-container {
+  position: relative;
+  display: grid;
+  width: 13rem;
+  min-height: 13rem;
+  border: 0.5rem solid #ffffff;
+  background: #ffffff;
+  place-items: center;
+}
+
+img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+p {
+  margin: 0;
+  color: #5f6b85;
+  text-align: center;
+}
+
+@media (max-width: 30rem) {
+  .qr-container {
+    width: 11rem;
+    min-height: 11rem;
+  }
+}

@@ -34,4 +34,18 @@ private class PesquisasPortalSecurityTest {
         Assert.areEqual('Texto', PesquisasPortalSecurity.textoSeguro('<script>alert(1)</script>Texto', 100));
         Assert.areEqual('12345678909', PesquisasPortalSecurity.normalizarDigitos('123.456.789-09'));
     }
+
+    @IsTest
+    static void deveNormalizarCpfObrigatorio() {
+        Assert.areEqual(
+            '52998224725',
+            PesquisasPortalSecurity.normalizarCpfObrigatorio('529.982.247-25')
+        );
+        try {
+            PesquisasPortalSecurity.normalizarCpfObrigatorio(null);
+            Assert.fail('Era esperado um erro de CPF.');
+        } catch (PesquisasPortalSecurity.PortalException erro) {
+            Assert.areEqual('Informe um CPF válido.', erro.getMessage());
+        }
+    }
 }
