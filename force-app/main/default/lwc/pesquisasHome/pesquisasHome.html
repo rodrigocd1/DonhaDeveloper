@@ -1,0 +1,33 @@
+<template>
+  <div class="journey-grid" aria-label="Escolha uma opção">
+    <button
+      class="journey-card"
+      data-journey="agendamento"
+      onclick={handleSelect}
+    >
+      <lightning-icon icon-name="utility:event" size="medium"></lightning-icon>
+      <span class="title">Agendar visita</span>
+      <span class="description">Escolha empreendimento, data e período.</span>
+    </button>
+    <button class="journey-card" data-journey="recepcao" onclick={handleSelect}>
+      <lightning-icon
+        icon-name="utility:checkin"
+        size="medium"
+      ></lightning-icon>
+      <span class="title">Fazer check-in</span>
+      <span class="description">Confirme sua chegada com segurança.</span>
+    </button>
+    <button
+      class="journey-card"
+      data-journey="avaliacao"
+      onclick={handleSelect}
+    >
+      <lightning-icon
+        icon-name="utility:favorite"
+        size="medium"
+      ></lightning-icon>
+      <span class="title">Avaliar atendimento</span>
+      <span class="description">Conte como foi sua experiência.</span>
+    </button>
+  </div>
+</template>

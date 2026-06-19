@@ -14,6 +14,9 @@ deploy-options.json
 # LWC Jest coverage reports
 coverage/
 
+# SOQL Query Results
+**/scripts/soql/query-results
+
 # Logs
 logs
 *.log
@@ -41,6 +44,18 @@ $RECYCLE.BIN/
 
 # Local environment variables
 .env
+.env.*
+!.env.example
+*.key
+*.pem
+*.p12
+*.jks
+.salesforce-jwt/
+**/.salesforce-jwt/
+server.key
+server.pem
+jwt.key
+jwt.pem
 
 # Python Salesforce Functions
 **/__pycache__/

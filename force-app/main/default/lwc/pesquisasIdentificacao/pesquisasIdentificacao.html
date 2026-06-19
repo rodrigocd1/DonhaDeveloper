@@ -1,0 +1,32 @@
+<template>
+  <fieldset>
+    <legend>Identificação</legend>
+    <p class="hint">Informe pelo menos um dado: CPF, e-mail ou telefone.</p>
+    <div class="fields-grid">
+      <lightning-input
+        data-field="cpf"
+        label="CPF"
+        type="text"
+        maxlength="14"
+        value={cpf}
+        onchange={handleChange}
+      ></lightning-input>
+      <lightning-input
+        data-field="email"
+        label="E-mail"
+        type="email"
+        maxlength="80"
+        value={email}
+        onchange={handleChange}
+      ></lightning-input>
+      <lightning-input
+        data-field="telefone"
+        label="Telefone"
+        type="tel"
+        maxlength="20"
+        value={telefone}
+        onchange={handleChange}
+      ></lightning-input>
+    </div>
+  </fieldset>
+</template>

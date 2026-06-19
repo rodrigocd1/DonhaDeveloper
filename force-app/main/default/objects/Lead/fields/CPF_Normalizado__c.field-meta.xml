@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>CPF_Normalizado__c</fullName>
+    <description>CPF contendo somente os onze dígitos para busca exata.</description>
+    <externalId>false</externalId>
+    <label>CPF Normalizado</label>
+    <length>11</length>
+    <required>false</required>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Codigo__c</fullName>
+    <description>Chave única para carga e integração dos empreendimentos.</description>
+    <externalId>true</externalId>
+    <label>Código</label>
+    <length>30</length>
+    <required>true</required>
+    <type>Text</type>
+    <unique>true</unique>
+</CustomField>

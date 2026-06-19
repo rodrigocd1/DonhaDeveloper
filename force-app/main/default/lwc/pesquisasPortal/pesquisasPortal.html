@@ -1,0 +1,73 @@
+<template>
+  <main class="portal-shell">
+    <header class="hero">
+      <p class="eyebrow">COMUNIDADE PESQUISAS</p>
+      <h1>Como podemos ajudar?</h1>
+      <p>Agende sua visita, faça seu check-in ou avalie seu atendimento.</p>
+    </header>
+
+    <section class="content" aria-live="polite">
+      <template lwc:if={isLoading}>
+        <div class="status-block">
+          <lightning-spinner
+            alternative-text="Carregando"
+            size="medium"
+          ></lightning-spinner>
+        </div>
+      </template>
+
+      <template lwc:elseif={errorMessage}>
+        <div class="message message-error" role="alert">
+          <p>{errorMessage}</p>
+          <lightning-button
+            label="Tentar novamente"
+            onclick={loadEmpreendimentos}
+          ></lightning-button>
+        </div>
+      </template>
+
+      <template lwc:elseif={showHome}>
+        <c-pesquisas-home onselecionar={handleSelect}></c-pesquisas-home>
+      </template>
+
+      <template lwc:elseif={showAgendamento}>
+        <c-pesquisas-agendamento
+          empreendimento-options={empreendimentoOptions}
+          onvoltar={handleBack}
+          onsucesso={handleSuccess}
+        ></c-pesquisas-agendamento>
+      </template>
+
+      <template lwc:elseif={showRecepcao}>
+        <c-pesquisas-recepcao
+          empreendimento-options={empreendimentoOptions}
+          onvoltar={handleBack}
+          onsucesso={handleSuccess}
+        ></c-pesquisas-recepcao>
+      </template>
+
+      <template lwc:elseif={showAvaliacao}>
+        <c-pesquisas-avaliacao
+          onvoltar={handleBack}
+          onsucesso={handleSuccess}
+        ></c-pesquisas-avaliacao>
+      </template>
+
+      <template lwc:if={successMessage}>
+        <div class="message message-success" role="status">
+          <lightning-icon
+            icon-name="utility:success"
+            size="small"
+            variant="success"
+          ></lightning-icon>
+          <p>{successMessage}</p>
+          <lightning-button
+            variant="brand"
+            label="Voltar ao início"
+            onclick={handleBack}
+          ></lightning-button>
+        </div>
+      </template>
+    </section>
+  </main>
+</template>

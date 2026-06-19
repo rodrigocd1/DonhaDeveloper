@@ -1,0 +1,88 @@
+<template>
+  <section class="form-card">
+    <div class="heading">
+      <lightning-button-icon
+        icon-name="utility:back"
+        alternative-text="Voltar"
+        onclick={handleBack}
+      ></lightning-button-icon>
+      <div>
+        <h2>Recepção e check-in</h2>
+        <p>Confirme sua chegada sem expor seus dados.</p>
+      </div>
+    </div>
+
+    <template lwc:if={showSearch}>
+      <form onsubmit={handleSearch} novalidate>
+        <c-pesquisas-identificacao></c-pesquisas-identificacao>
+        <lightning-combobox
+          class="field"
+          data-field="empreendimentoId"
+          label="Empreendimento"
+          options={comboboxOptions}
+          required
+          onchange={handleEmpreendimento}
+        ></lightning-combobox>
+        <lightning-button
+          class="submit"
+          type="submit"
+          variant="brand"
+          label={searchLabel}
+          disabled={isSubmitting}
+        ></lightning-button>
+      </form>
+    </template>
+
+    <template lwc:if={showFound}>
+      <div class="result result-success" role="status">
+        <h3>Cadastro validado</h3>
+        <p>Confirme para registrar sua chegada.</p>
+        <lightning-button
+          variant="brand"
+          label={confirmLabel}
+          disabled={isSubmitting}
+          onclick={handleCheckin}
+        ></lightning-button>
+      </div>
+    </template>
+
+    <template lwc:if={showNotFound}>
+      <div class="result">
+        <h3>Complete o cadastro rápido</h3>
+        <p>Precisamos apenas do nome completo para continuar.</p>
+        <lightning-input
+          data-field="nomeCompleto"
+          label="Nome completo"
+          maxlength="120"
+          required
+          onchange={handleName}
+        ></lightning-input>
+        <lightning-button
+          variant="brand"
+          label={quickLabel}
+          disabled={isSubmitting}
+          onclick={handleQuickCheckin}
+        ></lightning-button>
+      </div>
+    </template>
+
+    <template lwc:if={showAmbiguous}>
+      <div class="result result-warning" role="alert">
+        <h3>Não foi possível validar o cadastro</h3>
+        <p>Revise os dados informados ou procure a equipe de atendimento.</p>
+      </div>
+    </template>
+
+    <template lwc:if={hasResult}>
+      <lightning-button
+        class="retry"
+        label="Revisar dados"
+        onclick={resetSearch}
+        disabled={isSubmitting}
+      ></lightning-button>
+    </template>
+    <template lwc:if={errorMessage}>
+      <p class="error" role="alert">{errorMessage}</p>
+    </template>
+  </section>
+</template>

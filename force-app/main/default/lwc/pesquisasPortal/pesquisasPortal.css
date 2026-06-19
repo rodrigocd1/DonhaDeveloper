@@ -1,0 +1,81 @@
+:host {
+  --portal-primary: #173f73;
+  --portal-accent: #f6b51b;
+  display: block;
+  min-height: 100vh;
+  background: linear-gradient(145deg, #eef4fb 0%, #ffffff 55%, #fff8e5 100%);
+  color: #172b4d;
+}
+
+.portal-shell {
+  width: min(100% - 2rem, 72rem);
+  margin: 0 auto;
+  padding: 2rem 0 4rem;
+}
+
+.hero {
+  max-width: 48rem;
+  margin: 0 auto 1.5rem;
+  text-align: center;
+}
+
+.eyebrow {
+  margin: 0 0 0.5rem;
+  color: var(--portal-primary);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+}
+
+h1 {
+  margin: 0;
+  color: var(--portal-primary);
+  font-size: clamp(2rem, 7vw, 3.5rem);
+  line-height: 1.05;
+}
+
+.hero > p:last-child {
+  margin: 1rem auto 0;
+  font-size: 1rem;
+}
+
+.content {
+  min-height: 20rem;
+}
+
+.status-block,
+.message {
+  position: relative;
+  min-height: 12rem;
+  max-width: 36rem;
+  margin: 0 auto;
+  padding: 2rem;
+  border-radius: 1rem;
+  background: #ffffff;
+  box-shadow: 0 1rem 3rem rgb(23 63 115 / 10%);
+  text-align: center;
+}
+
+.message lightning-button {
+  display: block;
+  margin-top: 1.25rem;
+}
+
+.message-error {
+  border-top: 0.25rem solid #ba0517;
+}
+
+.message-success {
+  border-top: 0.25rem solid #2e844a;
+}
+
+@media (max-width: 30rem) {
+  .portal-shell {
+    width: min(100% - 1rem, 72rem);
+    padding-top: 1.25rem;
+  }
+
+  .hero {
+    margin-bottom: 1rem;
+  }
+}

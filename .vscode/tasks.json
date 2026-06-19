@@ -1,0 +1,87 @@
+{
+  "version": "2.0.0",
+  "inputs": [
+    {
+      "id": "eleraWork",
+      "type": "promptString",
+      "description": "Work Elera"
+    },
+    {
+      "id": "eleraClientId",
+      "type": "promptString",
+      "description": "Consumer Key da External Client App Elera"
+    }
+  ],
+  "tasks": [
+    {
+      "label": "Elera: Setup Work Check Env",
+      "type": "shell",
+      "command": "${workspaceFolder}\\scripts\\setup-elera-work-check-env.ps1",
+      "args": ["${input:eleraClientId}"],
+      "windows": {
+        "command": "powershell",
+        "args": [
+          "-NoProfile",
+          "-ExecutionPolicy",
+          "Bypass",
+          "-File",
+          "${workspaceFolder}\\scripts\\setup-elera-work-check-env.ps1",
+          "${input:eleraClientId}"
+        ]
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Elera: Auth Work Check",
+      "type": "shell",
+      "command": "${workspaceFolder}\\scripts\\auth-elera-work-check.ps1",
+      "windows": {
+        "command": "powershell",
+        "args": [
+          "-NoProfile",
+          "-ExecutionPolicy",
+          "Bypass",
+          "-File",
+          "${workspaceFolder}\\scripts\\auth-elera-work-check.ps1"
+        ]
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Elera: Verify Work Check",
+      "type": "shell",
+      "command": "${workspaceFolder}\\scripts\\verify-elera-work-validation.ps1",
+      "args": ["${input:eleraWork}"],
+      "windows": {
+        "command": "powershell",
+        "args": [
+          "-NoProfile",
+          "-ExecutionPolicy",
+          "Bypass",
+          "-File",
+          "${workspaceFolder}\\scripts\\verify-elera-work-validation.ps1",
+          "${input:eleraWork}"
+        ]
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Elera: Check Work",
+      "type": "shell",
+      "command": "${workspaceFolder}\\scripts\\check-work.ps1",
+      "args": ["${input:eleraWork}"],
+      "windows": {
+        "command": "powershell",
+        "args": [
+          "-NoProfile",
+          "-ExecutionPolicy",
+          "Bypass",
+          "-File",
+          "${workspaceFolder}\\scripts\\check-work.ps1",
+          "${input:eleraWork}"
+        ]
+      },
+      "problemMatcher": []
+    }
+  ]
+}

@@ -1,0 +1,103 @@
+<template>
+  <section class="form-card">
+    <div class="heading">
+      <lightning-button-icon
+        icon-name="utility:back"
+        alternative-text="Voltar"
+        onclick={handleBack}
+      ></lightning-button-icon>
+      <div>
+        <h2>Avaliar atendimento</h2>
+        <p>Sua opinião ajuda a melhorar nossa experiência.</p>
+      </div>
+    </div>
+
+    <form onsubmit={handleSubmit} novalidate>
+      <div class="fields-grid">
+        <lightning-input
+          data-field="nomeVendedor"
+          label="Nome do vendedor"
+          maxlength="120"
+          required
+          onchange={handleChange}
+        ></lightning-input>
+        <lightning-input
+          data-field="loja"
+          label="Loja"
+          maxlength="120"
+          required
+          onchange={handleChange}
+        ></lightning-input>
+      </div>
+      <fieldset>
+        <legend>Nota do atendimento</legend>
+        <div class="stars" role="radiogroup" aria-label="Nota de 1 a 5">
+          <button
+            type="button"
+            class={starOneClass}
+            data-rating="1"
+            aria-pressed={starOnePressed}
+            onclick={handleRating}
+          >
+            ★
+          </button>
+          <button
+            type="button"
+            class={starTwoClass}
+            data-rating="2"
+            aria-pressed={starTwoPressed}
+            onclick={handleRating}
+          >
+            ★
+          </button>
+          <button
+            type="button"
+            class={starThreeClass}
+            data-rating="3"
+            aria-pressed={starThreePressed}
+            onclick={handleRating}
+          >
+            ★
+          </button>
+          <button
+            type="button"
+            class={starFourClass}
+            data-rating="4"
+            aria-pressed={starFourPressed}
+            onclick={handleRating}
+          >
+            ★
+          </button>
+          <button
+            type="button"
+            class={starFiveClass}
+            data-rating="5"
+            aria-pressed={starFivePressed}
+            onclick={handleRating}
+          >
+            ★
+          </button>
+        </div>
+        <template lwc:if={ratingError}>
+          <p class="error" role="alert">Selecione uma nota de 1 a 5.</p>
+        </template>
+      </fieldset>
+      <lightning-textarea
+        data-field="observacoes"
+        label="Observações"
+        maxlength="32000"
+        onchange={handleChange}
+      ></lightning-textarea>
+      <template lwc:if={errorMessage}>
+        <p class="error" role="alert">{errorMessage}</p>
+      </template>
+      <lightning-button
+        class="submit"
+        type="submit"
+        variant="brand"
+        label={submitLabel}
+        disabled={isSubmitting}
+      ></lightning-button>
+    </form>
+  </section>
+</template>

@@ -12,6 +12,62 @@
 - Nao quebrar comportamento existente.
 - Consultar contexto especifico do cliente ou feature quando aplicavel.
 
+## Validacao da Work na org Elera
+
+Antes de iniciar qualquer implementacao que siga o fluxo de Work, validar se a Work existe executando:
+
+Windows:
+
+```powershell
+scripts/check-work.ps1 "<WORK_NORMALIZADA>"
+```
+
+Linux, macOS ou Git Bash:
+
+```bash
+scripts/check-work.sh "<WORK_NORMALIZADA>"
+```
+
+O identificador deve seguir o padrao `W-xxxxxx`, por exemplo `W-018973`.
+
+Resultados:
+
+- `FOUND`: a Work existe e o agente pode continuar.
+- `NOT_FOUND`: a Work nao existe e o agente deve parar.
+- `INVALID_WORK`: a Work esta invalida e o agente deve pedir a Work no padrao correto.
+- `AUTH_ERROR`: a autenticacao `elera-work-check` nao esta configurada corretamente e o agente deve parar.
+
+Usar somente esses scripts para validar a Work, salvo durante bootstrap ou manutencao direta da propria validacao.
+
+O alias esperado e `elera-work-check` e o usuario esperado e `integration.cli@elera.io`.
+
+A autenticacao JWT depende de uma External Client App com os scopes `Api` e `RefreshToken`, policy `AdminApprovedPreAuthorized` e a Permission Set `Elera_Work_Check_Read_Only` atribuida ao usuario de integracao.
+
+## Padrao e rastreabilidade da Work
+
+- A pessoa deve informar a Work.
+- Nunca descobrir automaticamente ou criar o numero da Work.
+- Normalizar o identificador para seis digitos: `W-1` vira `W-000001` e `W-25` vira `W-000025`.
+- Consultar o Salesforce somente com o identificador `W-xxxxxx`, sem assunto.
+- Se a Work estiver invalida, parar e pedir a Work correta.
+- A pasta deve ficar em `works/W-xxxxxx/`.
+- Quando o usuario exigir assunto, usar `works/W-xxxxxx-assunto/`, mantendo a validacao Salesforce somente com `W-xxxxxx`.
+- A pasta deve conter somente arquivos relacionados ao plano e aos arquivos alterados.
+- Nao apagar nem sobrescrever planos ou arquivos de controle antigos.
+- Quando houver novo plano, usar o proximo numero sequencial com dois digitos.
+
+Estrutura inicial:
+
+```text
+works/W-018973/
+|-- plano-implementacao-01.md
+`-- arquivos-alterados-01.md
+```
+
+Cada plano deve registrar agente/modelo, configuracao, data de inicio, objetivo, motivo e etapas em checklist. Usar apenas `- [ ]` para pendente e `- [x]` para concluido, atualizando o checklist durante a execucao.
+
+Cada `arquivos-alterados-NN.md` deve listar somente arquivos criados, alterados e removidos, mantendo correspondencia com o plano de mesmo numero.
+
 ## Economia de tokens e leitura de contexto
 
 - Em chat novo, ler uma unica vez os arquivos relevantes:
@@ -159,6 +215,12 @@
 - Nao descartar alteracoes locais de outros desenvolvedores.
 - Nao executar comandos destrutivos sem solicitacao explicita.
 
+## Branches protegidas
+
+- Nunca realizar commit em branches cujos nomes contenham `main`, `master`, `hml`, `homol`, `homolog`, `uat`, `full` ou `parcial`.
+- Antes de qualquer commit autorizado, verificar a branch atual.
+- Se a branch for protegida, parar e pedir orientacao.
+
 ## Validacao
 
 - Informar como validar.
@@ -175,6 +237,9 @@
 
 ## Proibicoes
 
+- Nao implementar sem Work valida quando a tarefa seguir o fluxo de Work.
+- Nao implementar sem plano quando a tarefa exigir plano.
+- Nao apagar ou sobrescrever planos e arquivos de controle antigos da Work.
 - Nao inventar regra de negocio.
 - Nao alterar partes nao solicitadas.
 - Nao alterar visual, layout ou comportamento sem pedido explicito.

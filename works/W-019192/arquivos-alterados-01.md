@@ -1,0 +1,116 @@
+# Arquivos alterados 01
+
+## Criados
+
+- `force-app/main/default/assignmentRules/Lead.assignmentRules-meta.xml`
+- `force-app/main/default/autoResponseRules/Lead.autoResponseRules-meta.xml`
+- `force-app/main/default/duplicateRules/Contact.Regra_padr_o_para_as_Contatos_com_Leads_duplicadas.duplicateRule-meta.xml`
+- `force-app/main/default/duplicateRules/Lead.Regra_padr_o_para_as_Leads_com_Contatos_duplicadas.duplicateRule-meta.xml`
+- `force-app/main/default/flows/PB_3_Lead.flow-meta.xml`
+- `force-app/main/default/layouts/Lead-Lead %28Marketing%29 Layout.layout-meta.xml`
+- `force-app/main/default/layouts/Lead-Lead %28Sales%29 Layout.layout-meta.xml`
+- `force-app/main/default/layouts/Lead-Lead %28Support%29 Layout.layout-meta.xml`
+- `force-app/main/default/layouts/Lead-Lead Layout.layout-meta.xml`
+- `force-app/main/default/layouts/Visita__c-Layout de Visita.layout-meta.xml`
+- `force-app/main/default/matchingRules/Contact.matchingRule-meta.xml`
+- `force-app/main/default/matchingRules/Lead.matchingRule-meta.xml`
+- `force-app/main/default/notificationtypes/Notificao_lead.notiftype-meta.xml`
+- `force-app/main/default/objects/Account/Account.object-meta.xml`
+- `force-app/main/default/objects/Account/fields/LeadTipoRegistro__c.field-meta.xml`
+- `force-app/main/default/objects/Lead/businessProcesses/Lead Process.businessProcess-meta.xml`
+- `force-app/main/default/objects/Lead/fields/Address.field-meta.xml`
+- `force-app/main/default/objects/Lead/fields/AnnualRevenue.field-meta.xml`
+- `force-app/main/default/objects/Lead/fields/CampaignId.field-meta.xml`
+- `force-app/main/default/objects/Lead/fields/Company.field-meta.xml`
+- `force-app/main/default/objects/Lead/fields/CurrencyIsoCode.field-meta.xml`
+- `force-app/main/default/objects/Lead/fields/CurrentGenerators__c.field-meta.xml`
+- `force-app/main/default/objects/Lead/fields/Data_Quality_Description__c.field-meta.xml`
+- `force-app/main/default/objects/Lead/fields/Data_Quality_Score__c.field-meta.xml`
+- `force-app/main/default/objects/Lead/fields/Description.field-meta.xml`
+- `force-app/main/default/objects/Lead/fields/DoNotCall.field-meta.xml`
+- `force-app/main/default/objects/Lead/fields/Email.field-meta.xml`
+- `force-app/main/default/objects/Lead/fields/Fax.field-meta.xml`
+- `force-app/main/default/objects/Lead/fields/HasOptedOutOfEmail.field-meta.xml`
+- `force-app/main/default/objects/Lead/fields/HasOptedOutOfFax.field-meta.xml`
+- `force-app/main/default/objects/Lead/fields/IndividualId.field-meta.xml`
+- `force-app/main/default/objects/Lead/fields/Industry.field-meta.xml`
+- `force-app/main/default/objects/Lead/fields/Jigsaw.field-meta.xml`
+- `force-app/main/default/objects/Lead/fields/LastTransferDate.field-meta.xml`
+- `force-app/main/default/objects/Lead/fields/LeadSource.field-meta.xml`
+- `force-app/main/default/objects/Lead/fields/MobilePhone.field-meta.xml`
+- `force-app/main/default/objects/Lead/fields/Name.field-meta.xml`
+- `force-app/main/default/objects/Lead/fields/NumberOfEmployees.field-meta.xml`
+- `force-app/main/default/objects/Lead/fields/NumberofLocations__c.field-meta.xml`
+- `force-app/main/default/objects/Lead/fields/OwnerId.field-meta.xml`
+- `force-app/main/default/objects/Lead/fields/PartnerAccountId.field-meta.xml`
+- `force-app/main/default/objects/Lead/fields/Phone.field-meta.xml`
+- `force-app/main/default/objects/Lead/fields/Primary__c.field-meta.xml`
+- `force-app/main/default/objects/Lead/fields/ProductInterest__c.field-meta.xml`
+- `force-app/main/default/objects/Lead/fields/Rating.field-meta.xml`
+- `force-app/main/default/objects/Lead/fields/SICCode__c.field-meta.xml`
+- `force-app/main/default/objects/Lead/fields/Status.field-meta.xml`
+- `force-app/main/default/objects/Lead/fields/Title.field-meta.xml`
+- `force-app/main/default/objects/Lead/fields/Website.field-meta.xml`
+- `force-app/main/default/objects/Lead/Lead.object-meta.xml`
+- `force-app/main/default/objects/Lead/listViews/AllOpenLeads.listView-meta.xml`
+- `force-app/main/default/objects/Lead/listViews/Arbole_1_Lead.listView-meta.xml`
+- `force-app/main/default/objects/Lead/listViews/Arbole_2_Lead.listView-meta.xml`
+- `force-app/main/default/objects/Lead/listViews/MyUnreadLeads.listView-meta.xml`
+- `force-app/main/default/objects/Lead/listViews/TodaysLeads.listView-meta.xml`
+- `force-app/main/default/objects/Lead/listViews/ViewCustom1.listView-meta.xml`
+- `force-app/main/default/objects/Lead/listViews/ViewCustom2.listView-meta.xml`
+- `force-app/main/default/objects/Lead/webLinks/APXTConga4__Conga_Composer_OAuth.webLink-meta.xml`
+- `force-app/main/default/objects/Lead/webLinks/APXTConga4__Conga_Mail_Merge.webLink-meta.xml`
+- `force-app/main/default/objects/Visita__c/fields/Lead__c.field-meta.xml`
+- `force-app/main/default/objects/Visita__c/Visita__c.object-meta.xml`
+- `force-app/main/default/objects/Visita_Expers__c/fields/Lead__c.field-meta.xml`
+- `force-app/main/default/objects/Visita_Expers__c/Visita_Expers__c.object-meta.xml`
+- `force-app/main/default/profiles/Admin.profile-meta.xml`
+- `force-app/main/default/profiles/Atendimento Perfil.profile-meta.xml`
+- `force-app/main/default/profiles/Central Relacionamento Profile.profile-meta.xml`
+- `force-app/main/default/profiles/Chatter External User.profile-meta.xml`
+- `force-app/main/default/profiles/Chatter Free User.profile-meta.xml`
+- `force-app/main/default/profiles/Chatter Moderator User.profile-meta.xml`
+- `force-app/main/default/profiles/ContractManager.profile-meta.xml`
+- `force-app/main/default/profiles/Cross Org Data Proxy User.profile-meta.xml`
+- `force-app/main/default/profiles/Custom%3A Marketing Profile.profile-meta.xml`
+- `force-app/main/default/profiles/Custom%3A Sales Profile.profile-meta.xml`
+- `force-app/main/default/profiles/Custom%3A Support Profile.profile-meta.xml`
+- `force-app/main/default/profiles/Customer Community Login User.profile-meta.xml`
+- `force-app/main/default/profiles/Customer Community User.profile-meta.xml`
+- `force-app/main/default/profiles/Customer Portal Manager Custom.profile-meta.xml`
+- `force-app/main/default/profiles/Customer Portal Manager Standard.profile-meta.xml`
+- `force-app/main/default/profiles/Donha Lab Profile.profile-meta.xml`
+- `force-app/main/default/profiles/Force%2Ecom - App Subscription User.profile-meta.xml`
+- `force-app/main/default/profiles/Force%2Ecom - Free User.profile-meta.xml`
+- `force-app/main/default/profiles/Gold Partner User.profile-meta.xml`
+- `force-app/main/default/profiles/Guest License User.profile-meta.xml`
+- `force-app/main/default/profiles/Guest.profile-meta.xml`
+- `force-app/main/default/profiles/HighVolumePortal.profile-meta.xml`
+- `force-app/main/default/profiles/MarketingProfile.profile-meta.xml`
+- `force-app/main/default/profiles/Partner App Subscription.profile-meta.xml`
+- `force-app/main/default/profiles/Partner Community Login User.profile-meta.xml`
+- `force-app/main/default/profiles/Partner Community User.profile-meta.xml`
+- `force-app/main/default/profiles/PlatformPortal.profile-meta.xml`
+- `force-app/main/default/profiles/Read Only.profile-meta.xml`
+- `force-app/main/default/profiles/Silver Partner User.profile-meta.xml`
+- `force-app/main/default/profiles/SolutionManager.profile-meta.xml`
+- `force-app/main/default/profiles/Standard.profile-meta.xml`
+- `force-app/main/default/profiles/StandardAul.profile-meta.xml`
+- `force-app/main/default/quickActions/NewLead.quickAction-meta.xml`
+- `force-app/main/default/settings/LeadConfig.settings-meta.xml`
+- `force-app/main/default/settings/WebToX.settings-meta.xml`
+- `force-app/main/default/sharingRules/Lead.sharingRules-meta.xml`
+- `force-app/main/default/standardValueSets/LeadSource.standardValueSet-meta.xml`
+- `force-app/main/default/standardValueSets/LeadStatus.standardValueSet-meta.xml`
+- `works/W-019192/arquivos-alterados-01.md`
+- `works/W-019192/contexto-tecnico-lead.md`
+- `works/W-019192/plano-implementacao-01.md`
+
+## Alterados
+
+- `Manifest/package.xml`
+
+## Removidos
+
+- Nenhum.

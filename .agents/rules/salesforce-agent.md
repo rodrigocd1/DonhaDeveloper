@@ -6,6 +6,31 @@ Use `AGENTS.md` como fonte principal de regras.
 
 Nao duplique aqui o conteudo do `AGENTS.md`.
 
+## Validacao obrigatoria de Work
+
+Antes de qualquer implementacao que siga o fluxo de Work, valide a Work na org Elera usando apenas:
+
+```powershell
+scripts/check-work.ps1 "<WORK_NORMALIZADA>"
+```
+
+ou:
+
+```bash
+scripts/check-work.sh "<WORK_NORMALIZADA>"
+```
+
+O formato esperado e `W-xxxxxx`.
+
+- `FOUND`: continue.
+- `NOT_FOUND`: pare.
+- `INVALID_WORK`: peca uma Work valida no formato `W-xxxxxx`.
+- `AUTH_ERROR`: pare e oriente a configurar a autenticacao `elera-work-check`.
+
+Nao consulte a Work manualmente via SOQL fora desses scripts, salvo manutencao da propria integracao.
+
+Nao solicite nem registre senha, token, refresh token, client secret, certificado real ou chave privada. Arquivos JWT reais devem ficar fora do repositorio e de pacotes portateis.
+
 ## Economia de tokens
 
 Ao iniciar chat novo, leia uma unica vez os arquivos relevantes e informe:

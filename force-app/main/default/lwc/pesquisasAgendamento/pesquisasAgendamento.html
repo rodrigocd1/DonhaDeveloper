@@ -1,0 +1,79 @@
+<template>
+  <section class="form-card">
+    <div class="heading">
+      <lightning-button-icon
+        icon-name="utility:back"
+        alternative-text="Voltar"
+        onclick={handleBack}
+      ></lightning-button-icon>
+      <div>
+        <h2>Agendar visita</h2>
+        <p>Preencha os dados para registrar seu interesse.</p>
+      </div>
+    </div>
+
+    <form onsubmit={handleSubmit} novalidate>
+      <lightning-input
+        data-field="nomeCompleto"
+        label="Nome completo"
+        maxlength="120"
+        required
+        onchange={handleChange}
+      ></lightning-input>
+      <c-pesquisas-identificacao></c-pesquisas-identificacao>
+      <div class="fields-grid">
+        <lightning-combobox
+          data-field="empreendimentoId"
+          label="Empreendimento"
+          options={comboboxOptions}
+          required
+          onchange={handleChange}
+        ></lightning-combobox>
+        <lightning-input
+          data-field="dataPretendida"
+          type="date"
+          label="Data pretendida"
+          min={minDate}
+          required
+          onchange={handleChange}
+        ></lightning-input>
+        <lightning-combobox
+          data-field="periodo"
+          label="Período"
+          options={periodoOptions}
+          required
+          onchange={handleChange}
+        ></lightning-combobox>
+        <lightning-input
+          data-field="regiao"
+          label="Região desejada"
+          maxlength="80"
+          onchange={handleChange}
+        ></lightning-input>
+        <lightning-input
+          data-field="bairro"
+          label="Bairro desejado"
+          maxlength="80"
+          onchange={handleChange}
+        ></lightning-input>
+      </div>
+      <lightning-textarea
+        data-field="observacoes"
+        label="Observações"
+        maxlength="32000"
+        onchange={handleChange}
+      ></lightning-textarea>
+
+      <template lwc:if={errorMessage}>
+        <p class="error" role="alert">{errorMessage}</p>
+      </template>
+      <lightning-button
+        class="submit"
+        type="submit"
+        variant="brand"
+        label={submitLabel}
+        disabled={isSubmitting}
+      ></lightning-button>
+    </form>
+  </section>
+</template>

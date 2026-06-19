@@ -48,8 +48,120 @@
 		<name>CustomField</name>
 	</types>
 	<types>
+		<members>PesquisasPortalController</members>
+		<members>PesquisasPortalControllerTest</members>
+		<members>PesquisasPortalDTOs</members>
+		<members>PesquisasPortalSecurity</members>
+		<members>PesquisasPortalSecurityTest</members>
+		<members>PesquisasPortalService</members>
+		<members>PesquisasPortalServiceTest</members>
 		<members>*</members>
 		<name>ApexClass</name>
+	</types>
+	<types>
+		<members>Lead</members>
+		<name>AssignmentRules</name>
+	</types>
+	<types>
+		<members>Lead</members>
+		<name>AutoResponseRules</name>
+	</types>
+	<types>
+		<members>Empreendimento__c</members>
+		<members>Lead</members>
+		<name>CustomObject</name>
+	</types>
+	<types>
+		<members>Notificao_lead</members>
+		<name>CustomNotificationType</name>
+	</types>
+	<types>
+		<members>Account.LeadTipoRegistro__c</members>
+		<members>Activity.Empreendimento__c</members>
+		<members>Activity.Estrelas_Avaliacao__c</members>
+		<members>Activity.Loja__c</members>
+		<members>Activity.Nome_Vendedor__c</members>
+		<members>Activity.Nota_Avaliacao__c</members>
+		<members>Activity.Tipo_Registro_Pesquisas__c</members>
+		<members>Empreendimento__c.Ativo__c</members>
+		<members>Empreendimento__c.Bairro__c</members>
+		<members>Empreendimento__c.Codigo__c</members>
+		<members>Empreendimento__c.Regiao__c</members>
+		<members>Lead.Bairro_Desejado__c</members>
+		<members>Lead.CPF_Normalizado__c</members>
+		<members>Lead.CPF__c</members>
+		<members>Lead.Data_Pretendida__c</members>
+		<members>Lead.Empreendimento__c</members>
+		<members>Lead.Observacoes_Agendamento__c</members>
+		<members>Lead.Origem_Formulario__c</members>
+		<members>Lead.Periodo_Preferido__c</members>
+		<members>Lead.Regiao_Desejada__c</members>
+		<members>Lead.Telefone_Normalizado__c</members>
+		<members>Visita_Expers__c.Lead__c</members>
+		<members>Visita__c.Lead__c</members>
+		<name>CustomField</name>
+	</types>
+	<types>
+		<members>site/Pesquisas1</members>
+		<name>DigitalExperienceBundle</name>
+	</types>
+	<types>
+		<members>Contact.Regra_padr_o_para_as_Contatos_com_Leads_duplicadas</members>
+		<members>Lead.Regra_padr_o_para_as_Leads_com_Contatos_duplicadas</members>
+		<name>DuplicateRule</name>
+	</types>
+	<types>
+		<members>PB_3_Lead</members>
+		<name>Flow</name>
+	</types>
+	<types>
+		<members>Empreendimento__c-Layout de Empreendimento</members>
+		<members>Lead-Lead (Marketing) Layout</members>
+		<members>Lead-Lead (Sales) Layout</members>
+		<members>Lead-Lead (Support) Layout</members>
+		<members>Lead-Lead Layout</members>
+		<members>Visita__c-Layout de Visita</members>
+		<name>Layout</name>
+	</types>
+	<types>
+		<members>*</members>
+		<name>LeadConvertSettings</name>
+	</types>
+	<types>
+		<members>Contact</members>
+		<members>Lead</members>
+		<name>MatchingRules</name>
+	</types>
+	<types>
+		<members>Pesquisas</members>
+		<name>CustomSite</name>
+	</types>
+	<types>
+		<members>Pesquisas</members>
+		<name>Network</name>
+	</types>
+	<types>
+		<members>Pesquisas Profile</members>
+		<members>*</members>
+		<name>Profile</name>
+	</types>
+	<types>
+		<members>NewLead</members>
+		<name>QuickAction</name>
+	</types>
+	<types>
+		<members>Lead</members>
+		<name>SharingRules</name>
+	</types>
+	<types>
+		<members>LeadConfig</members>
+		<members>WebToX</members>
+		<name>Settings</name>
+	</types>
+	<types>
+		<members>LeadSource</members>
+		<members>LeadStatus</members>
+		<name>StandardValueSet</name>
 	</types>
 	<types>
 		<members>*</members>
@@ -72,6 +184,12 @@
 		<name>AuraDefinitionBundle</name>
 	</types>
 	<types>
+		<members>pesquisasAgendamento</members>
+		<members>pesquisasAvaliacao</members>
+		<members>pesquisasHome</members>
+		<members>pesquisasIdentificacao</members>
+		<members>pesquisasPortal</members>
+		<members>pesquisasRecepcao</members>
 		<members>*</members>
 		<name>LightningComponentBundle</name>
 	</types>

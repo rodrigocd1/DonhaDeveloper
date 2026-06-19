@@ -1,0 +1,53 @@
+.journey-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.journey-card {
+  display: flex;
+  min-height: 13rem;
+  padding: 1.5rem;
+  border: 1px solid #d8e2ef;
+  border-radius: 1rem;
+  background: #ffffff;
+  box-shadow: 0 0.75rem 2rem rgb(23 63 115 / 8%);
+  color: #172b4d;
+  cursor: pointer;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  transition:
+    transform 120ms ease,
+    box-shadow 120ms ease;
+}
+
+.journey-card:hover,
+.journey-card:focus-visible {
+  box-shadow: 0 1rem 2.5rem rgb(23 63 115 / 16%);
+  outline: 3px solid #f6b51b;
+  outline-offset: 2px;
+  transform: translateY(-0.2rem);
+}
+
+.title {
+  margin-top: 1.5rem;
+  color: #173f73;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.description {
+  margin-top: 0.5rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 48rem) {
+  .journey-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .journey-card {
+    min-height: auto;
+  }
+}

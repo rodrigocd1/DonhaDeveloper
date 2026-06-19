@@ -1,0 +1,6 @@
+Name,Codigo__c,Bairro__c,Regiao__c,Ativo__c
+Residencial Aurora,EMP-001,Santana,Zona Norte,true
+Parque das Flores,EMP-002,Vila Mariana,Zona Sul,true
+Vista Central,EMP-003,Centro,Centro,true
+Jardim Horizonte,EMP-004,Tatuapé,Zona Leste,true
+Bosque Primavera,EMP-005,Pinheiros,Zona Oeste,true
