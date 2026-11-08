@@ -541,3 +541,11 @@
         }
     }
 }
+
+.comm-msg__attachment-link.comm-is-disabled,
+.comm-msg--theirs .comm-msg__attachment-link.comm-is-disabled,
+.comm-msg--mine .comm-msg__attachment-link.comm-is-disabled {
+    color: #b0adab;
+    cursor: not-allowed;
+    text-decoration: none;
+}

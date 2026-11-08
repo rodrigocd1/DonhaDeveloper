@@ -75,7 +75,9 @@
                                     <div key={attachment.contentDocumentId} class="comm-msg__attachment">
                                         <lightning-icon icon-name="doctype:attachment" size="x-small"></lightning-icon>
                                         <button
-                                            class="comm-msg__attachment-link"
+                                            class={attachmentLinkClass}
+                                            aria-disabled={attachmentAriaDisabled}
+                                            title={attachmentTitle}
                                             data-content-document-id={attachment.contentDocumentId}
                                             data-message-id={msg.Id}
                                             data-thread-id={msg.Thread__c}
@@ -125,7 +127,9 @@
                                                             <div key={attachment.contentDocumentId} class="comm-msg__attachment">
                                                                 <lightning-icon icon-name="doctype:attachment" size="x-small"></lightning-icon>
                                                                 <button
-                                                                    class="comm-msg__attachment-link"
+                                                                    class={attachmentLinkClass}
+                                                                    aria-disabled={attachmentAriaDisabled}
+                                                                    title={attachmentTitle}
                                                                     data-content-document-id={attachment.contentDocumentId}
                                                                     data-message-id={reply.Id}
                                                                     data-thread-id={reply.Thread__c}

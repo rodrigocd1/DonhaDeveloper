@@ -15,6 +15,7 @@ import getThreadPresenceOverrides from '@salesforce/apex/CommunicatorChatControl
 import getSettings      from '@salesforce/apex/CommunicatorChatController.getSettings';
 import { fetchAllTimelinePages } from './pollingUtils';
 import Id from '@salesforce/user/Id';
+import { isSalesforceMobileApp, buildDisabledFeatureToast, SALESFORCE_APP_DISABLED_MESSAGE } from 'c/communicatorEnvironment';
 import SYSTEM_AVATAR from '@salesforce/resourceUrl/communicatorSystemAvatar';
 import {
     on as onSocket,
@@ -631,8 +632,30 @@ export default class CommunicatorChatTimeline extends LightningElement {
         }
     }
 
+    get isAttachmentActionDisabled() {
+        return isSalesforceMobileApp();
+    }
+
+    get attachmentLinkClass() {
+        return this.isAttachmentActionDisabled
+            ? 'comm-msg__attachment-link comm-is-disabled'
+            : 'comm-msg__attachment-link';
+    }
+
+    get attachmentAriaDisabled() {
+        return this.isAttachmentActionDisabled ? 'true' : null;
+    }
+
+    get attachmentTitle() {
+        return this.isAttachmentActionDisabled ? SALESFORCE_APP_DISABLED_MESSAGE : null;
+    }
+
     async handleAttachmentClick(event) {
         event.preventDefault();
+        if (this.isAttachmentActionDisabled) {
+            this.dispatchEvent(buildDisabledFeatureToast());
+            return;
+        }
         const contentDocumentId = event.currentTarget?.dataset?.contentDocumentId;
         const messageId = event.currentTarget?.dataset?.messageId;
         const threadId = event.currentTarget?.dataset?.threadId || this.threadId;

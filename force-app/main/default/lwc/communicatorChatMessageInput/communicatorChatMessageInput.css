@@ -635,3 +635,19 @@
     height: 2.25rem;
     min-height: 2.25rem;
 }
+
+.comm-input__upload-visual--env-disabled {
+    background: #f3f3f3;
+    border-color: #c9c7c5;
+    color: #b0adab;
+    cursor: not-allowed;
+}
+
+.comm-input__upload-overlay--env-disabled {
+    top: 0;
+    height: 100%;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: not-allowed;
+}

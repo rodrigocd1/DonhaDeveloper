@@ -1,5 +1,6 @@
 import { LightningElement, api, track } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import { isSalesforceMobileApp, buildDisabledFeatureToast, SALESFORCE_APP_DISABLED_MESSAGE } from 'c/communicatorEnvironment';
 import { deleteRecord } from 'lightning/uiRecordApi';
 import validateBroadcastUploadedFiles from '@salesforce/apex/CommunicatorChatController.validateBroadcastUploadedFiles';
 import uploadBroadcastTemporaryAttachmentFromBase64 from '@salesforce/apex/CommunicatorChatController.uploadBroadcastTemporaryAttachmentFromBase64';
@@ -146,7 +147,22 @@ export default class CommunicatorBroadcastComposer extends LightningElement {
         return [this._uploadInputVersion];
     }
 
+    get isEnvironmentUploadDisabled() {
+        return isSalesforceMobileApp();
+    }
+
+    get environmentDisabledTitle() {
+        return SALESFORCE_APP_DISABLED_MESSAGE;
+    }
+
+    handleEnvironmentDisabledClick() {
+        this.dispatchEvent(buildDisabledFeatureToast());
+    }
+
     get uploadClass() {
+        if (this.isEnvironmentUploadDisabled) {
+            return 'comm-broadcast-composer__upload comm-broadcast-composer__upload--env-disabled';
+        }
         return this.isUploadDisabled
             ? 'comm-broadcast-composer__upload comm-broadcast-composer__upload--disabled'
             : 'comm-broadcast-composer__upload';

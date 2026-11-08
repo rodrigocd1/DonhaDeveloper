@@ -336,7 +336,7 @@ public with sharing class CommunicatorNotificationService {
             notification.setTargetPageRef(targetPageRef);
             notification.send(recipientIds);
         } catch (Exception ex) {
-            System.debug(LoggingLevel.ERROR, 'CommunicatorNotificationService.sendCustomNotification error: ' + ex.getMessage());
+            logSendFailure('sendCustomNotification', ex, recipientIds, messageId);
         }
     }
 
@@ -349,7 +349,26 @@ public with sharing class CommunicatorNotificationService {
             notification.setTargetPageRef(targetPageRef);
             notification.send(recipientIds);
         } catch (Exception ex) {
-            System.debug(LoggingLevel.ERROR, 'CommunicatorNotificationService.sendCustomNotificationText error: ' + ex.getMessage());
+            logSendFailure('sendCustomNotificationText', ex, recipientIds, null);
+        }
+    }
+
+    @TestVisible
+    private static void logSendFailure(String methodName, Exception ex, Set<String> recipientIds, Id messageId) {
+        Integer recipientCount = recipientIds == null ? 0 : recipientIds.size();
+        String summary = 'Falha ao enviar notificação do Communicator. Tipo=' + ex.getTypeName()
+            + '; Mensagem=' + ex.getMessage()
+            + '; Linha=' + ex.getLineNumber()
+            + '; Destinatários=' + recipientCount
+            + '; MessageId=' + messageId;
+        try {
+            new Logger()
+                .setClass('CommunicatorNotificationService')
+                .setMethod(methodName)
+                .setCategory('communicator-notification')
+                .error(summary, ex);
+        } catch (Exception loggerException) {
+            System.debug(LoggingLevel.ERROR, summary + '\n' + ex.getStackTraceString());
         }
     }
 

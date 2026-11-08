@@ -266,3 +266,22 @@
     opacity: 0.6;
     cursor: default;
 }
+
+.comm-broadcast-composer__upload--env-disabled {
+    cursor: not-allowed;
+}
+
+.comm-broadcast-composer__upload--env-disabled .comm-broadcast-composer__upload-visual {
+    border-color: #c9c7c5;
+    background: #f3f3f3;
+    color: #b0adab;
+}
+
+.comm-broadcast-composer__upload-input--env-disabled {
+    top: 0;
+    height: 100%;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: not-allowed;
+}

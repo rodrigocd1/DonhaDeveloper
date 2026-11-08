@@ -1,8 +1,9 @@
+<!-- AGENTS.md desabilitado (era de projeto do trabalho). Para reativar, remova este comentario e restaure as linhas abaixo:
 @AGENTS.md
+Use `AGENTS.md` como fonte principal de regras.
+-->
 
 # Claude Code
-
-Use `AGENTS.md` como fonte principal de regras.
 
 Nao duplique regras operacionais neste arquivo.
 

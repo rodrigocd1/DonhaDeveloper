@@ -1,4 +1,5 @@
 import { LightningElement, api, track } from 'lwc';
+import { isSalesforceMobileApp, buildDisabledFeatureToast, SALESFORCE_APP_DISABLED_MESSAGE } from 'c/communicatorEnvironment';
 import { NavigationMixin } from 'lightning/navigation';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import getOrCreateGroupThread  from '@salesforce/apex/CommunicatorChatController.getOrCreateGroupThread';
@@ -317,8 +318,30 @@ export default class CommunicatorGroupTimeline extends NavigationMixin(Lightning
         }];
     }
 
+    get isAttachmentActionDisabled() {
+        return isSalesforceMobileApp();
+    }
+
+    get attachmentLinkClass() {
+        return this.isAttachmentActionDisabled
+            ? 'comm-msg__attachment-link comm-is-disabled'
+            : 'comm-msg__attachment-link';
+    }
+
+    get attachmentAriaDisabled() {
+        return this.isAttachmentActionDisabled ? 'true' : null;
+    }
+
+    get attachmentTitle() {
+        return this.isAttachmentActionDisabled ? SALESFORCE_APP_DISABLED_MESSAGE : null;
+    }
+
     async handleAttachmentClick(event) {
         event.preventDefault();
+        if (this.isAttachmentActionDisabled) {
+            this.dispatchEvent(buildDisabledFeatureToast());
+            return;
+        }
         const contentDocumentId = event.currentTarget?.dataset?.contentDocumentId;
         const messageId = event.currentTarget?.dataset?.messageId;
         const threadId = event.currentTarget?.dataset?.threadId || this._groupThreadId;

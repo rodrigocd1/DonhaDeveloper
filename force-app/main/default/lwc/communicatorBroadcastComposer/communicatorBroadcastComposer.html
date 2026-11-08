@@ -75,18 +75,30 @@
                     </template>
                     <span>Anexar arquivo</span>
                 </button>
-                <template for:each={uploadInputTokens} for:item="uploadInputToken">
-                    <lightning-file-upload
-                        key={uploadInputToken}
-                        class="comm-broadcast-composer__upload-input"
-                        label="Anexar arquivo"
-                        variant="label-hidden"
-                        record-id={broadcast.groupId}
-                        accept={acceptedFormatsList}
-                        multiple
-                        disabled={isUploadDisabled}
-                        onuploadfinished={handleUploadFinished}
-                    ></lightning-file-upload>
+                <template if:false={isEnvironmentUploadDisabled}>
+                    <template for:each={uploadInputTokens} for:item="uploadInputToken">
+                        <lightning-file-upload
+                            key={uploadInputToken}
+                            class="comm-broadcast-composer__upload-input"
+                            label="Anexar arquivo"
+                            variant="label-hidden"
+                            record-id={broadcast.groupId}
+                            accept={acceptedFormatsList}
+                            multiple
+                            disabled={isUploadDisabled}
+                            onuploadfinished={handleUploadFinished}
+                        ></lightning-file-upload>
+                    </template>
+                </template>
+                <template if:true={isEnvironmentUploadDisabled}>
+                    <button
+                        class="comm-broadcast-composer__upload-input comm-broadcast-composer__upload-input--env-disabled"
+                        type="button"
+                        aria-label="Anexar arquivo"
+                        aria-disabled="true"
+                        title={environmentDisabledTitle}
+                        onclick={handleEnvironmentDisabledClick}
+                    ></button>
                 </template>
             </div>
 

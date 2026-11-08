@@ -3,6 +3,7 @@ import sendMessage from '@salesforce/apex/CommunicatorChatController.sendMessage
 import sendMessageWithAttachments from '@salesforce/apex/CommunicatorChatController.sendMessageWithAttachments';
 import validateUploadedFiles from '@salesforce/apex/CommunicatorChatController.validateUploadedFiles';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import { isSalesforceMobileApp, buildDisabledFeatureToast, SALESFORCE_APP_DISABLED_MESSAGE } from 'c/communicatorEnvironment';
 
 const LARGE_UPLOAD_SUCCESS_MESSAGE = 'Arquivo(s) anexado(s) com sucesso.';
 const LARGE_UPLOAD_DUPLICATE_MESSAGE = 'Alguns arquivos ja estavam anexados e foram ignorados.';
@@ -389,6 +390,24 @@ export default class CommunicatorChatMessageInput extends LightningElement {
 
     get isInputDisabled() {
         return this.isSending || this.isComposerDisabled;
+    }
+
+    get isEnvironmentUploadDisabled() {
+        return isSalesforceMobileApp();
+    }
+
+    get uploadVisualClass() {
+        return this.isEnvironmentUploadDisabled
+            ? 'comm-input__upload-visual comm-input__upload-visual--env-disabled'
+            : 'comm-input__upload-visual';
+    }
+
+    get environmentDisabledTitle() {
+        return SALESFORCE_APP_DISABLED_MESSAGE;
+    }
+
+    handleEnvironmentDisabledClick() {
+        this.dispatchEvent(buildDisabledFeatureToast());
     }
 
     get isUploadDisabled() {

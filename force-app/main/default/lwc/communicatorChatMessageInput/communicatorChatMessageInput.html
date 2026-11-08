@@ -67,7 +67,7 @@
             <div class="comm-input__upload-buttons">
                 <div class="comm-input__upload-proxy" title="Enviar arquivo">
                     <button
-                        class="comm-input__upload-visual"
+                        class={uploadVisualClass}
                         type="button"
                         tabindex="-1"
                         aria-hidden="true"
@@ -76,17 +76,29 @@
                         <lightning-icon icon-name="utility:upload" size="x-small" class="comm-input__upload-icon"></lightning-icon>
                         <span>Enviar arquivo</span>
                     </button>
-                    <lightning-file-upload
-                        class="comm-input__upload-overlay"
-                        name="commLargeFileUpload"
-                        label="Enviar arquivo"
-                        variant="label-hidden"
-                        record-id={largeUploadRecordId}
-                        accept={acceptedFormatsList}
-                        multiple
-                        disabled={isUploadDisabled}
-                        onuploadfinished={handleLargeUploadFinished}
-                    ></lightning-file-upload>
+                    <template if:false={isEnvironmentUploadDisabled}>
+                        <lightning-file-upload
+                            class="comm-input__upload-overlay"
+                            name="commLargeFileUpload"
+                            label="Enviar arquivo"
+                            variant="label-hidden"
+                            record-id={largeUploadRecordId}
+                            accept={acceptedFormatsList}
+                            multiple
+                            disabled={isUploadDisabled}
+                            onuploadfinished={handleLargeUploadFinished}
+                        ></lightning-file-upload>
+                    </template>
+                    <template if:true={isEnvironmentUploadDisabled}>
+                        <button
+                            class="comm-input__upload-overlay comm-input__upload-overlay--env-disabled"
+                            type="button"
+                            aria-label="Enviar arquivo"
+                            aria-disabled="true"
+                            title={environmentDisabledTitle}
+                            onclick={handleEnvironmentDisabledClick}
+                        ></button>
+                    </template>
                 </div>
             </div>
 
