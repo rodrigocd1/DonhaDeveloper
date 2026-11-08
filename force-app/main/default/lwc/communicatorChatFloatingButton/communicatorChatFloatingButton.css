@@ -2231,3 +2231,13 @@ c-communicator-broadcast-workspace {
     overflow-wrap: break-word;
     word-break: break-word;
 }
+
+.comm-picker__expand-btn.comm-is-disabled,
+.comm-picker__expand-btn.comm-is-disabled:hover,
+.comm-chat__history-btn.comm-is-disabled,
+.comm-chat__history-btn.comm-is-disabled:hover {
+    background: #f3f3f3;
+    border-color: #c9c7c5;
+    color: #b0adab;
+    cursor: not-allowed;
+}

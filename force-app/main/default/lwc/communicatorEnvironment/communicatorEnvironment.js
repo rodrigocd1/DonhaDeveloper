@@ -1,9 +1,18 @@
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import FORM_FACTOR from '@salesforce/client/formFactor';
-import COMMUNITY_ID from '@salesforce/community/Id';
 
 export const SALESFORCE_APP_DISABLED_MESSAGE =
     'Funcionalidade desabilitada: não é compatível com o app da Salesforce.';
+
+const EXPERIENCE_CLOUD_PATH_PATTERN = /\/s(\/|$)/;
+
+function isExperienceCloudSite() {
+    try {
+        return EXPERIENCE_CLOUD_PATH_PATTERN.test(window.location.pathname || '');
+    } catch (error) {
+        return false;
+    }
+}
 
 /**
  * Indica se o componente está rodando no app mobile da Salesforce.
@@ -11,7 +20,7 @@ export const SALESFORCE_APP_DISABLED_MESSAGE =
  */
 export function isSalesforceMobileApp(mobileMode = false) {
     if (mobileMode === true) return true;
-    return FORM_FACTOR === 'Small' && !COMMUNITY_ID;
+    return FORM_FACTOR === 'Small' && !isExperienceCloudSite();
 }
 
 export function buildDisabledFeatureToast() {

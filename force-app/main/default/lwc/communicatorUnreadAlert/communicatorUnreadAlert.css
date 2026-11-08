@@ -139,3 +139,12 @@
     font-size: 0.8125rem;
     color: #706e6b;
 }
+
+.comm-unread-alert__thread-link.comm-is-disabled,
+.comm-unread-alert__thread-link.comm-is-disabled:hover,
+.comm-unread-alert__last-label.comm-is-disabled,
+.comm-unread-alert__last-label.comm-is-disabled:hover {
+    color: #b0adab;
+    cursor: not-allowed;
+    text-decoration: none;
+}

@@ -377,7 +377,7 @@
                     </template>
 
                     <div class="comm-picker__footer">
-                        <button class="comm-picker__expand-btn" onclick={handleOpenHistory}>
+                        <button class={expandButtonClass} aria-disabled={historyButtonAriaDisabled} title={historyButtonTitle} onclick={handleOpenHistory}>
                             Expandir navegação
                         </button>
                     </div>
@@ -513,7 +513,7 @@
                                     {compactChatterToggleLabel}
                                 </button>
                             </template>
-                            <button class="comm-chat__history-btn" onclick={handleOpenConversationHistory}>
+                            <button class={historyButtonClass} aria-disabled={historyButtonAriaDisabled} title={historyButtonTitle} onclick={handleOpenConversationHistory}>
                             Acessar histórico de conversa
                             </button>
                         </div>

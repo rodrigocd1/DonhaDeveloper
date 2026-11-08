@@ -1,6 +1,7 @@
 import { LightningElement, api, track, wire }  from 'lwc';
 import { NavigationMixin }          from 'lightning/navigation';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import { isSalesforceMobileApp, buildDisabledFeatureToast, SALESFORCE_APP_DISABLED_MESSAGE } from 'c/communicatorEnvironment';
 import { EnclosingUtilityId, minimize } from 'lightning/platformUtilityBarApi';
 import USER_ID from '@salesforce/user/Id';
 import {
@@ -386,7 +387,34 @@ export default class CommunicatorChatFloatingButton extends NavigationMixin(Ligh
         this._stopPresenceOnlinePolling();
     }
 
+    get isHistoryActionDisabled() {
+        return isSalesforceMobileApp(this.mobileMode);
+    }
+
+    get historyButtonTitle() {
+        return this.isHistoryActionDisabled ? SALESFORCE_APP_DISABLED_MESSAGE : null;
+    }
+
+    get historyButtonAriaDisabled() {
+        return this.isHistoryActionDisabled ? 'true' : null;
+    }
+
+    get expandButtonClass() {
+        return this.isHistoryActionDisabled ? 'comm-picker__expand-btn comm-is-disabled' : 'comm-picker__expand-btn';
+    }
+
+    get historyButtonClass() {
+        return this.isHistoryActionDisabled ? 'comm-chat__history-btn comm-is-disabled' : 'comm-chat__history-btn';
+    }
+
+    _blockHistoryInSalesforceApp() {
+        if (!this.isHistoryActionDisabled) return false;
+        this.dispatchEvent(buildDisabledFeatureToast());
+        return true;
+    }
+
     handleOpenHistory() {
+        if (this._blockHistoryInSalesforceApp()) return;
         this._closeBroadcastImagePreview({ notifyWorkspace: true });
         if (!this.isFabMode) {
             // Internal (chore): abrir histórico completo sem selecionar uma conversa específica
@@ -652,6 +680,7 @@ export default class CommunicatorChatFloatingButton extends NavigationMixin(Ligh
     }
 
     handleOpenConversationHistory() {
+        if (this._blockHistoryInSalesforceApp()) return;
         this._logCurrentChatDebugUrls();
         if (!this.isFabMode) {
             // Internal (chore): abrir histórico já posicionado na conversa da oportunidade atual

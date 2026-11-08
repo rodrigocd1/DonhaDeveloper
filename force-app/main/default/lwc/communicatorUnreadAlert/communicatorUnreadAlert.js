@@ -1,5 +1,6 @@
 import { LightningElement, api, track } from 'lwc';
 import CommunicatorChatHistoryModal from 'c/communicatorChatHistoryModal';
+import { isSalesforceMobileApp, buildDisabledFeatureToast, SALESFORCE_APP_DISABLED_MESSAGE } from 'c/communicatorEnvironment';
 import getThreadsForRecord from '@salesforce/apex/CommunicatorChatController.getThreadsForRecord';
 import getSettings from '@salesforce/apex/CommunicatorChatController.getSettings';
 import getOpportunityIdForAnaliseFinanceira from '@salesforce/apex/CommunicatorChatController.getOpportunityIdForAnaliseFinanceira';
@@ -115,10 +116,38 @@ export default class CommunicatorUnreadAlert extends LightningElement {
         }
     }
 
+    get isModalActionDisabled() {
+        return !this.inlineMode && isSalesforceMobileApp();
+    }
+
+    get modalActionAriaDisabled() {
+        return this.isModalActionDisabled ? 'true' : null;
+    }
+
+    get modalActionTitle() {
+        return this.isModalActionDisabled ? SALESFORCE_APP_DISABLED_MESSAGE : null;
+    }
+
+    get threadLinkClass() {
+        return this.isModalActionDisabled
+            ? 'comm-unread-alert__thread-link comm-is-disabled'
+            : 'comm-unread-alert__thread-link';
+    }
+
+    get lastLabelClass() {
+        return this.isModalActionDisabled
+            ? 'comm-unread-alert__last-label comm-is-disabled'
+            : 'comm-unread-alert__last-label';
+    }
+
     handleThreadClick(event) {
         const threadId = event.currentTarget.dataset.threadId;
         if (this.inlineMode) {
             this.dispatchEvent(new CustomEvent('threadclick', { detail: { threadId } }));
+            return;
+        }
+        if (this.isModalActionDisabled) {
+            this.dispatchEvent(buildDisabledFeatureToast());
             return;
         }
         if (!this._opportunityId) return;
@@ -173,6 +202,10 @@ export default class CommunicatorUnreadAlert extends LightningElement {
         if (!msg) return;
         if (this.inlineMode) {
             this.dispatchEvent(new CustomEvent('lastmessageclick', { detail: { threadId: msg.threadId } }));
+            return;
+        }
+        if (this.isModalActionDisabled) {
+            this.dispatchEvent(buildDisabledFeatureToast());
             return;
         }
         if (!this._opportunityId) return;

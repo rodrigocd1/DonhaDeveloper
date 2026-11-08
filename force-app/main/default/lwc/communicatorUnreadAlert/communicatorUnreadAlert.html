@@ -6,7 +6,9 @@
                 <div class="comm-unread-alert__content">
                     <span class="comm-unread-alert__summary-text">Você tem atualização em:</span>
                     <button
-                        class="comm-unread-alert__thread-link"
+                        class={threadLinkClass}
+                        aria-disabled={modalActionAriaDisabled}
+                        title={modalActionTitle}
                         data-thread-id={item.threadId}
                         onclick={handleThreadClick}
                     >{item.label}</button>
@@ -16,7 +18,7 @@
     </template>
     <template if:true={lastReadMessage}>
         <div class="comm-unread-alert comm-unread-alert--read">
-            <button class="comm-unread-alert__last-label" onclick={handleLastMessageClick}>Última mensagem</button>
+            <button class={lastLabelClass} aria-disabled={modalActionAriaDisabled} title={modalActionTitle} onclick={handleLastMessageClick}>Última mensagem</button>
             <div class="comm-unread-last-msg">
                 <div class="comm-unread-last-msg__avatar">
                     <img

@@ -11,6 +11,10 @@
                 <object>Opportunity</object>
                 <object>AnaliseFinanceira__c</object>
             </objects>
+            <supportedFormFactors>
+                <supportedFormFactor type="Large" />
+                <supportedFormFactor type="Small" />
+            </supportedFormFactors>
         </targetConfig>
     </targetConfigs>
 </LightningComponentBundle>
