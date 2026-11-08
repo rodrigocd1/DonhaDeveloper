@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Codigo_no_Parceiro__c</fullName>
+    <description>Código que identifica o lead na base do impulsionador.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Código que identifica o lead na base do impulsionador.</inlineHelpText>
+    <label>Codigo no Parceiro</label>
+    <length>255</length>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

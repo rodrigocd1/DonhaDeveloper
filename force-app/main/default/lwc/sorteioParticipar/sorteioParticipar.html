@@ -1,0 +1,33 @@
+<template>
+  <main class="participar">
+    <section class="cartao" aria-live="polite">
+      <h1 class="titulo">{tituloExibido}</h1>
+      <template lwc:if={isLoading}>
+        <lightning-spinner alternative-text="Carregando"></lightning-spinner>
+      </template>
+      <template lwc:elseif={loadError}>
+        <p class="alerta" role="alert">{loadError}</p>
+      </template>
+      <template lwc:elseif={successMessage}>
+        <p class="sucesso" role="status">{successMessage}</p>
+      </template>
+      <template lwc:elseif={inscricoesAbertas}>
+        <div class="campos">
+          <lightning-input label="Nome" data-field="nome" required max-length="120" value={nome} onchange={handleChange}></lightning-input>
+          <lightning-input type="email" label="E-mail" data-field="email" required max-length="80" value={email} onchange={handleChange}></lightning-input>
+          <lightning-input type="tel" label="Código mostrado no telão" data-field="codigo" required max-length="4" pattern={padraoCodigo} message-when-pattern-mismatch="Digite os 4 números do telão." value={codigo} onchange={handleChange}></lightning-input>
+          <div class="honeypot" aria-hidden="true">
+            <label>Não preencha<input tabindex="-1" autocomplete="off" data-field="honeypot" value={honeypot} onchange={handleChange} /></label>
+          </div>
+          <template lwc:if={errorMessage}>
+            <p class="alerta" role="alert">{errorMessage}</p>
+          </template>
+          <lightning-button class="enviar" variant="brand" label={rotuloEnviar} disabled={isSubmitting} onclick={handleSubmit}></lightning-button>
+        </div>
+      </template>
+      <template lwc:else>
+        <p class="aviso" role="status">As inscrições deste sorteio estão encerradas.</p>
+      </template>
+    </section>
+  </main>
+</template>

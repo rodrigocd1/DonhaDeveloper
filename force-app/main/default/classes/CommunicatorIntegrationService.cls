@@ -24,6 +24,43 @@ public with sharing class CommunicatorIntegrationService {
     }
 
     /**
+     * @description Publishes a socket-compatible new message event asynchronously.
+     *              Main message persistence must never fail due to Heroku unavailability.
+     */
+    public static void publishNewMessageEventAsync(
+        Id messageId,
+        Id threadId,
+        String messageBody,
+        Set<Id> recipientUserIds,
+        Boolean hasAttachment
+    ) {
+        if (messageId == null) return;
+
+        CommunicatorDTOs.MessageEventDTO payload = new CommunicatorDTOs.MessageEventDTO();
+        payload.messageId     = String.valueOf(messageId);
+        payload.threadId      = threadId == null ? null : String.valueOf(threadId);
+        payload.message       = messageBody;
+        payload.messageBody   = messageBody; // Backward compatibility for existing consumers.
+        payload.senderId      = UserInfo.getUserId();
+        payload.senderName    = UserInfo.getName();
+        payload.sentAt        = String.valueOf(System.now());
+        payload.hasAttachment = (hasAttachment == true);
+
+        if (recipientUserIds != null && !recipientUserIds.isEmpty()) {
+            List<String> userIds = new List<String>();
+            for (Id recipientId : recipientUserIds) {
+                if (recipientId != null) userIds.add(String.valueOf(recipientId));
+            }
+            userIds.sort();
+            if (!userIds.isEmpty()) {
+                payload.user_ids = userIds;
+            }
+        }
+
+        enqueueNewMessageEvent(payload);
+    }
+
+    /**
      * @description Retrieves external message history for a thread.
      */
     public static CommunicatorDTOs.ExternalHistoryDTO getExternalHistory(String externalThreadId) {
@@ -48,6 +85,28 @@ public with sharing class CommunicatorIntegrationService {
 
     private static String getNamedCredentialEndpoint(String path) {
         return 'callout:CommunicatorHeroku' + path;
+    }
+
+    @TestVisible
+    private static void enqueueNewMessageEvent(CommunicatorDTOs.MessageEventDTO payload) {
+        if (payload == null || String.isBlank(payload.messageId)) return;
+
+        if (Test.isRunningTest()) {
+            dispatchNewMessageEventSafely(payload);
+            return;
+        }
+
+        System.enqueueJob(new NewMessageEventQueueable(JSON.serialize(payload)));
+    }
+
+    @TestVisible
+    private static void dispatchNewMessageEventSafely(CommunicatorDTOs.MessageEventDTO payload) {
+        try {
+            notifyNewMessage(payload);
+        } catch (Exception ex) {
+            System.debug(LoggingLevel.ERROR,
+                'CommunicatorIntegrationService.publishNewMessageEventAsync error: ' + ex.getMessage());
+        }
     }
 
     private static HttpRequest buildPostRequest(String endpoint, String body) {
@@ -95,6 +154,23 @@ public with sharing class CommunicatorIntegrationService {
     public class CommunicatorHttpClientImpl implements ICommunicatorHttpClient {
         public HttpResponse send(HttpRequest req) {
             return new Http().send(req);
+        }
+    }
+
+    private class NewMessageEventQueueable implements Queueable, Database.AllowsCallouts {
+        private String payloadJson;
+
+        public NewMessageEventQueueable(String payloadJson) {
+            this.payloadJson = payloadJson;
+        }
+
+        public void execute(QueueableContext context) {
+            CommunicatorDTOs.MessageEventDTO payload =
+                (CommunicatorDTOs.MessageEventDTO) JSON.deserialize(
+                    payloadJson,
+                    CommunicatorDTOs.MessageEventDTO.class
+                );
+            dispatchNewMessageEventSafely(payload);
         }
     }
 }

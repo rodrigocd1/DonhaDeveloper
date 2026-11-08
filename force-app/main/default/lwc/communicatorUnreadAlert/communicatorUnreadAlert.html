@@ -1,0 +1,46 @@
+<template>
+    <template if:true={hasUnread}>
+        <template for:each={threadItems} for:item="item">
+            <div key={item.key} class="comm-unread-alert">
+                <span class="comm-unread-alert__count-badge">{item.badgeLabel}</span>
+                <div class="comm-unread-alert__content">
+                    <span class="comm-unread-alert__summary-text">Você tem atualização em:</span>
+                    <button
+                        class="comm-unread-alert__thread-link"
+                        data-thread-id={item.threadId}
+                        onclick={handleThreadClick}
+                    >{item.label}</button>
+                </div>
+            </div>
+        </template>
+    </template>
+    <template if:true={lastReadMessage}>
+        <div class="comm-unread-alert comm-unread-alert--read">
+            <button class="comm-unread-alert__last-label" onclick={handleLastMessageClick}>Última mensagem</button>
+            <div class="comm-unread-last-msg">
+                <div class="comm-unread-last-msg__avatar">
+                    <img
+                        src={lastReadMessage.senderPhoto}
+                        alt={lastReadMessage.senderName}
+                        class="comm-unread-last-msg__photo"
+                        onerror={handleAvatarError}
+                    />
+                </div>
+                <div class="comm-unread-last-msg__content">
+                    <div class="comm-unread-last-msg__meta">
+                        <span class="comm-unread-last-msg__sender">{lastReadMessage.senderName}</span>
+                        <template if:true={lastReadMessage.time}>
+                            <span class="comm-unread-last-msg__time">{lastReadMessage.time}</span>
+                        </template>
+                    </div>
+                    <p class="comm-unread-last-msg__body">{lastReadMessage.preview}</p>
+                </div>
+            </div>
+        </div>
+    </template>
+    <template if:true={showEmpty}>
+        <div class="comm-unread-alert comm-unread-alert--empty">
+            <span class="comm-unread-alert__empty-text">Sem atualizações</span>
+        </div>
+    </template>
+</template>

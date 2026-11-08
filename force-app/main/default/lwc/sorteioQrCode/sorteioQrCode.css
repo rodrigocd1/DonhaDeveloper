@@ -1,0 +1,9 @@
+.qr {
+  display: block;
+  width: min(18rem, 70vw);
+  height: auto;
+  margin: 0 auto;
+  image-rendering: pixelated;
+  background: #fff;
+  border-radius: 0.75rem;
+}

@@ -2,13 +2,15 @@
 
 :host {
     flex-shrink: 0;
+    --comm-mobile-safe-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 .comm-input {
+    position: relative;
     display: flex;
     flex-direction: column;
-    gap: 0.35rem;
-    padding: 0.6rem 0.75rem;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem 1rem;
     border-top: 1px solid #dddbda;
     background: #fff;
 }
@@ -25,9 +27,53 @@
     flex-shrink: 0;
 }
 
-/* Reduz o espaço vertical do lightning-file-upload */
+/* Estilo base do seletor de arquivo */
 .comm-input__file-upload {
     display: block;
+    flex: 0 0 auto;
+    min-width: 0;
+    /* Styling hooks (caso o DOM interno do base component nÃ£o seja estilÃ¡vel via seletor) */
+    --slds-c-file-selector-dropzone-border-style: none;
+    --slds-c-file-selector-dropzone-border-width: 0;
+    --slds-c-file-selector-dropzone-border-color: transparent;
+    --slds-c-file-selector-dropzone-background-color: transparent;
+    --slds-c-file-selector-dropzone-spacing-inline: 0;
+    --slds-c-file-selector-dropzone-spacing-block: 0;
+    --sds-c-file-selector-dropzone-border-style: none;
+    --sds-c-file-selector-dropzone-border-width: 0;
+    --sds-c-file-selector-dropzone-border-color: transparent;
+    --sds-c-file-selector-dropzone-background-color: transparent;
+}
+
+/* Remove a borda pontilhada do dropzone e deixa somente o botÃ£o */
+.comm-input__file-upload .slds-file-selector__dropzone {
+    border: none !important;
+    border-style: none !important;
+    border-width: 0 !important;
+    outline: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    padding: 0 !important;
+}
+
+/* Cobre variaÃ§Ãµes de classes/textos do SLDS */
+.comm-input__file-upload .slds-file-selector__dropzone-description,
+.comm-input__file-upload .slds-file-selector__dropzone-description-text,
+.comm-input__file-upload .slds-file-selector__text {
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.comm-input__file-upload .slds-file-selector__text,
+.comm-input__file-upload .slds-file-selector__dropzone-description,
+.comm-input__file-upload .slds-file-selector__dropzone-description-text {
+    display: none !important;
+}
+
+/* Compatibilidade visual com seletor de arquivo */
+.comm-input__file-upload .slds-file-selector__body {
+    display: inline-flex !important;
+    align-items: center;
 }
 
 /* ── Preview do arquivo ── */
@@ -61,24 +107,24 @@
 
 /* ── Textarea ── */
 .comm-input__textarea {
-    flex: 1;
+    width: 100%;
     resize: none;
-    border: 1px solid #dddbda;
-    border-radius: 1.25rem;
-    padding: 0.5rem 0.85rem;
-    font-size: 0.875rem;
+    border: 1px solid #c9c7c5;
+    border-radius: 0.5rem;
+    padding: 0.75rem 0.85rem;
+    font-size: 0.95rem;
     line-height: 1.5;
     font-family: inherit;
     outline: none;
     overflow-y: auto;
-    max-height: 100px;
+    min-height: 108px;
+    max-height: 160px;
     transition: border-color 0.15s;
-    background: #f9f9f9;
+    background: #fff;
 }
 
 .comm-input__textarea:focus {
     border-color: #0176d3;
-    background: #fff;
 }
 
 .comm-input__textarea:disabled {
@@ -87,6 +133,156 @@
 }
 
 /* ── Enviando ── */
+/* Actions (upload + send) */
+.comm-input__actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.comm-input__upload-buttons {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex: 0 1 auto;
+    min-width: 0;
+}
+
+.comm-input__upload-proxy {
+    position: relative;
+    display: inline-block;
+    flex: 0 0 auto;
+    width: 11.6rem;
+    height: 2.25rem;
+    min-height: 2.25rem;
+    overflow: hidden;
+    border-radius: 0.5rem;
+    white-space: nowrap;
+    cursor: default;
+}
+
+.comm-input__upload-overlay {
+    display: block;
+    position: absolute;
+    top: -20px;
+    left: 0;
+    z-index: 2;
+    opacity: 0.01;
+    width: 100%;
+    height: 80px;
+    cursor: default;
+    --slds-c-file-selector-dropzone-border-style: none;
+    --slds-c-file-selector-dropzone-border-width: 0;
+    --slds-c-file-selector-dropzone-border-color: transparent;
+    --slds-c-file-selector-dropzone-background-color: transparent;
+    --slds-c-file-selector-dropzone-spacing-inline: 0;
+    --slds-c-file-selector-dropzone-spacing-block: 0;
+    --sds-c-file-selector-dropzone-border-style: none;
+    --sds-c-file-selector-dropzone-border-width: 0;
+    --sds-c-file-selector-dropzone-border-color: transparent;
+    --sds-c-file-selector-dropzone-background-color: transparent;
+}
+
+.comm-input__upload-overlay,
+.comm-input__upload-overlay .slds-form-element,
+.comm-input__upload-overlay .slds-form-element__control,
+.comm-input__upload-overlay .slds-file-selector,
+.comm-input__upload-overlay .slds-file-selector__dropzone,
+.comm-input__upload-overlay .slds-file-selector__body,
+.comm-input__upload-overlay .slds-file-selector__button {
+    width: 100%;
+    height: 100%;
+    cursor: default !important;
+    pointer-events: auto !important;
+}
+
+.comm-input__upload-overlay .slds-file-selector__body,
+.comm-input__upload-overlay .slds-file-selector__button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.comm-input__upload-overlay .slds-file-selector__button {
+    pointer-events: auto !important;
+    cursor: default !important;
+}
+
+.comm-input__upload-overlay .slds-file-selector__dropzone {
+    border: 0;
+    padding: 0;
+}
+
+.comm-input__upload-overlay .slds-file-selector__text {
+    display: none;
+}
+
+.comm-input__upload-visual {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0 1rem;
+    border: 1px solid #706e6b;
+    border-radius: 0.5rem;
+    background: #fff;
+    color: #706e6b;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: default;
+    transition: background 0.15s ease, border-color 0.15s ease;
+    user-select: none;
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+.comm-input__upload-visual:hover {
+    background: #f7f7f7;
+}
+
+.comm-input__upload-visual:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.comm-input__upload-icon {
+    --lwc-colorTextIconDefault: #706e6b;
+    --slds-c-icon-color-foreground-default: #706e6b;
+}
+
+.comm-input__send {
+    height: 2.5rem;
+    min-width: 150px;
+    padding: 0 1.15rem;
+    border: none;
+    border-radius: 0.5rem;
+    background: #0176d3;
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.comm-input__send:disabled {
+    background: #c9c7c5;
+    cursor: not-allowed;
+    opacity: 0.9;
+}
+
+.comm-input__send-icon {
+    --lwc-colorTextIconDefault: #fff;
+    --slds-c-icon-color-foreground-default: #fff;
+}
+
 .comm-input__uploading {
     display: flex;
     align-items: center;
@@ -94,4 +290,348 @@
     font-size: 0.75rem;
     color: #706e6b;
     padding: 0 0.25rem;
+}
+
+.comm-input__upload-error {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.4rem;
+    padding: 0.45rem 0.65rem;
+    background: #fef1ee;
+    border: 1px solid #f5a28b;
+    border-radius: 0.4rem;
+    font-size: 0.82rem;
+    color: #ba0517;
+    line-height: 1.4;
+}
+
+.comm-input__upload-error-icon {
+    --lwc-colorTextIconDefault: #ba0517;
+    --slds-c-icon-color-foreground-default: #ba0517;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.comm-input__upload-error-text {
+    flex: 1;
+}
+
+/* ── Mention popup ── */
+.comm-input__mention-popup {
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    z-index: 500;
+    margin-bottom: 4px;
+}
+
+/* ── Mention chips ── */
+.comm-input__mentions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    padding: 0.3rem 0.25rem 0;
+}
+
+.comm-input__mention-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.15rem 0.4rem 0.15rem 0.5rem;
+    border-radius: 1rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.comm-input__mention-chip--user {
+    background: #e8f4fe;
+    color: #0176d3;
+    border: 1px solid #b8ddf9;
+}
+
+.comm-input__mention-chip--group {
+    background: #f3ecfd;
+    color: #7526e3;
+    border: 1px solid #d5b8f9;
+}
+
+.comm-input__mention-remove {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.85rem;
+    line-height: 1;
+    padding: 0 0 0 0.15rem;
+    color: inherit;
+    opacity: 0.7;
+}
+.comm-input__mention-remove:hover { opacity: 1; }
+
+/* iOS (compact mode only): prioritize timeline by shrinking the composer */
+.comm-input--ios-compact {
+    gap: 0.35rem;
+    padding: 0.38rem 0.75rem calc(0.45rem + var(--comm-mobile-safe-bottom));
+}
+
+.comm-input--ios-compact .comm-input__textarea {
+    min-height: 0;
+    max-height: none;
+    padding: 0.36rem 0.6rem;
+    font-size: 0.78rem;
+    line-height: 1.25;
+}
+
+.comm-input--ios-compact .comm-input__actions {
+    gap: 0.5rem;
+}
+
+.comm-input--ios-compact .comm-input__upload-buttons {
+    gap: 0.35rem;
+}
+
+.comm-input--ios-compact .comm-input__upload-proxy,
+.comm-input--ios-compact .comm-input__send {
+    height: 1.9rem;
+}
+
+.comm-input--ios-compact .comm-input__upload-overlay {
+    min-height: 1.9rem;
+}
+
+.comm-input--ios-compact .comm-input__upload-visual,
+.comm-input--ios-compact .comm-input__send {
+    font-size: 0.76rem;
+}
+
+.comm-input--ios-compact .comm-input__upload-visual {
+    padding: 0 0.62rem;
+    gap: 0.3rem;
+}
+
+.comm-input--ios-compact .comm-input__send {
+    min-width: 96px;
+    padding: 0 0.62rem;
+}
+
+.comm-input--ios-compact .comm-input__attachment-preview,
+.comm-input--ios-compact .comm-input__uploading {
+    font-size: 0.66rem;
+}
+
+@media (max-height: 800px) and (min-width: 768px) {
+    .comm-input {
+        gap: 0.4rem;
+        padding: 0.45rem 0.65rem 0.55rem;
+    }
+
+    .comm-input__textarea {
+        min-height: 68px;
+        max-height: 96px;
+        padding: 0.55rem 0.65rem;
+        line-height: 1.35;
+    }
+
+    .comm-input__upload-proxy {
+        height: 2.1rem;
+    }
+
+    .comm-input__upload-overlay {
+        min-height: 2.1rem;
+    }
+
+    .comm-input__upload-visual {
+        padding: 0 0.75rem;
+        font-size: 0.82rem;
+        gap: 0.4rem;
+    }
+
+    .comm-input__send {
+        height: 2.1rem;
+        min-width: 112px;
+        padding: 0 0.75rem;
+        font-size: 0.82rem;
+    }
+}
+
+@media (max-height: 760px) and (min-width: 768px) {
+    .comm-input {
+        gap: 0.35rem;
+        padding: 0.35rem 0.55rem 0.45rem;
+    }
+
+    .comm-input__textarea {
+        min-height: 56px;
+        max-height: 84px;
+        padding: 0.45rem 0.55rem;
+        font-size: 0.84rem;
+    }
+
+    .comm-input__actions {
+        gap: 0.4rem;
+    }
+
+    .comm-input__upload-buttons {
+        gap: 0.35rem;
+    }
+
+    .comm-input__upload-proxy {
+        height: 1.95rem;
+    }
+
+    .comm-input__upload-overlay {
+        min-height: 1.95rem;
+    }
+
+    .comm-input__upload-visual {
+        padding: 0 0.65rem;
+        font-size: 0.76rem;
+    }
+
+    .comm-input__send {
+        height: 1.95rem;
+        min-width: 100px;
+        padding: 0 0.65rem;
+        font-size: 0.76rem;
+    }
+}
+
+@media (max-height: 768px) and (min-width: 768px) {
+    .comm-input__textarea {
+        min-height: 52px;
+        max-height: 52px;
+    }
+}
+
+@media (max-height: 720px) and (min-width: 768px) {
+    .comm-input {
+        gap: 0.25rem;
+        padding: 0.28rem 0.5rem 0.38rem;
+    }
+
+    .comm-input__textarea {
+        min-height: 34px;
+        max-height: 34px;
+        padding: 0.26rem 0.5rem;
+        font-size: 0.72rem;
+        line-height: 1.15;
+    }
+
+    .comm-input__actions {
+        gap: 0.32rem;
+    }
+
+    .comm-input__upload-buttons {
+        gap: 0.28rem;
+    }
+
+    .comm-input__upload-proxy,
+    .comm-input__send {
+        height: 1.75rem;
+    }
+
+    .comm-input__upload-overlay {
+        min-height: 1.75rem;
+    }
+
+    .comm-input__upload-visual {
+        padding: 0 0.5rem;
+        gap: 0.3rem;
+        font-size: 0.68rem;
+    }
+
+    .comm-input__send {
+        min-width: 86px;
+        padding: 0 0.5rem;
+        font-size: 0.68rem;
+    }
+
+    .comm-input__attachment-preview,
+    .comm-input__uploading {
+        font-size: 0.64rem;
+    }
+}
+
+@media (min-width: 1200px) and (min-resolution: 1.25dppx) {
+    .comm-input__textarea {
+        min-height: 52px;
+        max-height: 52px;
+        font-size: 0.82rem;
+    }
+
+    .comm-input__upload-visual,
+    .comm-input__send {
+        font-size: 0.78rem;
+    }
+
+    .comm-input__attachment-preview,
+    .comm-input__uploading {
+        font-size: 0.72rem;
+    }
+}
+
+@media (min-width: 1200px) and (max-height: 760px) and (min-resolution: 1.25dppx) {
+    .comm-input__textarea {
+        font-size: 0.76rem;
+    }
+
+    .comm-input__upload-visual,
+    .comm-input__send {
+        font-size: 0.72rem;
+    }
+
+    .comm-input__attachment-preview,
+    .comm-input__uploading {
+        font-size: 0.66rem;
+    }
+}
+
+@media (max-width: 767px) {
+    .comm-input {
+        gap: 0.4rem;
+        padding: 0.45rem 0.75rem max(0.6rem, var(--comm-mobile-safe-bottom));
+    }
+
+    .comm-input__textarea {
+        min-height: 48px;
+        max-height: 72px;
+        font-size: 0.95rem;
+        padding: 0.5rem 0.75rem;
+        line-height: 1.4;
+    }
+
+    .comm-input__actions {
+        gap: 0.5rem;
+    }
+
+    .comm-input__upload-buttons {
+        gap: 0.45rem;
+        flex-wrap: wrap;
+    }
+
+    .comm-input__send {
+        min-width: 120px;
+        height: 2.2rem;
+        font-size: 0.875rem;
+    }
+
+    .comm-input__upload-proxy {
+        height: 2.2rem;
+    }
+
+    .comm-input__upload-overlay {
+        min-height: 2.2rem;
+    }
+
+    .comm-input__upload-visual {
+        font-size: 0.875rem;
+        padding: 0 0.75rem;
+    }
+}
+
+.comm-input__upload-proxy,
+.comm-input__upload-overlay {
+    width: 11.6rem;
+    height: 2.25rem;
+    min-height: 2.25rem;
 }

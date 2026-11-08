@@ -1,0 +1,112 @@
+<template>
+    <section class={overlayClass}>
+        <div class="cbdm-backdrop"></div>
+
+        <div class="cbdm-surface">
+            <div class="cbdm-container" role="dialog" aria-modal="true" aria-labelledby="cbdm-title">
+                <div class="cbdm-header">
+                    <div>
+                        <p class="cbdm-eyebrow">Comunicado</p>
+                        <h2 class="cbdm-title" id="cbdm-title">{modalTitle}</h2>
+                    </div>
+                    <button class="cbdm-close-btn" onclick={handleClose} title="Fechar">
+                        <lightning-icon icon-name="utility:close" size="x-small"></lightning-icon>
+                    </button>
+                </div>
+
+                <template if:true={errorMessage}>
+                    <div class="cbdm-banner cbdm-banner--error" role="alert">
+                        <lightning-icon icon-name="utility:error" size="x-small" variant="error"></lightning-icon>
+                        <span>{errorMessage}</span>
+                    </div>
+                </template>
+
+                <template if:true={isLoading}>
+                    <div class="cbdm-loading">
+                        <lightning-spinner size="small" alternative-text="Carregando"></lightning-spinner>
+                    </div>
+                </template>
+
+                <template if:false={isLoading}>
+                    <div class="cbdm-body">
+                        <div class="cbdm-field">
+                            <label class="cbdm-label" for="broadcast-name">Nome</label>
+                            <input
+                                id="broadcast-name"
+                                type="text"
+                                class="cbdm-input"
+                                data-field="name"
+                                value={name}
+                                oninput={handleNameInput}
+                                onblur={handleFieldBlur}
+                                required
+                            />
+                        </div>
+
+                        <div class="cbdm-field">
+                            <label class="cbdm-label" for="broadcast-description">Descrição</label>
+                            <lightning-textarea
+                                id="broadcast-description"
+                                class="cbdm-textarea cbdm-description-control"
+                                data-field="description"
+                                label="Descrição"
+                                variant="label-hidden"
+                                value={description}
+                                onchange={handleDescriptionChange}
+                                onblur={handleFieldBlur}
+                                rows="4"
+                            ></lightning-textarea>
+                        </div>
+
+                        <div class="cbdm-field">
+                            <div class="cbdm-field-head">
+                                <label class="cbdm-label">Audiência inicial</label>
+                            </div>
+                            <c-communicator-broadcast-audience-selector
+                                value={audiences}
+                                onaudiencechange={handleAudienceChange}
+                            ></c-communicator-broadcast-audience-selector>
+                        </div>
+                    </div>
+                </template>
+
+                <template if:true={showArchiveConfirm}>
+                    <div class="cbdm-confirm">
+                        <p class="cbdm-confirm-text">
+                            Tem certeza que deseja encerrar este grupo de comunicados? Ele deixará de aparecer no Comunicador.
+                        </p>
+                        <div class="cbdm-confirm-actions">
+                            <button class="cbdm-button cbdm-button--secondary" onclick={handleCancelArchive} disabled={isSaving}>
+                                Cancelar
+                            </button>
+                            <button class="cbdm-button cbdm-button--danger" onclick={handleConfirmArchive} disabled={isSaving}>
+                                Sim, encerrar grupo
+                            </button>
+                        </div>
+                    </div>
+                </template>
+
+                <div class="cbdm-footer">
+                    <template if:true={hasArchiveAction}>
+                        <button class="cbdm-button cbdm-button--secondary" onclick={handleArchiveClick} disabled={isArchiveDisabled}>
+                            {archiveLabel}
+                        </button>
+                    </template>
+                    <div class="cbdm-footer-actions">
+                        <button class="cbdm-button cbdm-button--secondary" onclick={handleClose} disabled={isSaving}>
+                            Cancelar
+                        </button>
+                        <button class="cbdm-button cbdm-button--primary" onclick={handleSubmit} disabled={isSubmitDisabled}>
+                            <template if:true={isSaving}>
+                                <lightning-spinner size="x-small" alternative-text="Salvando"></lightning-spinner>
+                            </template>
+                            <template if:false={isSaving}>
+                                {submitLabel}
+                            </template>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>

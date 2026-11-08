@@ -84,6 +84,10 @@ export default class CommunicatorChatPicker extends LightningElement {
         this.dispatchEvent(new CustomEvent('close'));
     }
 
+    handleOpenHistory() {
+        this.dispatchEvent(new CustomEvent('openhistory'));
+    }
+
     // ─────────────────────────────────────────
     // Search
     // ─────────────────────────────────────────

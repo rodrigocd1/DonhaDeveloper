@@ -1,0 +1,72 @@
+<template>
+    <div class="comm-grp">
+        <div class="comm-grp__header">
+            <lightning-icon icon-name="utility:groups" size="x-small"></lightning-icon>
+            <span>Grupos de Chat</span>
+        </div>
+
+        <div class="comm-grp__body">
+            <!-- Create group form -->
+            <div class="comm-grp__form">
+                <lightning-input
+                    label="Nome do grupo"
+                    value={newGroupName}
+                    placeholder="Ex: Equipe Advisory SP"
+                    onchange={handleNameChange}
+                    class="comm-grp__name-input"
+                ></lightning-input>
+                <lightning-textarea
+                    label="Descrição (opcional)"
+                    value={newGroupDesc}
+                    placeholder="Descreva o grupo..."
+                    onchange={handleDescChange}
+                    max-length="255"
+                ></lightning-textarea>
+                <lightning-button
+                    label="Criar Grupo"
+                    variant="brand"
+                    onclick={handleCreateGroup}
+                    disabled={isCreating}
+                    class="comm-grp__create-btn"
+                ></lightning-button>
+            </div>
+
+            <hr class="comm-grp__divider" />
+
+            <!-- Groups list -->
+            <template if:true={isLoadingGroups}>
+                <lightning-spinner size="small" alternative-text="Carregando grupos..."></lightning-spinner>
+            </template>
+
+            <template if:true={hasGroups}>
+                <p class="comm-grp__section-label">Grupos ativos</p>
+                <ul class="comm-grp__list">
+                    <template for:each={groups} for:item="grp">
+                        <li key={grp.Id} class="comm-grp__item">
+                            <div class="comm-grp__item-info">
+                                <span class="comm-grp__item-name">{grp.Name}</span>
+                                <span class="comm-grp__item-count">{grp.MemberCount__c} membros</span>
+                            </div>
+                            <div class="comm-grp__item-actions">
+                                <lightning-button
+                                    label="Gerenciar"
+                                    variant="neutral"
+                                    size="small"
+                                    data-id={grp.Id}
+                                    data-name={grp.Name}
+                                    onclick={handleManageGroup}
+                                ></lightning-button>
+                            </div>
+                        </li>
+                    </template>
+                </ul>
+            </template>
+
+            <template if:false={hasGroups}>
+                <template if:false={isLoadingGroups}>
+                    <p class="comm-grp__empty">Nenhum grupo criado ainda.</p>
+                </template>
+            </template>
+        </div>
+    </div>
+</template>

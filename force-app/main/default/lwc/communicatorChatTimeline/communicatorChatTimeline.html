@@ -1,5 +1,11 @@
-<template>
-    <div class="comm-timeline" onscroll={handleScroll}>
+﻿<template>
+    <template if:true={isLoadingMessages}>
+        <div class="comm-timeline__history-loading">
+            <lightning-spinner size="small" alternative-text="Carregando histórico..."></lightning-spinner>
+        </div>
+    </template>
+
+    <div class={timelineClass} onscroll={handleScroll}>
 
         <!-- Load more trigger (top) -->
         <template if:true={hasMoreMessages}>
@@ -14,47 +20,141 @@
         </template>
 
         <!-- Messages -->
-        <template for:each={messages} for:item="msg">
-            <div
-                key={msg.Id}
-                data-message-id={msg.Id}
-                class={msg.bubbleClass}
-            >
-                <!-- Avatar -->
-                <div class="comm-msg__avatar">
-                    <img src={msg.senderPhoto} alt={msg.senderName} class="comm-msg__photo" />
-                </div>
+        <template for:each={timelineMessages} for:item="msg">
 
-                <!-- Bubble -->
-                <div class="comm-msg__content">
-                    <div class="comm-msg__meta">
-                        <span class="comm-msg__sender">{msg.senderName}</span>
-                        <span class="comm-msg__time">{msg.formattedTime}</span>
+            <!-- System message -->
+            <template if:true={msg.isSystemMessage}>
+                <div
+                    key={msg.Id}
+                    data-message-id={msg.Id}
+                    class="comm-msg comm-msg--system"
+                >
+                    <div class="comm-msg__avatar">
+                        <img src={msg.senderPhoto} alt={msg.senderName} class="comm-msg__photo" onerror={handleAvatarError} />
                     </div>
-                    <div class="comm-msg__bubble">
-                        <template if:true={msg.Body__c}>
-                            <!-- eslint-disable-next-line @lwc/lwc/no-inner-html -->
-                            <p class="comm-msg__body" lwc:dom="manual" data-id={msg.Id}></p>
-                        </template>
-                        <template if:true={msg.HasAttachment__c}>
-                            <div class="comm-msg__attachment">
-                                <lightning-icon icon-name="doctype:attachment" size="x-small"></lightning-icon>
-                                <a href={msg.attachmentUrl} target="_blank">Ver anexo</a>
+                    <div class="comm-msg__content">
+                        <p class="comm-msg__system-header">
+                            <strong>Atualização do sistema</strong>&#32;{msg.systemFormattedTime}
+                        </p>
+                        <p class="comm-msg__system-body">{msg.Body__c}</p>
+                    </div>
+                </div>
+            </template>
+
+            <!-- Regular message -->
+            <template if:false={msg.isSystemMessage}>
+                <div
+                    key={msg.Id}
+                    data-message-id={msg.Id}
+                    class={msg.bubbleClass}
+                >
+                    <!-- Avatar -->
+                    <div class="comm-msg__avatar">
+                        <img src={msg.senderPhoto} alt={msg.senderName} class="comm-msg__photo" onerror={handleAvatarError} />
+                    </div>
+
+                    <!-- Bubble -->
+                    <div class="comm-msg__content">
+                        <div class="comm-msg__meta">
+                            <span class="comm-msg__sender">{msg.senderName}</span>
+                            <span class="comm-msg__time">{msg.formattedTime}</span>
+                            <template if:true={msg.showPresenceStatus}>
+                                <span class="comm-msg__presence" aria-hidden="true">
+                                    <span class={msg.presenceDotClass}></span>
+                                    <span>{msg.socketStatusLabel}</span>
+                                </span>
+                            </template>
+                        </div>
+                        <div class="comm-msg__bubble">
+                            <template if:true={msg.Body__c}>
+                                <!-- eslint-disable-next-line @lwc/lwc/no-inner-html -->
+                                <p class="comm-msg__body" lwc:dom="manual" data-id={msg.Id}></p>
+                            </template>
+                            <template if:true={msg.hasAttachment}>
+                                <template for:each={msg.attachments} for:item="attachment">
+                                    <div key={attachment.contentDocumentId} class="comm-msg__attachment">
+                                        <lightning-icon icon-name="doctype:attachment" size="x-small"></lightning-icon>
+                                        <button
+                                            class="comm-msg__attachment-link"
+                                            data-content-document-id={attachment.contentDocumentId}
+                                            data-message-id={msg.Id}
+                                            data-thread-id={msg.Thread__c}
+                                            onclick={handleAttachmentClick}
+                                        >Ver anexo</button>
+                                        <span class="comm-msg__attachment-name">{attachment.fileName}</span>
+                                    </div>
+                                </template>
+                            </template>
+                        </div>
+
+                        <template if:true={msg.hasReplies}>
+                            <div class="comm-msg__thread-controls">
+                                <button
+                                    class="comm-msg__thread-toggle"
+                                    data-parent-id={msg.Id}
+                                    onclick={handleToggleReplies}
+                                >
+                                    {msg.toggleRepliesLabel}
+                                </button>
                             </div>
+                            <template if:false={msg.isRepliesCollapsed}>
+                                <div class="comm-msg__replies">
+                                    <template for:each={msg.replies} for:item="reply">
+                                        <div key={reply.Id} data-message-id={reply.Id} class={reply.threadReplyClass}>
+                                            <div class="comm-msg__avatar">
+                                                <img src={reply.senderPhoto} alt={reply.senderName} class="comm-msg__photo" />
+                                            </div>
+                                            <div class="comm-msg__content">
+                                                <div class="comm-msg__meta">
+                                                    <span class="comm-msg__sender">{reply.senderName}</span>
+                                                    <span class="comm-msg__time">{reply.formattedTime}</span>
+                                                    <template if:true={reply.showPresenceStatus}>
+                                                        <span class="comm-msg__presence" aria-hidden="true">
+                                                            <span class={reply.presenceDotClass}></span>
+                                                            <span>{reply.socketStatusLabel}</span>
+                                                        </span>
+                                                    </template>
+                                                </div>
+                                                <div class="comm-msg__bubble">
+                                                    <template if:true={reply.Body__c}>
+                                                        <!-- eslint-disable-next-line @lwc/lwc/no-inner-html -->
+                                                        <p class="comm-msg__body" lwc:dom="manual" data-id={reply.Id}></p>
+                                                    </template>
+                                                    <template if:true={reply.hasAttachment}>
+                                                        <template for:each={reply.attachments} for:item="attachment">
+                                                            <div key={attachment.contentDocumentId} class="comm-msg__attachment">
+                                                                <lightning-icon icon-name="doctype:attachment" size="x-small"></lightning-icon>
+                                                                <button
+                                                                    class="comm-msg__attachment-link"
+                                                                    data-content-document-id={attachment.contentDocumentId}
+                                                                    data-message-id={reply.Id}
+                                                                    data-thread-id={reply.Thread__c}
+                                                                    onclick={handleAttachmentClick}
+                                                                >Ver anexo</button>
+                                                                <span class="comm-msg__attachment-name">{attachment.fileName}</span>
+                                                            </div>
+                                                        </template>
+                                                    </template>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+                            </template>
                         </template>
                     </div>
                 </div>
-            </div>
+            </template>
+
         </template>
 
         <!-- Empty state -->
         <template if:true={isEmpty}>
             <div class="comm-timeline__empty">
-                <lightning-icon icon-name="utility:chat" size="medium"></lightning-icon>
-                <p>Nenhuma mensagem ainda. Inicie a conversa!</p>
+                <lightning-icon icon-name={emptyIconName} size="medium" class="comm-timeline__empty-icon"></lightning-icon>
+                <p>{emptyText}</p>
             </div>
         </template>
-
         <!-- Bottom anchor for auto-scroll -->
         <div class="comm-timeline__bottom" lwc:ref="bottomAnchor"></div>
     </div>

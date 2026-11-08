@@ -1,0 +1,13 @@
+<template>
+    <lightning-modal-header label="Histórico de mensagens"></lightning-modal-header>
+
+    <lightning-modal-body>
+        <c-communicator-history-page
+            is-modal={isModalContext}
+            initial-thread-id={initialThreadId}
+            opportunity-id={recordId}
+            onnavigatetorecord={handleNavigateToRecord}
+            onnavigatetoar={handleNavigateToAr}
+        ></c-communicator-history-page>
+    </lightning-modal-body>
+</template>

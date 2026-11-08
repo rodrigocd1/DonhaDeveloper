@@ -1,0 +1,464 @@
+<template>
+    <div class="wrapper" style={themeStyle}>
+        <!-- SIDEBAR -->
+        <aside class="sidebar" data-step={currentStep}>
+            <header class="sb-header">
+                <img class="logo" src={logoUrl} alt={resolvedBrandName} />
+                <span class="step-num">{stepLabel}</span>
+            </header>
+
+            <template if:true={isStep1}>
+                <div class="sb-photo" style={sidebarPhotoStyle}></div>
+            </template>
+
+            <div class="sb-body">
+                <nav class="dots" aria-label="Progresso">
+                    <template for:each={stepDots} for:item="d">
+                        <span key={d.key} class={d.cls}></span>
+                    </template>
+                </nav>
+
+                <template if:true={isStep1}>
+                    <h2 class="sb-title">{resolvedStep1SidebarTitle}</h2>
+                    <ul class="sb-list">
+                        <template for:each={sidebarBenefitsStep1} for:item="benefit">
+                            <li key={benefit.key}>{benefit.label}</li>
+                        </template>
+                    </ul>
+                </template>
+
+                <template if:true={isStep2}>
+                    <h2 class="sb-title">{resolvedStep2SidebarTitle}</h2>
+                    <ul class="sb-list">
+                        <template for:each={sidebarBenefitsStep2} for:item="benefit">
+                            <li key={benefit.key}>{benefit.label}</li>
+                        </template>
+                    </ul>
+                </template>
+
+                <template if:true={isStep3}>
+                    <h2 class="sb-title">{resolvedStep3SidebarTitle}</h2>
+                    <ul class="sb-list">
+                        <template for:each={sidebarBenefitsStep3} for:item="benefit">
+                            <li key={benefit.key}>{benefit.label}</li>
+                        </template>
+                    </ul>
+                </template>
+
+                <template if:true={isStep4}>
+                    <h2 class="sb-title">{resolvedStep4SidebarTitle}</h2>
+                    <ul class="sb-list">
+                        <template for:each={sidebarBenefitsStep4} for:item="benefit">
+                            <li key={benefit.key}>{benefit.label}</li>
+                        </template>
+                    </ul>
+                </template>
+
+                <template if:true={isStep5}>
+                    <h2 class="sb-title">{resolvedStep5SidebarTitle}</h2>
+                    <p class="sb-msg">{resolvedStep5SidebarMessage}</p>
+                </template>
+            </div>
+
+            <footer class="sb-footer">
+                <span class="step-progress">{currentStep}/5</span>
+            </footer>
+        </aside>
+
+        <!-- CONTENT PANEL -->
+        <main class="content">
+
+            <!-- Tela 01: Localização e identificação -->
+            <template if:true={isStep1}>
+                <div class="panel panel-step-1">
+                    <template if:true={errorMessage}>
+                        <div class="page-alert" role="alert">{errorMessage}</div>
+                    </template>
+                    <div class="panel-head">
+                        <h1 class="panel-title">{resolvedStep1PanelTitle}</h1>
+                        <p class="panel-sub">{resolvedStep1PanelSubtitle}</p>
+                    </div>
+                    <div class="panel-body">
+                        <template if:true={isLookupSearch}>
+                            <div class="search-type-grid" role="group" aria-label="Tipo de busca">
+                                <template for:each={searchOptions} for:item="option">
+                                    <button key={option.value} class={option.cssClass} type="button" data-value={option.value} onclick={selectSearchType}>{option.label}</button>
+                                </template>
+                            </div>
+                            <div class="lookup-row">
+                                <div class="field lookup-field">
+                                    <label class="field-lbl" for="searchValue">{searchInputLabel}</label>
+                                    <input id="searchValue" class="field-input" type={searchInputType} name="searchValue" value={searchData.value} oninput={handleSearchChange} onchange={handleSearchChange} placeholder={searchInputPlaceholder} inputmode={searchInputMode} required/>
+                                </div>
+                                <button class="btn-primary lookup-submit" type="button" onclick={handleLookupSubmit} disabled={isSearching}>{resolvedSearchButtonLabel}</button>
+                            </div>
+                        </template>
+
+                        <template if:true={isLookupNeedsCpf}>
+                            <div class="lookup-status">
+                                <p class="lookup-status-title">{lookupMessage}</p>
+                                <template if:true={lookupMatches}>
+                                    <div class="masked-list">
+                                        <template for:each={lookupMatches} for:item="match">
+                                            <div class="masked-item" key={match.key}>
+                                                <strong>{match.maskedName}</strong>
+                                                <span>{match.maskedEmail}</span>
+                                                <span>{match.maskedWhatsapp}</span>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </template>
+                            </div>
+                            <div class="lookup-row">
+                                <div class="field lookup-field">
+                                    <label class="field-lbl" for="searchCpf">CPF</label>
+                                    <input id="searchCpf" class="field-input" type="text" name="searchCpf" value={searchData.cpf} oninput={handleSearchCpfChange} onchange={handleSearchCpfChange} placeholder="000.000.000-00" inputmode="numeric" required/>
+                                </div>
+                                <button class="btn-primary lookup-submit" type="button" onclick={handleLookupSubmit} disabled={isSearching}>{resolvedSearchButtonLabel}</button>
+                            </div>
+                            <div class="actions lookup-actions">
+                                <button class="btn-secondary" type="button" onclick={handleLookupTryAgain}>{resolvedSearchAgainLabel}</button>
+                            </div>
+                        </template>
+
+                        <template if:true={isLookupNotFound}>
+                            <div class="lookup-status">
+                                <p class="lookup-status-title">{lookupMessage}</p>
+                            </div>
+                            <div class="actions actions-row lookup-actions">
+                                <button class="btn-secondary" type="button" onclick={handleLookupTryAgain}>{resolvedSearchAgainLabel}</button>
+                                <button class="btn-primary" type="button" onclick={handleStartNewCustomer}>{resolvedNewCustomerLabel}</button>
+                            </div>
+                        </template>
+
+                        <template if:true={isLookupClosed}>
+                            <div class="lookup-status">
+                                <p class="lookup-status-title">{lookupMessage}</p>
+                            </div>
+                            <div class="actions lookup-actions">
+                                <button class="btn-secondary" type="button" onclick={handleLookupTryAgain}>{resolvedSearchAgainLabel}</button>
+                            </div>
+                        </template>
+
+                        <template if:true={isLookupConfirm}>
+                            <template if:true={hasLookupMessage}>
+                                <div class="lookup-status lookup-status-success">
+                                    <p class="lookup-status-title">{lookupMessage}</p>
+                                </div>
+                            </template>
+                            <div class="form-grid confirm-grid">
+                                <div class="field span-6">
+                                    <label class="field-lbl" for="fullName">Nome completo</label>
+                                    <input id="fullName" class="field-input" type="text" name="nomeCompleto" value={formData.nomeCompleto} onchange={handleChange} autocomplete="name" required/>
+                                </div>
+                                <div class="field span-6">
+                                    <label class="field-lbl" for="cpf">CPF</label>
+                                    <input id="cpf" class="field-input" type="text" name="cpf" value={formData.cpf} onchange={handleChange} placeholder="000.000.000-00" inputmode="numeric" required/>
+                                </div>
+                                <div class="field span-6">
+                                    <label class="field-lbl" for="birthDate">Data de nascimento</label>
+                                    <input id="birthDate" class="field-input" type="date" name="dataNasc" value={formData.dataNasc} onchange={handleChange} required/>
+                                </div>
+                                <div class="field span-6">
+                                    <label class="field-lbl" for="whatsapp">WhatsApp</label>
+                                    <input id="whatsapp" class="field-input" type="tel" name="whatsapp" value={formData.whatsapp} onchange={handleChange} placeholder="(00) 00000-0000" autocomplete="tel" required/>
+                                </div>
+                                <div class="field span-12">
+                                    <label class="field-lbl" for="email">E-mail</label>
+                                    <input id="email" class="field-input" type="email" name="email" value={formData.email} onchange={handleChange} autocomplete="email" required/>
+                                </div>
+                            </div>
+                            <div class="actions">
+                                <button class="btn-primary" type="button" onclick={handleConfirmCustomerData} disabled={isConfirmingCustomer}>{resolvedConfirmCustomerButtonLabel} →</button>
+                            </div>
+                        </template>
+
+                        <p class="data-notice">Dados protegidos. Não serão compartilhados.</p>
+                    </div>
+                </div>
+            </template>
+
+            <!-- Tela 02: Conta de Energia -->
+            <template if:true={isStep2}>
+                <div class="panel panel-step-2">
+                    <template if:true={errorMessage}>
+                        <div class="page-alert" role="alert">{errorMessage}</div>
+                    </template>
+                    <div class="panel-head">
+                        <h1 class="panel-title">Conta de <strong>Energia.</strong></h1>
+                        <p class="panel-sub">Informe o valor médio ou envie a conta de energia.</p>
+                    </div>
+                    <div class="panel-body">
+                        <p class="field-q energy-mode-title">Como deseja informar os dados da conta?</p>
+                        <div class="energy-mode-row" role="group" aria-label="Forma de informar conta de energia">
+                            <button class={averageModeClass} type="button" data-value="AVERAGE" onclick={selectEnergyInputMode}>Usar valor médio</button>
+                            <button class={billModeClass} type="button" data-value="BILL" onclick={selectEnergyInputMode}>Enviar conta</button>
+                        </div>
+
+                        <template if:true={isAverageMode}>
+                            <div class="manual-energy-panel">
+                                <p class="field-q">Qual o valor médio da sua conta de energia por mês?</p>
+                                <div class="range-grid">
+                                    <template for:each={energyRanges} for:item="range">
+                                        <button key={range.value} class={range.cssClass} type="button" data-value={range.value} onclick={selectEnergyRange}>{range.label}</button>
+                                    </template>
+                                </div>
+                            </div>
+                        </template>
+
+                        <template if:true={isBillMode}>
+                            <p class="field-q">Conta de energia:</p>
+                            <div class="bill-source-row">
+                                <button class="bill-source-btn" type="button" onclick={startCamera}>Tirar foto da conta</button>
+                                <button class="bill-source-btn" type="button" onclick={triggerBillFileInput}>Enviar arquivo da conta</button>
+                                <input class="hidden-file-input" data-id="billFileInput" type="file" accept={acceptedBillFormats} onchange={handleBillFileChange} />
+                            </div>
+
+                            <template if:true={isCameraOpen}>
+                                <div class="camera-card">
+                                    <video class="camera-preview" data-id="billCamera" autoplay playsinline muted></video>
+                                    <div class="actions actions-row bill-actions">
+                                        <button class="btn-primary" type="button" onclick={capturePhoto}>Usar foto</button>
+                                        <button class="btn-secondary" type="button" onclick={stopCamera}>Cancelar</button>
+                                    </div>
+                                </div>
+                            </template>
+
+                            <template if:true={hasBillFile}>
+                                <div class="bill-preview-card">
+                                    <template if:true={hasBillPreview}>
+                                        <img class="bill-preview-image" src={billPreviewUrl} alt="Prévia da conta de energia" />
+                                    </template>
+                                    <template if:false={hasBillPreview}>
+                                        <div class="bill-file-summary">
+                                            <span class="bill-file-icon">PDF</span>
+                                            <strong>{billFileName}</strong>
+                                        </div>
+                                    </template>
+                                    <div class="actions actions-row bill-actions">
+                                        <template if:true={isCameraCapture}>
+                                            <button class="btn-secondary" type="button" onclick={retakePhoto}>Tirar novamente</button>
+                                        </template>
+                                        <button class="btn-secondary" type="button" onclick={resetBillDocument}>Remover arquivo</button>
+                                    </div>
+                                </div>
+                            </template>
+                        </template>
+
+                        <p class="field-q">O cliente possui energia solar?</p>
+                        <div class="toggle-row">
+                            <button class={solarSimClass} type="button" data-value="sim" onclick={selectSolar} aria-pressed={isSolarYes}>Sim</button>
+                            <button class={solarNaoClass} type="button" data-value="nao" onclick={selectSolar} aria-pressed={isSolarNo}>Não</button>
+                        </div>
+                        <p class="field-q">Tipo de ligação:</p>
+                        <div class="ligacao-row">
+                            <button class={ligacaoMonoClass} type="button" data-value="mono" onclick={selectLigacao}>Monofásica</button>
+                            <button class={ligacaoBiClass} type="button" data-value="bi" onclick={selectLigacao}>Bifásica</button>
+                            <button class={ligacaoTriClass} type="button" data-value="tri" onclick={selectLigacao}>Trifásica</button>
+                        </div>
+
+                        <template if:true={billStatusMessage}>
+                            <p class="data-notice energy-status">{billStatusMessage}</p>
+                        </template>
+
+                        <template if:true={isProcessingBill}>
+                            <div class="processing-state" role="status" aria-live="polite">
+                                <lightning-spinner alternative-text="Analisando conta" size="small"></lightning-spinner>
+                            </div>
+                        </template>
+
+                        <div class="actions">
+                            <button class="btn-primary" type="button" onclick={advanceToStep3} disabled={billActionDisabled}>{billActionLabel} →</button>
+                        </div>
+                        <p class="data-notice">Dados protegidos. Não serão compartilhados.</p>
+                    </div>
+                </div>
+            </template>
+
+            <!-- Tela 03: Simulação Personalizada -->
+            <template if:true={isStep3}>
+                <div class="panel panel-step-3">
+                    <template if:true={errorMessage}>
+                        <div class="page-alert" role="alert">{errorMessage}</div>
+                    </template>
+                    <div class="panel-head">
+                        <h1 class="panel-title">Simulação <strong>Personalizada.</strong></h1>
+                    </div>
+                    <div class="panel-body">
+                        <div class="savings-card">
+                            <p class="sv-lbl">Economia mensal estimada</p>
+                            <p class="sv-val">{savingsMonthlyDisplay}</p>
+                            <p class="sv-brand">{resolvedSimulationBrandText}</p>
+                        </div>
+                        <p class="section-lbl">Detalhes da simulação</p>
+                        <div class="sim-table">
+                            <div class="sim-row">
+                                <span class="sim-label">{currentBillLabel}</span>
+                                <strong class="sim-value">{contaEstimadaDisplay}</strong>
+                            </div>
+                            <div class="sim-row">
+                                <span class="sim-label">Economia mensal estimada</span>
+                                <strong class="sim-value">{savingsMonthlyDisplay}</strong>
+                            </div>
+                            <div class="sim-row">
+                                <span class="sim-label">Desconto VEO</span>
+                                <strong class="sim-value">{descontoPercentDisplay}</strong>
+                            </div>
+                            <div class="sim-row">
+                                <span class="sim-label">Economia anual estimada</span>
+                                <strong class="sim-value">{economiaAnualDisplay}</strong>
+                            </div>
+                        </div>
+                        <p class="section-lbl">Energia renovável</p>
+                        <div class="renewable-box">
+                            <strong>{renewableInfoText}</strong>
+                            <span>{simulationRuleText}</span>
+                            <span>{simulationMessage}</span>
+                        </div>
+                        <p class="section-lbl">Por que a VEO?</p>
+                        <div class="pills-row">
+                            <span class="pill"><span class="pill-dot"></span><span>Sem obras</span></span>
+                            <span class="pill"><span class="pill-dot"></span><span>100% renovável</span></span>
+                            <span class="pill"><span class="pill-dot"></span><span>Sem fidelidade</span></span>
+                            <span class="pill"><span class="pill-dot"></span><span>Economia garantida</span></span>
+                        </div>
+                        <div class="actions actions-row">
+                            <button class="btn-primary" type="button" onclick={goToStep4} disabled={savingsActionDisabled}>{savingsActionLabel} →</button>
+                            <button class="btn-secondary" type="button" onclick={goToStep2}>{simulationSecondaryActionLabel} →</button>
+                        </div>
+                        <p class="data-notice">Dados protegidos. Não serão compartilhados.</p>
+                    </div>
+                </div>
+            </template>
+
+            <!-- Tela 04: Finalização da Adesão -->
+            <template if:true={isStep4}>
+                <div class="panel panel-step-4">
+                    <template if:true={errorMessage}>
+                        <div class="page-alert" role="alert">{errorMessage}</div>
+                    </template>
+                    <div class="panel-head">
+                        <h1 class="panel-title">Finalização da <strong>Adesão.</strong></h1>
+                        <p class="panel-sub">Confirme seus dados antes de finalizar.</p>
+                    </div>
+                    <div class="panel-body">
+                        <div class="summary-card">
+                            <p class="summary-title">Resumo da adesão</p>
+                            <div class="summary-row">
+                                <span>Nome</span>
+                                <strong>{formData.nomeCompleto}</strong>
+                            </div>
+                            <div class="summary-row">
+                                <span>Valor da conta</span>
+                                <strong>{contaEstimadaDisplay}</strong>
+                            </div>
+                            <div class="summary-row">
+                                <span>Desconto VEO</span>
+                                <strong>{descontoPercentDisplay}</strong>
+                            </div>
+                            <div class="summary-row">
+                                <span>Economia estimada</span>
+                                <strong>{savingsMonthlyDisplay}</strong>
+                            </div>
+                            <div class="summary-row">
+                                <span>Economia anual</span>
+                                <strong>{economiaAnualDisplay}</strong>
+                            </div>
+                            <div class="summary-row">
+                                <span>WhatsApp</span>
+                                <strong>{contactPhoneDisplay}</strong>
+                            </div>
+                            <div class="summary-row">
+                                <span>E-mail</span>
+                                <strong>{contactEmailDisplay}</strong>
+                            </div>
+                        </div>
+                        <div class="checks">
+                            <label class="check-item">
+                                <input type="checkbox" name="aceitaTermos" checked={formData.aceitaTermos} onchange={handleCheck} required/>
+                                <span>{resolvedTermsConsentText}</span>
+                            </label>
+                            <label class="check-item">
+                                <input type="checkbox" name="aceitaPrivacidade" checked={formData.aceitaPrivacidade} onchange={handleCheck} required/>
+                                <span>{resolvedPrivacyConsentText}</span>
+                            </label>
+                            <label class="check-item">
+                                <input type="checkbox" name="aceitaContrato" checked={formData.aceitaContrato} onchange={handleCheck} required/>
+                                <span>{resolvedContractConsentText}</span>
+                            </label>
+                            <template if:true={shouldShowProcuracaoConsent}>
+                                <label class="check-item">
+                                    <input type="checkbox" name="aceitaProcuracao" checked={formData.aceitaProcuracao} onchange={handleCheck} required/>
+                                    <span>{resolvedProcuracaoConsentText}</span>
+                                </label>
+                            </template>
+                            <label class="check-item">
+                                <input type="checkbox" name="aceitaContato" checked={formData.aceitaContato} onchange={handleCheck} required/>
+                                <span>{resolvedContactConsentText}</span>
+                            </label>
+                        </div>
+                        <div class="clicksign-box">
+                            <div class="clicksign-head">
+                                <p class="clicksign-title">{resolvedClicksignTitle}</p>
+                                <span class={clicksignStatusClass}>{clicksignStatusLabel}</span>
+                            </div>
+                            <template if:true={isClicksignDisabled}>
+                                <p class="clicksign-text">{resolvedClicksignDisabledText}</p>
+                            </template>
+                            <template if:false={isClicksignDisabled}>
+                                <p class="clicksign-text">{resolvedClicksignEnabledText}</p>
+                                <div class="clicksign-placeholder" role="region" aria-label="Widget Clicksign">
+                                    <span>{resolvedClicksignSandboxText}</span>
+                                    <small>{clicksignConfigDisplay}</small>
+                                </div>
+                            </template>
+                        </div>
+                        <div class="actions actions-row">
+                            <button class="btn-primary" type="button" onclick={handleConfirmar} disabled={confirmAdhesionDisabled}>
+                                <template if:true={isSubmitting}>{resolvedSubmittingLabel}</template>
+                                <template if:false={isSubmitting}>{resolvedReviewLabel} →</template>
+                            </button>
+                            <button class="btn-secondary" type="button" onclick={goToStep3}>{resolvedReviewBackLabel}</button>
+                        </div>
+                        <p class="data-notice">Ao confirmar, um consultor VEO entrará em contato para ativação.</p>
+                    </div>
+                </div>
+            </template>
+
+            <!-- Tela 05: Confirmação -->
+            <template if:true={isStep5}>
+                <div class="panel panel-success panel-step-5">
+                    <div class="success-card">
+                        <div class="success-icon">
+                            <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="60" cy="60" r="60" fill="#F5D000" opacity="0.2"/>
+                                <circle cx="60" cy="60" r="46" fill="#F5D000"/>
+                                <polyline points="35,62 52,79 85,45" fill="none" stroke="#0C3B54" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <h1 class="success-title">{resolvedSuccessTitle}</h1>
+                        <p class="success-msg">{resolvedSuccessMessage}</p>
+                        <p class="success-msg">{resolvedSuccessDetail}</p>
+                        <template if:true={hasOpportunityCode}>
+                            <div class="success-code">
+                                <span>{resolvedSuccessCodeLabel}</span>
+                                <strong>{opportunityCodeDisplay}</strong>
+                            </div>
+                        </template>
+                        <div class="actions actions-row actions-center">
+                            <button class="btn-primary" type="button" onclick={restart}>{resolvedSuccessRestartLabel}</button>
+                        </div>
+                    </div>
+                </div>
+            </template>
+
+            <template if:true={shouldShowDevControls}>
+                <div class="dev-controls" aria-label="Controles de teste">
+                    <button class="dev-btn dev-btn-back" type="button" onclick={goToPreviousStep}>Retroceder página</button>
+                    <button class="dev-btn dev-btn-next" type="button" onclick={goToNextStep}>Avançar página</button>
+                </div>
+            </template>
+
+        </main>
+    </div>
+</template>

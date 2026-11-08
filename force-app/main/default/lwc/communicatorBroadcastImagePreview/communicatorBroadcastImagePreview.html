@@ -1,0 +1,37 @@
+<template>
+    <section
+        class="comm-broadcast-image-preview"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="comm-broadcast-image-preview-title"
+        onkeydown={handleKeydown}
+    >
+        <div class="comm-broadcast-image-preview__backdrop" onclick={handleBackdropClick}></div>
+
+        <div class="comm-broadcast-image-preview__surface" onclick={handleSurfaceClick}>
+            <div class="comm-broadcast-image-preview__header">
+                <h2 class="comm-broadcast-image-preview__title" id="comm-broadcast-image-preview-title">
+                    {fileName}
+                </h2>
+                <button
+                    type="button"
+                    class="comm-broadcast-image-preview__close"
+                    data-close-button
+                    onclick={handleCloseClick}
+                    title="Fechar imagem"
+                    aria-label="Fechar imagem"
+                >
+                    <lightning-icon icon-name="utility:close" size="x-small"></lightning-icon>
+                </button>
+            </div>
+
+            <div class="comm-broadcast-image-preview__body">
+                <img
+                    class="comm-broadcast-image-preview__image"
+                    src={src}
+                    alt={alternativeText}
+                />
+            </div>
+        </div>
+    </section>
+</template>

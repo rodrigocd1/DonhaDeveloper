@@ -1,0 +1,295 @@
+<template>
+    <div class="comm-gtl">
+
+        <!-- Loading -->
+        <template if:true={_isLoading}>
+            <div class="comm-gtl__loading">
+                <lightning-spinner size="small" alternative-text="Carregando mensagens do grupo..."></lightning-spinner>
+                <span class="comm-gtl__loading-text">Carregando mensagens...</span>
+            </div>
+        </template>
+
+        <!-- Estado vazio -->
+        <template if:true={isEmpty}>
+            <div class="comm-gtl__empty">
+                <lightning-icon icon-name="utility:groups" size="medium" class="comm-gtl__empty-icon"></lightning-icon>
+                <p class="comm-gtl__empty-title">Nenhuma menção a este grupo ainda.</p>
+                <p class="comm-gtl__empty-text">Mensagens aparecerão aqui quando este grupo for mencionado em uma conversa.</p>
+            </div>
+        </template>
+
+        <!-- Lista de mensagens (somente menções originais no topo) -->
+        <template if:true={hasMessages}>
+            <ul class="comm-gtl__list">
+                <template for:each={messagesWithReplyState} for:item="msg">
+                    <li key={msg.Id} class="comm-gtl__item" data-msg-id={msg.Id}>
+                        <div class={msg.messageClass}>
+
+                            <!-- Avatar + cabeçalho da menção -->
+                            <div class="comm-gtl__msg-header">
+                                <template if:true={msg.senderPhoto}>
+                                    <img class="comm-gtl__avatar" src={msg.senderPhoto} alt={msg.senderName} />
+                                </template>
+                                <template if:false={msg.senderPhoto}>
+                                    <div class="comm-gtl__avatar comm-gtl__avatar--placeholder">
+                                        <lightning-icon icon-name="standard:user" size="x-small"></lightning-icon>
+                                    </div>
+                                </template>
+                                <div class="comm-gtl__msg-meta">
+                                    <span class="comm-gtl__sender">{msg.senderName}</span>
+                                    <span class="comm-gtl__time">{msg.formattedTime}</span>
+                                </div>
+                                <div class="comm-gtl__header-right">
+                                    <template if:true={msg.opportunityId}>
+                                        <button
+                                            class="comm-gtl__related-link"
+                                            data-opportunity-id={msg.opportunityId}
+                                            onclick={handleAccessOpportunity}
+                                        >
+                                            <lightning-icon icon-name="standard:opportunity" size="xx-small" class="comm-gtl__related-link-icon"></lightning-icon>
+                                            <span>{msg.opportunityName}</span>
+                                        </button>
+                                    </template>
+                                    <div class="comm-gtl__stage-row">
+                                        <span class="comm-gtl__stage-label">Fase atual:</span>
+                                        <span class={msg.stageBadgeClass}>{msg.stageName}</span>
+                                    </div>
+                                    <template if:true={msg.showRelatedRef}>
+                                        <div class="comm-gtl__related-links">
+                                            <template if:true={msg.isRelatedRefClickable}>
+                                                <button
+                                                    class="comm-gtl__related-link"
+                                                    data-record-id={msg.relatedRefId}
+                                                    data-record-name={msg.relatedRefName}
+                                                    data-related-type={msg.relatedRefType}
+                                                    data-object-api-name={msg.relatedRefObjectApiName}
+                                                    onclick={handleAccessRelated}
+                                                >
+                                                    <lightning-icon icon-name="utility:work_order_type" size="xx-small" class="comm-gtl__related-link-icon"></lightning-icon>
+                                                    <span>{msg.relatedRefName}</span>
+                                                </button>
+                                            </template>
+                                            <template if:false={msg.isRelatedRefClickable}>
+                                                <div class="comm-gtl__related-link">
+                                                    <lightning-icon icon-name="utility:work_order_type" size="xx-small" class="comm-gtl__related-link-icon"></lightning-icon>
+                                                    <span>{msg.relatedRefName}</span>
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+
+                            <!-- Corpo da menção -->
+                            <p class="comm-gtl__body">{msg.Body__c}</p>
+                            <template if:true={msg.hasAttachment}>
+                                <template for:each={msg.attachments} for:item="attachment">
+                                    <div key={attachment.contentDocumentId} class="comm-msg__attachment">
+                                        <lightning-icon icon-name="doctype:attachment" size="x-small"></lightning-icon>
+                                        <button
+                                            class="comm-msg__attachment-link"
+                                            data-content-document-id={attachment.contentDocumentId}
+                                            data-message-id={msg.Id}
+                                            data-thread-id={msg.Thread__c}
+                                            data-opportunity-id={msg.opportunityId}
+                                            onclick={handleAttachmentClick}
+                                        >Ver anexo</button>
+                                        <span class="comm-msg__attachment-name">{attachment.fileName}</span>
+                                    </div>
+                                </template>
+                            </template>
+
+                            <!-- Respostas aninhadas -->
+                            <template if:true={msg.hasReplies}>
+                                <div class="comm-gtl__thread-controls">
+                                    <button
+                                        class="comm-gtl__thread-toggle"
+                                        data-parent-id={msg.Id}
+                                        onclick={handleToggleReplies}
+                                    >
+                                        {msg.toggleRepliesLabel}
+                                    </button>
+                                </div>
+                                <template if:false={msg.isRepliesCollapsed}>
+                                    <ul class="comm-gtl__replies">
+                                        <template for:each={msg.replies} for:item="reply">
+                                            <li key={reply.Id} class="comm-gtl__reply-item" data-msg-id={reply.Id}>
+                                                <div class={reply.replyClass}>
+                                                    <div class="comm-gtl__msg-header">
+                                                        <template if:true={reply.senderPhoto}>
+                                                            <img class="comm-gtl__avatar comm-gtl__avatar--sm" src={reply.senderPhoto} alt={reply.senderName} />
+                                                        </template>
+                                                        <template if:false={reply.senderPhoto}>
+                                                            <div class="comm-gtl__avatar comm-gtl__avatar--sm comm-gtl__avatar--placeholder">
+                                                                <lightning-icon icon-name="standard:user" size="x-small"></lightning-icon>
+                                                            </div>
+                                                        </template>
+                                                        <div class="comm-gtl__msg-meta">
+                                                            <span class="comm-gtl__sender">{reply.senderName}</span>
+                                                            <span class="comm-gtl__time">{reply.formattedTime}</span>
+                                                        </div>
+                                                    </div>
+                                                    <p class="comm-gtl__body">{reply.Body__c}</p>
+                                                    <template if:true={reply.hasAttachment}>
+                                                        <template for:each={reply.attachments} for:item="attachment">
+                                                            <div key={attachment.contentDocumentId} class="comm-msg__attachment">
+                                                                <lightning-icon icon-name="doctype:attachment" size="x-small"></lightning-icon>
+                                                                <button
+                                                                    class="comm-msg__attachment-link"
+                                                                    data-content-document-id={attachment.contentDocumentId}
+                                                                    data-message-id={reply.Id}
+                                                                    data-thread-id={reply.Thread__c}
+                                                                    data-opportunity-id={msg.opportunityId}
+                                                                    onclick={handleAttachmentClick}
+                                                                >Ver anexo</button>
+                                                                <span class="comm-msg__attachment-name">{attachment.fileName}</span>
+                                                            </div>
+                                                        </template>
+                                                    </template>
+                                                </div>
+                                            </li>
+                                        </template>
+                                    </ul>
+                                </template>
+                            </template>
+
+                            <!-- Footer: Responder ou Fase encerrada (abaixo do toggle de respostas) -->
+                            <div class="comm-gtl__actions">
+                                <template if:true={msg.canReply}>
+                                    <button
+                                        class="comm-gtl__reply-btn"
+                                        data-msg-id={msg.Id}
+                                        onclick={handleReplyClick}
+                                    >
+                                        <lightning-icon icon-name="utility:reply" size="xx-small" class="comm-gtl__reply-icon"></lightning-icon>
+                                        Responder
+                                    </button>
+                                </template>
+                                <template if:false={msg.canReply}>
+                                    <span class="comm-gtl__badge comm-gtl__badge--closed">
+                                        <lightning-icon icon-name="utility:lock" size="xx-small" class="comm-gtl__closed-icon"></lightning-icon>
+                                        Fase encerrada
+                                    </span>
+                                </template>
+                            </div>
+
+                            <!-- Área de resposta inline -->
+                            <template if:true={msg.isReplying}>
+                                <div class="comm-gtl__reply-area">
+                                    <textarea
+                                        class="comm-gtl__reply-input"
+                                        placeholder="Digite sua resposta..."
+                                        value={_replyBody}
+                                        oninput={handleReplyInput}
+                                        rows="3"
+                                    ></textarea>
+                                    <template if:true={_sendError}>
+                                        <p class="comm-gtl__reply-error">{_sendError}</p>
+                                    </template>
+                                    <div class="comm-gtl__reply-buttons">
+                                        <button
+                                            class="comm-gtl__btn comm-gtl__btn--cancel"
+                                            onclick={handleCancelReply}
+                                            disabled={_isSending}
+                                        >
+                                            Cancelar
+                                        </button>
+                                        <button
+                                            class="comm-gtl__btn comm-gtl__btn--send"
+                                            onclick={handleSendReply}
+                                            disabled={_isSending}
+                                        >
+                                            <template if:true={_isSending}>
+                                                <lightning-spinner size="xx-small" alternative-text="Enviando..."></lightning-spinner>
+                                            </template>
+                                            <template if:false={_isSending}>
+                                                Enviar
+                                            </template>
+                                        </button>
+                                    </div>
+                                </div>
+                            </template>
+
+                        </div>
+                    </li>
+                </template>
+            </ul>
+        </template>
+
+        <template if:true={showPagination}>
+            <div class="comm-gtl__pagination">
+                <span class="comm-gtl__total">{totalLabel}</span>
+                <div class="comm-gtl__pagination-right">
+                    <div class="comm-gtl__page-nav">
+                        <button
+                            class="comm-gtl__page-btn"
+                            onclick={handleFirstPage}
+                            disabled={firstDisabled}
+                            title="Primeira página"
+                        >
+                            <lightning-icon icon-name="utility:jump_to_left" size="x-small"></lightning-icon>
+                        </button>
+                        <button
+                            class="comm-gtl__page-btn"
+                            onclick={handlePrevPage}
+                            disabled={prevDisabled}
+                            title="Página anterior"
+                        >
+                            <lightning-icon icon-name="utility:chevronleft" size="x-small"></lightning-icon>
+                        </button>
+                        <div class="comm-gtl__page-list">
+                            <template for:each={paginationItems} for:item="item">
+                                <template if:true={item.page}>
+                                    <button
+                                        key={item.key}
+                                        class={item.className}
+                                        data-page={item.page}
+                                        onclick={handlePageSelect}
+                                    >{item.label}</button>
+                                </template>
+                                <template if:false={item.page}>
+                                    <span key={item.key} class="comm-gtl__page-ellipsis">{item.label}</span>
+                                </template>
+                            </template>
+                        </div>
+                        <button
+                            class="comm-gtl__page-btn"
+                            onclick={handleNextPage}
+                            disabled={nextDisabled}
+                            title="Próxima página"
+                        >
+                            <lightning-icon icon-name="utility:chevronright" size="x-small"></lightning-icon>
+                        </button>
+                        <button
+                            class="comm-gtl__page-btn"
+                            onclick={handleLastPage}
+                            disabled={lastDisabled}
+                            title="Última página"
+                        >
+                            <lightning-icon icon-name="utility:jump_to_right" size="x-small"></lightning-icon>
+                        </button>
+                    </div>
+                    <div class="comm-gtl__page-size">
+                        <select class="comm-gtl__page-size-select" disabled>
+                            <option value={_pageSize}>{pageSizeLabel}</option>
+                        </select>
+                    </div>
+                    <div class="comm-gtl__goto">
+                        <label class="comm-gtl__goto-label">Ir para</label>
+                        <input
+                            type="number"
+                            min="1"
+                            max={totalPages}
+                            class="comm-gtl__goto-input"
+                            value={gotoPageValue}
+                            oninput={handleGotoInput}
+                            onkeydown={handleGotoKeydown}
+                        />
+                        <button class="comm-gtl__goto-btn" onclick={handleGotoPage}>Ir</button>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+    </div>
+</template>

@@ -3,7 +3,8 @@
     <fullName>Observacoes_Agendamento__c</fullName>
     <label>Observações do Agendamento</label>
     <length>32768</length>
-    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
     <type>LongTextArea</type>
     <visibleLines>5</visibleLines>
 </CustomField>

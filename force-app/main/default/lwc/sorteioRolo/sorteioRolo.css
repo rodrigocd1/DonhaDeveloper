@@ -1,0 +1,115 @@
+:host {
+  --rolo-altura-item: 5rem;
+  --rolo-fundo: #0b1f3a;
+  --rolo-destaque: #f6b51b;
+  display: block;
+}
+
+.palco {
+  position: relative;
+}
+
+.janela {
+  position: relative;
+  height: calc(var(--rolo-altura-item) * 3);
+  overflow: hidden;
+  border-radius: 1rem;
+  background: var(--rolo-fundo);
+  box-shadow: inset 0 0 2rem rgba(0, 0, 0, 0.6);
+}
+
+.janela::before,
+.janela::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: var(--rolo-altura-item);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.janela::before {
+  top: 0;
+  background: linear-gradient(var(--rolo-fundo), transparent);
+}
+
+.janela::after {
+  bottom: 0;
+  background: linear-gradient(transparent, var(--rolo-fundo));
+}
+
+.marcador {
+  position: absolute;
+  top: var(--rolo-altura-item);
+  left: 0;
+  right: 0;
+  height: var(--rolo-altura-item);
+  border-top: 3px solid var(--rolo-destaque);
+  border-bottom: 3px solid var(--rolo-destaque);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.rolo {
+  list-style: none;
+  margin: 0;
+  padding: var(--rolo-altura-item) 0 0;
+  will-change: transform;
+}
+
+.item {
+  height: var(--rolo-altura-item);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 1rem;
+  color: #fff;
+  font-size: clamp(1.5rem, 5vw, 3rem);
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.janela_revelada .marcador {
+  background: rgba(246, 181, 27, 0.15);
+  animation: pulsar 0.8s ease-in-out 3;
+}
+
+.confetes {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.confete {
+  position: absolute;
+  top: -1rem;
+  width: 0.6rem;
+  height: 1rem;
+  border-radius: 0.15rem;
+  animation: cair 2.4s ease-in forwards;
+}
+
+@keyframes pulsar {
+  50% {
+    transform: scale(1.04);
+  }
+}
+
+@keyframes cair {
+  to {
+    transform: translateY(18rem) rotate(540deg);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .janela_revelada .marcador,
+  .confete {
+    animation: none;
+  }
+}

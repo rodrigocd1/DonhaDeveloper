@@ -3,6 +3,8 @@
     <fullName>Periodo_Preferido__c</fullName>
     <label>Período Preferido</label>
     <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
     <type>Picklist</type>
     <valueSet>
         <restricted>true</restricted>

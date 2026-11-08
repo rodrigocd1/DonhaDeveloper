@@ -12,6 +12,13 @@
             </div>
             <div class="comm-room__header-right">
                 <lightning-button-icon
+                    icon-name="utility:list"
+                    variant="bare-inverse"
+                    alternative-text="Histórico de mensagens"
+                    title="Histórico de mensagens"
+                    onclick={handleOpenHistory}
+                ></lightning-button-icon>
+                <lightning-button-icon
                     icon-name="utility:search"
                     variant="bare-inverse"
                     alternative-text="Buscar mensagens"

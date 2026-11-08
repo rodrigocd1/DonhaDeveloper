@@ -5,6 +5,7 @@
     <formula>IF( Data_Quality_Score__c =100,&quot;All Lead Details Captured&quot;, &quot;Missing: &quot;&amp;IF( LEN( FirstName)=0,&quot;First Name, &quot;,&quot;&quot;)&amp;&quot;&quot;&amp;IF(LEN(LastName)=0, &quot;Last Name, &quot;,&quot;&quot;)&amp;&quot;&quot;&amp;IF( LEN(Company)=0, &quot;Company, &quot;,&quot;&quot;)&amp;&quot;&quot;&amp;IF( LEN(Phone)=0, &quot;Phone, &quot;,&quot;&quot;)&amp;&quot;&quot;&amp;IF( ISPICKVAL(Salutation,&quot;&quot;), &quot;Salutation, &quot;,&quot;&quot;)&amp;&quot;&quot;&amp;IF( ISPICKVAL(Rating,&quot;&quot;), &quot;Rating, &quot;,&quot;&quot;)&amp;&quot;&quot;&amp;IF( LEN(City)=0, &quot;Complete Address, &quot;,&quot;&quot;)&amp;&quot;&quot;&amp;IF( LEN(Email)=0, &quot;Email&quot;,&quot;&quot;))</formula>
     <label>Data Quality Description</label>
     <required>false</required>
+    <trackHistory>false</trackHistory>
     <type>Text</type>
     <unique>false</unique>
 </CustomField>

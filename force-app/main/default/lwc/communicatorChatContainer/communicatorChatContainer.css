@@ -14,20 +14,21 @@
 
 /* Tamanho normal — min-height: 0 é essencial para o scroll funcionar */
 .comm-chat--normal {
-    width: 420px;
-    height: 600px;
-    max-height: 90vh;
+    width: min(420px, calc(100vw - 1.5rem));
+    height: min(600px, calc(100dvh - 2rem));
+    max-height: calc(100dvh - 1rem);
     min-height: 0;
 }
 
 .comm-chat--maximized {
     position: fixed;
-    top: 2rem;
+    top: 1rem;
     left: 50%;
     transform: translateX(-50%);
-    width: 80vw;
-    height: 85vh;
+    width: min(1200px, calc(100vw - 2rem));
+    height: calc(100dvh - 2rem);
     max-width: 1200px;
+    max-height: calc(100dvh - 2rem);
     z-index: 9999;
     min-height: 0;
 }
@@ -102,6 +103,13 @@
     }
 }
 
+@media (max-height: 800px) and (min-width: 768px) {
+    .comm-chat--normal {
+        height: min(600px, calc(100dvh - 1rem));
+        max-height: calc(100dvh - 0.5rem);
+    }
+}
+
 /* ── Ícones e botões brancos no cabeçalho azul ──────────────────
    bare-inverse e variant=inverse garantem branco no Lightning.
    Os tokens abaixo garantem branco também no Experience Cloud,
@@ -116,6 +124,11 @@
 }
 .comm-chat__header lightning-button-icon:hover {
     --slds-c-button-neutral-color-background: rgba(255,255,255,0.18);
+}
+
+.comm-chat__header-btn--active {
+    --slds-c-button-neutral-color-background: rgba(255,255,255,0.25);
+    border-radius: 0.25rem;
 }
 .comm-chat__header lightning-icon {
     --lwc-colorTextIconDefault: #fff;

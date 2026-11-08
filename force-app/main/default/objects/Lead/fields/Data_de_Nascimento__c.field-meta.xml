@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Data_de_Nascimento__c</fullName>
+    <description>Data de Nascimento do Lead, caso tenha sido informada na Landing Page (ex: Heineken)</description>
+    <inlineHelpText>Data de Nascimento do Lead, caso tenha sido informada na Landing Page.</inlineHelpText>
+    <label>Data de Nascimento</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Date</type>
+</CustomField>

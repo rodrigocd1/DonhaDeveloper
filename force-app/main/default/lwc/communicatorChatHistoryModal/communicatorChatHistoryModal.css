@@ -1,0 +1,26 @@
+/* Force the modal body to fill all available height */
+:host lightning-modal-body {
+    padding: 0 !important;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Ensure the history page fills the modal body as a flex item.
+   flex-basis: 0 makes the height definite so child height: 100% resolves correctly. */
+c-communicator-history-page {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 0;
+    min-height: 0;
+    overflow: hidden;
+}
+
+c-communicator-chat-history,
+c-communicator-chat-timeline {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    height: 100%;
+}

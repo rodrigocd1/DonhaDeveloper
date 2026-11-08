@@ -3,7 +3,7 @@
 /*
  * SCROLL FIX: Para o scroll funcionar dentro de um flex container,
  * o elemento precisa de min-height: 0. Sem isso, o flex item
- * expande além do container pai e o overflow-y não funciona.
+ * expande alÃ©m do container pai e o overflow-y nÃ£o funciona.
  */
 :host {
     display: flex;
@@ -11,26 +11,50 @@
     flex: 1;
     min-height: 0;
     overflow: hidden;
+    position: relative;
 }
 
 .comm-timeline {
     flex: 1;
     min-height: 0;
     overflow-y: auto;
-    padding: 1rem;
+    overflow-x: hidden;
+    /* 'contain' prevents scroll chaining in bounded contexts (floating widget).
+       History page overrides this to 'auto' via --comm-overscroll-behavior. */
+    overscroll-behavior-y: var(--comm-overscroll-behavior, contain);
+    padding: 1.25rem 1rem;
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
-    background: #f3f3f3;
+    gap: 1rem;
+    background: #ffffff;
     scroll-behavior: smooth;
 }
 
-/* ── Carregar mais ── */
+.comm-timeline--floating.comm-timeline--empty {
+    background: #eef7ff;
+    padding: 0;
+}
+
+.comm-timeline--empty {
+    background: #eef7ff;
+}
+
+/* â”€â”€ Carregar mais â”€â”€ */
 .comm-timeline__load-more {
     display: flex;
     justify-content: center;
     padding: 0.5rem 0;
     flex-shrink: 0;
+}
+
+.comm-timeline__history-loading {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.82);
+    z-index: 10;
 }
 
 .comm-timeline__load-btn {
@@ -48,7 +72,7 @@
     background: #e5e5e5;
 }
 
-/* ── Estado vazio ── */
+/* â”€â”€ Estado vazio â”€â”€ */
 .comm-timeline__empty {
     display: flex;
     flex-direction: column;
@@ -61,12 +85,22 @@
     text-align: center;
 }
 
-/* ── Linha de mensagem ── */
+.comm-timeline--floating.comm-timeline--empty .comm-timeline__empty {
+    padding: 3.5rem 2rem;
+    color: #5e5e5e;
+}
+
+.comm-timeline__empty-icon {
+    --lwc-colorTextIconDefault: #c9c7c5;
+    --slds-c-icon-color-foreground-default: #c9c7c5;
+}
+
+/* â”€â”€ Linha de mensagem â”€â”€ */
 .comm-msg {
     display: flex;
     gap: 0.5rem;
-    align-items: flex-end;
-    max-width: 85%;
+    align-items: flex-start;
+    max-width: 92%;
     animation: fadeIn 0.2s ease;
     flex-shrink: 0;
 }
@@ -78,14 +112,19 @@
 
 .comm-msg--mine {
     flex-direction: row-reverse;
-    align-self: flex-end;
+    align-self: stretch;
+    max-width: 100%;
 }
 
 .comm-msg--theirs {
     align-self: flex-start;
 }
 
-/* ── Avatar ── */
+.comm-msg--mine .comm-msg__avatar {
+    display: none;
+}
+
+/* â”€â”€ Avatar â”€â”€ */
 .comm-msg__photo {
     width: 32px;
     height: 32px;
@@ -94,76 +133,411 @@
     flex-shrink: 0;
 }
 
-/* ── Conteúdo ── */
+/* â”€â”€ ConteÃºdo â”€â”€ */
 .comm-msg__content {
     display: flex;
     flex-direction: column;
     gap: 0.2rem;
     max-width: 100%;
+    min-width: 0;
 }
 
 .comm-msg--mine .comm-msg__content {
-    align-items: flex-end;
+    width: 100%;
+    align-items: flex-start;
+    background: #0176d3;
+    color: #ffffff;
+    padding: 0.9rem 1rem;
+    border-radius: 1rem;
 }
 
 .comm-msg__meta {
     display: flex;
-    gap: 0.4rem;
-    font-size: 0.7rem;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    font-size: 0.8rem;
     color: #706e6b;
+}
+
+.comm-msg--mine .comm-msg__meta {
+    color: rgba(255, 255, 255, 0.95);
 }
 
 .comm-msg__sender {
     font-weight: 600;
 }
 
-/* ── Balão ── */
+/* â”€â”€ PresenÃ§a (Online) â”€â”€ */
+.comm-msg__presence {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-left: 0.25rem;
+    font-weight: 600;
+}
+
+.comm-msg__presence-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #2ecc71;
+}
+
+.comm-msg__presence-dot--online {
+    background: #2ecc71;
+}
+
+.comm-msg__presence-dot--offline {
+    background: #8c8c8c;
+}
+
+.comm-msg__presence-dot--connecting {
+    background: #f5a623;
+}
+
+/* â”€â”€ BalÃ£o â”€â”€ */
 .comm-msg__bubble {
     padding: 0.6rem 0.85rem;
     border-radius: 1rem;
     font-size: 0.875rem;
     line-height: 1.5;
     word-break: break-word;
+    overflow-wrap: anywhere;
+}
+
+.comm-msg__mention-link {
+    color: #0176d3;
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+.comm-msg--mine .comm-msg__mention-link {
+    color: #ffffff;
 }
 
 .comm-msg--mine .comm-msg__bubble {
-    background: #0176d3;
-    color: #fff;
-    border-bottom-right-radius: 0.25rem;
+    background: transparent;
+    color: inherit;
+    padding: 0.55rem 0 0;
+    border-radius: 0;
 }
 
 .comm-msg--theirs .comm-msg__bubble {
     background: #fff;
     color: #181818;
-    border: 1px solid #dddbda;
-    border-bottom-left-radius: 0.25rem;
+    border: none;
+    border-radius: 0.9rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
 }
 
-/* ── Anexo ── */
+.comm-msg__thread-controls {
+    margin-top: 0.5rem;
+}
+
+.comm-msg__thread-toggle {
+    border: none;
+    background: transparent;
+    color: #0176d3;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0;
+}
+
+.comm-msg__thread-toggle:hover {
+    text-decoration: underline;
+}
+
+.comm-msg--mine .comm-msg__thread-toggle {
+    color: rgba(255, 255, 255, 0.96);
+}
+
+.comm-msg--mine .comm-msg__thread-toggle:hover {
+    color: #ffffff;
+}
+
+.comm-msg__replies {
+    margin-top: 0.6rem;
+    padding-left: 0.75rem;
+    border-left: 2px solid #d8dde6;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+}
+
+.comm-msg--reply {
+    max-width: 100%;
+}
+
+.comm-msg--reply .comm-msg__photo {
+    width: 24px;
+    height: 24px;
+}
+
+.comm-msg--reply .comm-msg__bubble {
+    font-size: 0.82rem;
+    padding: 0.5rem 0.75rem;
+}
+
+/* â”€â”€ Anexo â”€â”€ */
 .comm-msg__attachment {
     display: flex;
     align-items: center;
     gap: 0.35rem;
-    margin-top: 0.35rem;
-    font-size: 0.8rem;
+    margin-top: 0.7rem;
+    font-size: 0.85rem;
+    width: fit-content;
+    padding: 0.35rem 0.6rem;
+    border-radius: 0.75rem;
+    background: rgba(255, 255, 255, 0.92);
 }
 
-.comm-msg--mine .comm-msg__attachment a {
-    color: #d4e8fb;
+.comm-msg__attachment-link {
+    background: transparent;
+    border: none;
+    color: #0176d3;
+    cursor: pointer;
+    font: inherit;
+    padding: 0;
+    text-decoration: underline;
 }
 
-.comm-msg--theirs .comm-msg__attachment a {
+.comm-msg--theirs .comm-msg__attachment-link,
+.comm-msg--mine .comm-msg__attachment-link {
     color: #0176d3;
 }
 
-/* ── Destaque de busca ── */
+.comm-msg__attachment-name {
+    color: #16325c;
+    word-break: break-word;
+}
+
+/* â”€â”€ Destaque de busca â”€â”€ */
 .comm-msg--highlighted .comm-msg__bubble {
     outline: 2px solid #f8ca00;
     outline-offset: 2px;
 }
 
-/* ── Âncora do fundo ── */
+.comm-msg--highlighted.comm-msg--mine .comm-msg__content {
+    outline: 2px solid #f8ca00;
+    outline-offset: 2px;
+}
+
+/* â”€â”€ Ã‚ncora do fundo â”€â”€ */
+/* ── Mensagem de sistema ── */
+.comm-msg--system {
+    align-self: flex-start;
+    max-width: 92%;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 0;
+    margin: 0;
+    animation: fadeIn 0.2s ease;
+    flex-shrink: 0;
+}
+
+.comm-msg__system-header {
+    font-size: 0.8rem;
+    color: #3e3e3c;
+    line-height: 1.45;
+    margin: 0;
+}
+
+.comm-msg__system-header strong {
+    font-weight: 700;
+}
+
+.comm-msg__system-body {
+    font-size: 0.8rem;
+    color: #706e6b;
+    line-height: 1.45;
+    white-space: pre-wrap;
+    word-break: break-word;
+    margin: 0.1rem 0 0 0;
+}
+
 .comm-timeline__bottom {
     height: 1px;
     flex-shrink: 0;
+}
+
+/* â”€â”€ Badge de status do registro â”€â”€ */
+.comm-msg__status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin-top: 0.3rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 0.75rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.35);
+    color: inherit;
+    width: fit-content;
+}
+
+.comm-msg--theirs .comm-msg__status-badge {
+    background: #f0f7ff;
+    border-color: #d4e8fb;
+    color: #0176d3;
+}
+
+/* â”€â”€ MenÃ§Ã£o ao usuÃ¡rio atual â”€â”€ */
+.comm-msg--mentioned .comm-msg__bubble {
+    border-left: 3px solid #7526e3;
+    background: #f8f2ff !important;
+    color: #181818 !important;
+}
+
+.comm-msg--mentioned::before {
+    content: '@';
+    position: absolute;
+    left: -14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #7526e3;
+}
+
+.comm-msg--mentioned {
+    position: relative;
+}
+
+@media (max-height: 800px) and (min-width: 768px) {
+    .comm-timeline {
+        padding: 1rem 0.75rem;
+    }
+}
+
+@media (min-width: 1200px) and (min-resolution: 1.25dppx) {
+    .comm-msg__meta {
+        font-size: 0.72rem;
+    }
+
+    .comm-msg__bubble {
+        font-size: 0.78rem;
+        line-height: 1.4;
+    }
+
+    .comm-msg__thread-toggle,
+    .comm-msg__attachment {
+        font-size: 0.74rem;
+    }
+
+    .comm-msg__system-header,
+    .comm-msg__system-body {
+        font-size: 0.74rem;
+    }
+}
+
+@media (max-height: 720px) and (min-width: 768px) {
+    .comm-timeline {
+        padding: 0.7rem 0.55rem;
+        gap: 0.7rem;
+    }
+
+    .comm-msg__photo {
+        width: 26px;
+        height: 26px;
+    }
+
+    .comm-msg__meta {
+        gap: 0.35rem;
+        font-size: 0.68rem;
+    }
+
+    .comm-msg__bubble {
+        font-size: 0.74rem;
+        line-height: 1.35;
+        padding: 0.48rem 0.68rem;
+    }
+
+    .comm-msg--mine .comm-msg__content {
+        padding: 0.65rem 0.75rem;
+    }
+
+    .comm-msg__thread-toggle,
+    .comm-msg__attachment {
+        font-size: 0.7rem;
+    }
+
+    .comm-msg__system-header,
+    .comm-msg__system-body {
+        font-size: 0.7rem;
+        line-height: 1.35;
+    }
+}
+
+@media (min-width: 1200px) and (max-height: 760px) and (min-resolution: 1.25dppx) {
+    .comm-msg__meta {
+        font-size: 0.64rem;
+    }
+
+    .comm-msg__bubble {
+        font-size: 0.7rem;
+        line-height: 1.3;
+    }
+
+    .comm-msg__thread-toggle,
+    .comm-msg__attachment,
+    .comm-msg__system-header,
+    .comm-msg__system-body {
+        font-size: 0.66rem;
+    }
+}
+
+@media (max-width: 767px) {
+    .comm-timeline {
+        padding: 1rem 0.75rem;
+    }
+
+    .comm-msg {
+        max-width: 96%;
+    }
+
+    .comm-msg__replies {
+        padding-left: 0.6rem;
+    }
+}
+
+/* iOS mobile (compact variant only): denser timeline for better message visibility */
+@supports (-webkit-touch-callout: none) {
+    @media (max-width: 767px) {
+        .comm-timeline--floating {
+            padding: 0.7rem 0.55rem;
+            gap: 0.6rem;
+        }
+
+        .comm-timeline--floating .comm-msg__photo {
+            width: 26px;
+            height: 26px;
+        }
+
+        .comm-timeline--floating .comm-msg__meta {
+            gap: 0.28rem;
+            font-size: 0.66rem;
+        }
+
+        .comm-timeline--floating .comm-msg__bubble {
+            font-size: 0.78rem;
+            line-height: 1.32;
+            padding: 0.45rem 0.65rem;
+        }
+
+        .comm-timeline--floating .comm-msg--mine .comm-msg__content {
+            padding: 0.58rem 0.68rem;
+        }
+
+        .comm-timeline--floating .comm-msg__thread-toggle,
+        .comm-timeline--floating .comm-msg__attachment,
+        .comm-timeline--floating .comm-msg__system-header,
+        .comm-timeline--floating .comm-msg__system-body {
+            font-size: 0.66rem;
+        }
+    }
 }

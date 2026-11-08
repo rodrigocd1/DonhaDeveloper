@@ -62,7 +62,7 @@ private class CommunicatorChatControllerTest {
         CommunicatorThread__c thread = CommunicatorTestFactory.createThread(opp.Id);
 
         Test.startTest();
-        CommunicatorMessage__c msg = CommunicatorChatController.sendMessage(thread.Id, 'Hello world');
+        CommunicatorMessage__c msg = CommunicatorChatController.sendMessage(thread.Id, 'Hello world', null);
         Test.stopTest();
 
         Assert.isNotNull(msg.Id);
@@ -77,7 +77,7 @@ private class CommunicatorChatControllerTest {
 
         try {
             Test.startTest();
-            CommunicatorChatController.sendMessage(thread.Id, '');
+            CommunicatorChatController.sendMessage(thread.Id, '', null);
             Test.stopTest();
             Assert.fail('Expected AuraHandledException');
         } catch (AuraHandledException ex) {
@@ -226,7 +226,7 @@ private class CommunicatorChatControllerTest {
 
         try {
             Test.startTest();
-            CommunicatorChatController.sendMessageWithAttachment(thread.Id, 'See attachment', null);
+            CommunicatorChatController.sendMessageWithAttachment(thread.Id, 'See attachment', null, null);
             Test.stopTest();
             Assert.fail('Expected AuraHandledException');
         } catch (AuraHandledException ex) {

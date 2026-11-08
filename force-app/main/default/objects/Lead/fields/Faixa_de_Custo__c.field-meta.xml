@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Faixa_de_Custo__c</fullName>
+    <description>Faixa de custo informada pelo lead no momento do seu cadastro. É utilizado na estimativa do custo mensal com energia.</description>
+    <inlineHelpText>Faixa de custo informada pelo lead no momento do seu cadastro. É utilizado na estimativa do custo mensal com energia.</inlineHelpText>
+    <label>Faixa de Custo</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetName>Faixa_de_Custo</valueSetName>
+    </valueSet>
+</CustomField>

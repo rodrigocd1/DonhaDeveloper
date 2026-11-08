@@ -1,0 +1,96 @@
+<template>
+  <main class="painel">
+    <h1 class="titulo">{tituloExibido}</h1>
+
+    <template lwc:if={isBusy}>
+      <lightning-spinner alternative-text="Carregando"></lightning-spinner>
+    </template>
+
+    <template lwc:if={errorMessage}>
+      <div class="alerta" role="alert">
+        <p>{errorMessage}</p>
+        <lightning-button label="Tentar novamente" onclick={handleTentarNovamente}></lightning-button>
+        <lightning-button label="Novo sorteio" onclick={handleNovo}></lightning-button>
+      </div>
+    </template>
+
+    <template lwc:if={semSorteio}>
+      <section class="cartao inicio">
+        <lightning-input label="Nome do sorteio (opcional)" max-length="80" value={titulo} onchange={handleTitulo}></lightning-input>
+        <lightning-button variant="brand" label="Criar sorteio" disabled={isBusy} onclick={handleCriar}></lightning-button>
+      </section>
+    </template>
+
+    <template lwc:if={inscricoesAbertas}>
+      <section class="grade">
+        <div class="cartao convite">
+          <c-sorteio-qr-code link={linkParticipacao}></c-sorteio-qr-code>
+          <p class="link">{linkParticipacao}</p>
+          <p class="codigo-rotulo">Código do sorteio</p>
+          <p class="codigo">{painel.codigoAcesso}</p>
+          <lightning-button variant="brand" label="Encerrar inscrições e começar o sorteio" disabled={isBusy} onclick={handleEncerrar}></lightning-button>
+        </div>
+        <div class="cartao lista">
+          <h2 class="subtitulo">{rotuloCadastrados}</h2>
+          <ol class="nomes" aria-live="polite">
+            <template for:each={participantes} for:item="item">
+              <li key={item.posicao}>{item.nome} <span class="email">{item.emailMascarado}</span></li>
+            </template>
+          </ol>
+        </div>
+      </section>
+    </template>
+
+    <template lwc:if={emSorteio}>
+      <section class="grade">
+        <div class="cartao sorteio">
+          <c-sorteio-rolo onfim={handleFimRolo}></c-sorteio-rolo>
+          <template lwc:if={ganhadorAtual}>
+            <p class="ganhador" aria-live="assertive">🎉 {ganhadorAtual.nome} 🎉</p>
+          </template>
+          <div class="acoes">
+            <lightning-button variant="brand" label={rotuloSortear} disabled={sortearBloqueado} onclick={handleSortear}></lightning-button>
+            <lightning-button label="Finalizar sorteio" disabled={acaoBloqueada} onclick={handleFinalizar}></lightning-button>
+          </div>
+        </div>
+        <div class="cartao lista">
+          <lightning-tabset>
+            <lightning-tab label={rotuloRestantes}>
+              <ol class="nomes">
+                <template for:each={restantes} for:item="item">
+                  <li key={item.posicao}>{item.nome} <span class="email">{item.emailMascarado}</span></li>
+                </template>
+              </ol>
+            </lightning-tab>
+            <lightning-tab label={rotuloGanhadores}>
+              <ol class="nomes">
+                <template for:each={ganhadores} for:item="item">
+                  <li key={item.posicao}><span class="ordem">{item.ordem}º</span> {item.nome}</li>
+                </template>
+              </ol>
+            </lightning-tab>
+            <lightning-tab label={rotuloCadastrados}>
+              <ol class="nomes">
+                <template for:each={participantes} for:item="item">
+                  <li key={item.posicao}>{item.nome} <span class="email">{item.emailMascarado}</span></li>
+                </template>
+              </ol>
+            </lightning-tab>
+          </lightning-tabset>
+        </div>
+      </section>
+    </template>
+
+    <template lwc:if={finalizado}>
+      <section class="cartao">
+        <h2 class="subtitulo">{rotuloGanhadores}</h2>
+        <ol class="nomes">
+          <template for:each={ganhadores} for:item="item">
+            <li key={item.posicao}><span class="ordem">{item.ordem}º</span> {item.nome}</li>
+          </template>
+        </ol>
+        <lightning-button variant="brand" label="Novo sorteio" onclick={handleNovo}></lightning-button>
+      </section>
+    </template>
+  </main>
+</template>

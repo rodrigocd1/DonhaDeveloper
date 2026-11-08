@@ -1,0 +1,35 @@
+:host {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+    position: relative;
+}
+
+.comm-broadcast-workspace {
+    display: flex;
+    flex-direction: column;
+    gap: var(--comm-broadcast-workspace-gap, 0.75rem);
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+    background: #ffffff;
+}
+
+c-communicator-broadcast-list,
+c-communicator-broadcast-timeline {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+}
+
+c-communicator-broadcast-composer {
+    display: block;
+    flex-shrink: 0;
+}
+
+.comm-broadcast-workspace__bottom {
+    height: 1px;
+    width: 100%;
+    flex-shrink: 0;
+}

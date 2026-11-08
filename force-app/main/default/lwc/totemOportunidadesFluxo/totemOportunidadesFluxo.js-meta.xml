@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>67.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>Totem Oportunidades Fluxo</masterLabel>
+    <targets>
+        <target>lightningCommunity__Default</target>
+        <target>lightningCommunity__Page</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightningCommunity__Default">
+            <property name="brandName" type="String" label="Nome da marca" default="VEO Energia"/>
+            <property name="partnerName" type="String" label="Nome do parceiro"/>
+            <property name="primaryLogoUrl" type="String" label="URL do logo principal"/>
+            <property name="partnerLogoUrl" type="String" label="URL do logo do parceiro"/>
+            <property name="backgroundImageUrl" type="String" label="URL da imagem de fundo"/>
+            <property name="promoImageUrl" type="String" label="URL da imagem promocional"/>
+            <property name="giftImageUrl" type="String" label="URL da imagem do brinde"/>
+            <property name="primaryColor" type="String" label="Cor principal" default="#074f70"/>
+            <property name="secondaryColor" type="String" label="Cor secundaria" default="#053d57"/>
+            <property name="accentColor" type="String" label="Cor de destaque" default="#f6eb60"/>
+            <property name="textColor" type="String" label="Cor de texto" default="#ffffff"/>
+            <property name="surfaceColor" type="String" label="Cor de superficie" default="#e8edef"/>
+            <property name="heroTitle" type="String" label="Titulo da etapa inicial" default="Boas-vindas a VEO Energia."/>
+            <property name="heroSubtitle" type="String" label="Subtitulo da etapa inicial" default="Preencha seus dados para receber a simulacao personalizada."/>
+            <property name="primaryButtonLabel" type="String" label="Label do botao principal" default="Continuar"/>
+            <property name="secondaryButtonLabel" type="String" label="Label do botao secundario" default="Refazer análise"/>
+            <property name="successTitle" type="String" label="Titulo final" default="Cadastro concluído!"/>
+            <property name="successMessage" type="String" label="Mensagem final" default="Sua adesão foi registrada com sucesso."/>
+            <property name="successDetail" type="String" label="Mensagem complementar final" default="Em breve a VEO dará continuidade ao processo."/>
+            <property name="termsConsentText" type="String" label="Texto de aceite dos termos" default="Li e aceito os Termos e Condições da VEO Energia."/>
+            <property name="privacyConsentText" type="String" label="Texto de aceite de privacidade e LGPD" default="Li e aceito os Termos de privacidade e LGPD da VEO Energia."/>
+            <property name="contractConsentText" type="String" label="Texto de aceite do contrato" default="Li e aceito o Contrato de adesão da VEO Energia."/>
+            <property name="procuracaoConsentText" type="String" label="Texto de aceite da procuracao" default="Li e aceito a Procuração para representação junto à distribuidora, quando aplicável."/>
+            <property name="contactConsentText" type="String" label="Texto de consentimento de contato" default="Autorizo o contato via WhatsApp para acompanhamento."/>
+            <property name="showProcuracaoConsent" type="Boolean" label="Exibir aceite de procuracao" default="false"/>
+            <property name="clicksignEnabled" type="Boolean" label="Ativar integracao Clicksign" default="false"/>
+            <property name="clicksignUrl" type="String" label="URL do widget Clicksign"/>
+            <property name="clicksignEnvironment" type="String" label="Ambiente Clicksign" default="sandbox"/>
+            <property name="clicksignTemplate" type="String" label="Modelo Clicksign"/>
+            <property name="clicksignParams" type="String" label="Parametros Clicksign"/>
+            <property name="invalidCodeMessage" type="String" label="Mensagem para codigo invalido ou expirado" default="Não foi possível validar o código informado. Verifique o código digitado ou reinicie o cadastro."/>
+            <property name="notFoundMessage" type="String" label="Mensagem para cadastro nao encontrado" default="Não encontramos um cadastro com os dados informados. Verifique as informações ou inicie um novo cadastro."/>
+            <property name="ambiguousMessage" type="String" label="Mensagem para cadastro ambiguo" default="Encontramos mais de um cadastro possível. Confirme o CPF do cliente para continuar."/>
+            <property name="closedOpportunityMessage" type="String" label="Mensagem para oportunidade encerrada" default="Cliente já possui uma adesão encerrada. A oportunidade não foi alterada automaticamente."/>
+            <property name="codeValidityDays" type="Integer" label="Validade do codigo em dias" default="30"/>
+            <property name="maxBillFileSizeMb" type="Integer" label="Tamanho maximo da conta em MB" default="4"/>
+            <property name="benefitsStep1" type="String" label="Beneficios etapa 1 separados por ponto e virgula" default="Sem obras ou instalacao;Energia 100% renovavel;Economia garantida"/>
+            <property name="benefitsStep2" type="String" label="Beneficios etapa 2 separados por ponto e virgula" default="Foto ou arquivo da conta;Possui energia solar?;Tipo de ligacao eletrica"/>
+            <property name="benefitsStep3" type="String" label="Beneficios etapa 3 separados por ponto e virgula" default="Calculo baseado no seu perfil;Sem fidelidade minima;Ativacao em ate 30 dias"/>
+            <property name="benefitsStep4" type="String" label="Beneficios etapa 4 separados por ponto e virgula" default="Revisao dos seus dados;Aceite dos termos;Ativacao iniciada"/>
+            <property name="leadSource" type="String" label="Origem do Lead" default="Totem Oportunidades"/>
+            <property name="leadOrigin" type="String" label="Origem detalhada do Lead" default="totem-oportunidades-veo"/>
+            <property name="formWeb" type="String" label="Formulario web" default="totem_oportunidades"/>
+            <property name="partnerCode" type="String" label="Codigo do parceiro" default="VEO"/>
+            <property name="campaignCode" type="String" label="Codigo da campanha" default="TOTEM_VEO"/>
+            <property name="pageIdentifier" type="String" label="Identificador da pagina" default="veo-oportunidades-home"/>
+            <property name="showDevControls" type="Boolean" label="Exibir controles de teste" default="true"/>
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

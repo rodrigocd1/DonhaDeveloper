@@ -23,6 +23,7 @@
                     <c-communicator-chat-picker
                         onoppselected={handleOppSelected}
                         onclose={handleFabClose}
+                        onopenhistory={handleOpenHistory}
                         show-close-btn
                     ></c-communicator-chat-picker>
                 </template>
@@ -33,6 +34,7 @@
                         unread-count={unreadCount}
                         onback={handleBack}
                         onclose={handleFabClose}
+                        onopenhistory={handleOpenHistory}
                         onmessagesent={handleMessageSent}
                         show-close-btn
                     ></c-communicator-chat-room>
@@ -52,6 +54,7 @@
             <template if:false={showChat}>
                 <c-communicator-chat-picker
                     onoppselected={handleOppSelected}
+                    onopenhistory={handleOpenHistory}
                 ></c-communicator-chat-picker>
             </template>
             <template if:true={showChat}>
@@ -60,6 +63,7 @@
                     opportunity-name={opportunityName}
                     unread-count={unreadCount}
                     onback={handleBack}
+                    onopenhistory={handleOpenHistory}
                     onmessagesent={handleMessageSent}
                 ></c-communicator-chat-room>
             </template>

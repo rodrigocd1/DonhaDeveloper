@@ -1,66 +1,113 @@
 <template>
-    <div class="comm-input">
+    <div class={inputClass}>
 
-        <!-- Linha de anexo: upload + preview lado a lado -->
-        <div class="comm-input__attach-row">
-            <div class="comm-input__attach-wrapper">
-                <lightning-file-upload
-                    name="chatAttachment"
-                    label="Anexar arquivo"
-                    accept={acceptedFormats}
-                    record-id={threadId}
-                    onuploadfinished={handleUploadFinished}
-                    class="comm-input__file-upload"
-                ></lightning-file-upload>
+        <!-- Mention popup (shown when @ is typed) -->
+        <template if:true={showMentionPickerState}>
+            <div class="comm-input__mention-popup">
+                <c-communicator-chat-mention
+                    thread-id={threadId}
+                    onmentionselect={handleMentionSelect}
+                    onclose={handleMentionClose}
+                ></c-communicator-chat-mention>
             </div>
+        </template>
 
-            <!-- Preview do arquivo selecionado -->
-            <template if:true={uploadedFile}>
-                <div class="comm-input__attachment-preview">
-                    <lightning-icon icon-name="doctype:attachment" size="x-small"></lightning-icon>
-                    <span class="comm-input__attachment-name">{uploadedFile.name}</span>
-                    <lightning-button-icon
-                        icon-name="utility:close"
-                        variant="bare"
-                        size="x-small"
-                        alternative-text="Remover anexo"
-                        title="Remover"
-                        onclick={handleRemoveAttachment}
-                    ></lightning-button-icon>
+
+        <!-- Attachment preview -->
+        <template if:true={hasUploadedFiles}>
+            <template for:each={uploadedFiles} for:item="file">
+                <div key={file.localId} class="comm-input__attachment-preview">
+                    <template if:true={file.isPending}>
+                        <lightning-spinner size="xx-small" alternative-text="Enviando arquivo..."></lightning-spinner>
+                    </template>
+                    <template if:false={file.isPending}>
+                        <lightning-icon icon-name="doctype:attachment" size="x-small"></lightning-icon>
+                    </template>
+                    <span class="comm-input__attachment-name">{file.name}</span>
+                    <template if:false={file.isPending}>
+                        <lightning-button-icon
+                            icon-name="utility:close"
+                            variant="bare"
+                            size="x-small"
+                            alternative-text="Remover anexo"
+                            title="Remover"
+                            data-upload-key={file.localId}
+                            onclick={handleRemoveAttachment}
+                        ></lightning-button-icon>
+                    </template>
                 </div>
             </template>
-        </div>
+        </template>
 
-        <!-- Linha de envio: textarea + botão -->
-        <div class="comm-input__row">
-            <textarea
-                class="comm-input__textarea"
-                placeholder="Digite uma mensagem..."
-                value={messageText}
-                oninput={handleInput}
-                onkeydown={handleKeyDown}
-                rows="1"
-                disabled={isSending}
-            ></textarea>
+        <!-- Text -->
+        <textarea
+            class="comm-input__textarea"
+            placeholder="Digite aqui sua mensagem..."
+            value={messageText}
+            oninput={handleInput}
+            onkeydown={handleKeyDown}
+            rows={textareaRows}
+            disabled={isInputDisabled}
+        ></textarea>
 
-            <lightning-button-icon
-                icon-name="utility:send"
-                variant="brand"
-                size="medium"
-                alternative-text="Enviar mensagem"
-                title="Enviar"
-                disabled={isSendDisabled}
+        <!-- Erro de tamanho de arquivo (inline — funciona em Lightning Experience e Community) -->
+        <template if:true={uploadError}>
+            <div class="comm-input__upload-error" role="alert">
+                <lightning-icon
+                    icon-name="utility:error"
+                    size="x-small"
+                    class="comm-input__upload-error-icon"
+                ></lightning-icon>
+                <span class="comm-input__upload-error-text">{uploadError}</span>
+            </div>
+        </template>
+
+        <!-- Actions (upload + send) -->
+        <div class="comm-input__actions">
+            <div class="comm-input__upload-buttons">
+                <div class="comm-input__upload-proxy" title="Enviar arquivo">
+                    <button
+                        class="comm-input__upload-visual"
+                        type="button"
+                        tabindex="-1"
+                        aria-hidden="true"
+                        disabled={isUploadDisabled}
+                    >
+                        <lightning-icon icon-name="utility:upload" size="x-small" class="comm-input__upload-icon"></lightning-icon>
+                        <span>Enviar arquivo</span>
+                    </button>
+                    <lightning-file-upload
+                        class="comm-input__upload-overlay"
+                        name="commLargeFileUpload"
+                        label="Enviar arquivo"
+                        variant="label-hidden"
+                        record-id={largeUploadRecordId}
+                        accept={acceptedFormatsList}
+                        multiple
+                        disabled={isUploadDisabled}
+                        onuploadfinished={handleLargeUploadFinished}
+                    ></lightning-file-upload>
+                </div>
+            </div>
+
+            <button
+                class="comm-input__send"
                 onclick={handleSend}
-            ></lightning-button-icon>
+                disabled={isSendDisabled}
+                title="Enviar"
+                type="button"
+            >
+                <span>Enviar</span>
+                <lightning-icon icon-name="utility:send" size="x-small" class="comm-input__send-icon"></lightning-icon>
+            </button>
         </div>
 
-        <!-- Indicador de envio -->
-        <template if:true={isSending}>
+        <!-- Sending indicator -->
+        <template if:true={isBusy}>
             <div class="comm-input__uploading">
                 <lightning-spinner size="x-small" alternative-text="Enviando..."></lightning-spinner>
                 <span>Enviando...</span>
             </div>
         </template>
-
     </div>
 </template>

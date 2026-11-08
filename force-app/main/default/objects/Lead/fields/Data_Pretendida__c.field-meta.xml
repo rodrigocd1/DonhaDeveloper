@@ -3,5 +3,7 @@
     <fullName>Data_Pretendida__c</fullName>
     <label>Data Pretendida</label>
     <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
     <type>Date</type>
 </CustomField>

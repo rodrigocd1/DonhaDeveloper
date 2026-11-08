@@ -3,6 +3,7 @@
     <fullName>Game_Recovery_Code_Created_At__c</fullName>
     <label>Game Recovery Code Created At</label>
     <required>false</required>
-    <trackTrending>false</trackTrending>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
     <type>DateTime</type>
 </CustomField>

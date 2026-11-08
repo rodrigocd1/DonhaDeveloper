@@ -10,7 +10,8 @@
         <criteriaItems>
             <field>Ativa__c</field>
             <operation>equals</operation>
-            <value>true</value>
+            <value>True</value>
         </criteriaItems>
+        <includeHVUOwnedRecords>false</includeHVUOwnedRecords>
     </sharingGuestRules>
 </SharingRules>

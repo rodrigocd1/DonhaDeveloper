@@ -23,6 +23,7 @@
     <redirectToCustomDomain>false</redirectToCustomDomain>
     <referrerPolicyOriginWhenCrossOrigin>true</referrerPolicyOriginWhenCrossOrigin>
     <selfRegPage>CommunitiesSelfReg</selfRegPage>
+    <serverIsDown>SNA_f07Rc_sf_default_cdn_Pesquisas1</serverIsDown>
     <siteAdmin>rodrigocd01@gmail.com</siteAdmin>
     <siteGuestRecordDefaultOwner>rodrigocd01@gmail.com</siteGuestRecordDefaultOwner>
     <siteType>ChatterNetwork</siteType>

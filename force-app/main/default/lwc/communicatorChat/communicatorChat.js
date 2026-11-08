@@ -1,12 +1,13 @@
 import { LightningElement, api, track, wire } from 'lwc';
-import getOrCreateThread from '@salesforce/apex/CommunicatorChatController.getOrCreateThread';
-import getUnreadCount    from '@salesforce/apex/CommunicatorChatController.getUnreadCount';
-import markThreadAsRead  from '@salesforce/apex/CommunicatorChatController.markThreadAsRead';
-import getSettings       from '@salesforce/apex/CommunicatorChatController.getSettings';
+import getOrCreateThread                      from '@salesforce/apex/CommunicatorChatController.getOrCreateThread';
+import getUnreadCount                         from '@salesforce/apex/CommunicatorChatController.getUnreadCount';
+import markThreadAsRead                       from '@salesforce/apex/CommunicatorChatController.markThreadAsRead';
+import getSettings                            from '@salesforce/apex/CommunicatorChatController.getSettings';
+import CommunicatorChatHistoryModal           from 'c/communicatorChatHistoryModal';
 
 const DEFAULT_POLL_MS = 6000;
-const MODE_FAB         = 'fab';
-const MODE_UTILITY     = 'utility';
+const MODE_FAB        = 'fab';
+const MODE_UTILITY    = 'utility';
 
 export default class CommunicatorChat extends LightningElement {
 
@@ -18,8 +19,6 @@ export default class CommunicatorChat extends LightningElement {
      */
     @api mode = MODE_FAB;
 
-
-
     @track isOpen          = false;
     @track _settings       = null;
 
@@ -27,6 +26,7 @@ export default class CommunicatorChat extends LightningElement {
     wiredSettings({ data }) {
         if (data) this._settings = data;
     }
+
     @track showChat        = false;
     @track threadId        = null;
     @track opportunityName = '';
@@ -80,10 +80,36 @@ export default class CommunicatorChat extends LightningElement {
 
     handleBack() {
         this._stopPolling();
-        this.showChat      = false;
-        this.threadId      = null;
-        this.unreadCount   = 0;
+        this.showChat        = false;
+        this.threadId        = null;
+        this.unreadCount     = 0;
         this.opportunityName = '';
+    }
+
+    // ─────────────────────────────────────────
+    // History
+    // FAB (Experience Cloud) → redirect to community page.
+    // Utility (Lightning Experience) → open modal.
+    //   · Chat-room view: passes threadId → timeline mode.
+    //   · Picker view: thread-list mode → "Abrir conversa" navigates.
+    // ─────────────────────────────────────────
+
+    async handleOpenHistory() {
+       
+        const opts = { size: 'large' };
+        if (this.showChat && this.threadId) opts.threadId = this.threadId;
+
+        const result = await CommunicatorChatHistoryModal.open(opts);
+
+        if (result?.threadId) {
+            this._stopPolling();
+            this.threadId        = result.threadId;
+            this.opportunityName = result.recordName;
+            this.showChat        = true;
+            this._startPolling();
+            markThreadAsRead({ threadId: result.threadId }).catch(console.error);
+            this.unreadCount = 0;
+        }
     }
 
     handleMessageSent() {
@@ -99,9 +125,7 @@ export default class CommunicatorChat extends LightningElement {
         this._stopPolling();
         const intervalMs = this._settings?.pollingIntervalMs || DEFAULT_POLL_MS;
         this._pollTimer = setInterval(async () => {
-            // Atualiza a timeline
             this.template.querySelector('c-communicator-chat-room')?.refresh();
-            // Atualiza badge de não lidos
             if (this.threadId) {
                 try {
                     this.unreadCount = await getUnreadCount({ threadId: this.threadId });

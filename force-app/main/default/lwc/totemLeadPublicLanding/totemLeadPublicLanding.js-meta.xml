@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>66.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>Totem Lead Public Landing</masterLabel>
+    <targets>
+        <target>lightningCommunity__Default</target>
+        <target>lightningCommunity__Page</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightningCommunity__Default">
+            <property name="configurationKey" type="String" label="Chave da configuração" default="VEO" />
+            <property name="brandName" type="String" label="Legado - nome da marca" />
+            <property name="partnerName" type="String" label="Legado - nome do parceiro" />
+            <property name="primaryLogoUrl" type="String" label="Legado - logo principal" />
+            <property name="partnerLogoUrl" type="String" label="Legado - logo do parceiro" />
+            <property name="backgroundImageUrl" type="String" label="Legado - imagem de fundo" />
+            <property name="promoImageUrl" type="String" label="Legado - imagem promocional" />
+            <property name="giftImageUrl" type="String" label="Legado - imagem do brinde" />
+            <property name="primaryColor" type="String" label="Legado - cor principal" />
+            <property name="secondaryColor" type="String" label="Legado - cor secundária" />
+            <property name="accentColor" type="String" label="Legado - cor de destaque" />
+            <property name="textColor" type="String" label="Legado - cor do texto" />
+            <property name="surfaceColor" type="String" label="Legado - cor da superfície" />
+            <property name="heroTitle" type="String" label="Legado - título inicial" />
+            <property name="heroSubtitle" type="String" label="Legado - subtítulo inicial" />
+            <property name="heroTimeText" type="String" label="Legado - texto auxiliar" />
+            <property name="primaryButtonLabel" type="String" label="Legado - botão principal" />
+            <property name="resultButtonLabel" type="String" label="Legado - botão de resultado" />
+            <property name="submitButtonLabel" type="String" label="Legado - botão de envio" />
+            <property name="submittingLabel" type="String" label="Legado - texto de envio" />
+            <property name="secondaryButtonLabel" type="String" label="Legado - botão secundário" />
+            <property name="reasonsLabel" type="String" label="Legado - título de benefícios" />
+            <property name="simulationLabel" type="String" label="Legado - título da simulação" />
+            <property name="successTitle" type="String" label="Legado - título de sucesso" />
+            <property name="successMessage" type="String" label="Legado - mensagem de sucesso" />
+            <property name="benefitsText" type="String" label="Legado - benefícios" />
+            <property name="giftNotice" type="String" label="Legado - aviso do brinde" />
+            <property name="giftInputLabel" type="String" label="Legado - label do código" />
+            <property name="giftInputPlaceholder" type="String" label="Legado - placeholder do código" />
+            <property name="giftButtonLabel" type="String" label="Legado - botão do brinde" />
+            <property name="footerText" type="String" label="Legado - rodapé" />
+            <property name="leadSource" type="String" label="Legado - origem do Lead" />
+            <property name="leadOrigin" type="String" label="Legado - origem detalhada" />
+            <property name="formWeb" type="String" label="Legado - formulário web" />
+            <property name="partnerCode" type="String" label="Legado - código do parceiro" />
+            <property name="campaignCode" type="String" label="Legado - campanha" />
+            <property name="pageIdentifier" type="String" label="Legado - identificador da página" />
+            <property name="showDevControls" type="Boolean" label="Legado - controles de teste (ignorado)" default="false" />
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

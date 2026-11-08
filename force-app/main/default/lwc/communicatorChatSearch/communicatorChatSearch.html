@@ -7,12 +7,12 @@
             <input
                 type="search"
                 class="comm-search__input"
-                placeholder="Buscar mensagens..."
+                placeholder={placeholder}
                 value={keyword}
                 oninput={handleInput}
                 onkeydown={handleKeyDown}
             />
-            <template if:true={isSearching}>
+            <template if:true={showSpinner}>
                 <lightning-spinner size="x-small" alternative-text="Buscando..."></lightning-spinner>
             </template>
         </div>
@@ -20,18 +20,22 @@
         <!-- Resultados -->
         <template if:true={hasResults}>
             <ul class="comm-search__list" role="listbox">
-                <template for:each={results} for:item="result">
+                <template for:each={displayedResults} for:item="result">
                     <li
                         key={result.Id}
                         class="comm-search__item"
                         role="option"
                         data-id={result.Id}
+                        data-thread-id={result.Thread__c}
                         onclick={handleResultClick}
                     >
                         <div class="comm-search__item-meta">
                             <span class="comm-search__item-sender">{result.senderName}</span>
                             <span class="comm-search__item-time">{result.formattedTime}</span>
                         </div>
+                        <template if:true={result.stageName}>
+                            <span class="comm-search__item-stage">{result.stageName}</span>
+                        </template>
                         <p class="comm-search__item-body" data-id={result.Id}></p>
                     </li>
                 </template>

@@ -3,7 +3,8 @@
     <fullName>Game_Feedback_Comment__c</fullName>
     <label>Game Feedback Comment</label>
     <length>32768</length>
-    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
     <trackTrending>false</trackTrending>
     <type>LongTextArea</type>
     <visibleLines>10</visibleLines>

@@ -3,8 +3,8 @@
     <fullName>Game_Rewards_JSON__c</fullName>
     <label>Game Rewards JSON</label>
     <length>32768</length>
-    <required>false</required>
-    <trackTrending>false</trackTrending>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
     <type>LongTextArea</type>
     <visibleLines>10</visibleLines>
 </CustomField>

@@ -28,10 +28,42 @@ public with sharing class CommunicatorSearchService {
 
         return [
             SELECT Id, Name, Body__c, SearchBody__c, SentAt__c, Status__c,
-                   HasAttachment__c, Thread__c,
-                   Sender__c, Sender__r.Name, Sender__r.SmallPhotoUrl
+                   HasAttachment__c, RecordStatus__c, Thread__c,
+                   Sender__c, Sender__r.Name, Sender__r.SmallPhotoUrl,
+                   CreatedById, CreatedBy.Name, CreatedBy.SmallPhotoUrl
             FROM CommunicatorMessage__c
             WHERE Thread__c = :threadId
+            AND   SearchBody__c LIKE :likePattern
+            ORDER BY SentAt__c ASC
+            LIMIT :MAX_SEARCH_RESULTS
+        ];
+    }
+
+    /**
+     * @description Searches messages across multiple threads (all stages of a record).
+     * @param threadIds List of thread record Ids.
+     * @param keyword   Search term (matched with LIKE, case-insensitive).
+     * @return List of matching CommunicatorMessage__c records ordered by SentAt__c ASC.
+     */
+    public static List<CommunicatorMessage__c> searchMessagesAcrossThreads(List<Id> threadIds, String keyword) {
+        if (threadIds == null || threadIds.isEmpty()) {
+            throw new CommunicatorException('threadIds cannot be empty.');
+        }
+        if (String.isBlank(keyword)) {
+            throw new CommunicatorException('Search keyword cannot be empty.');
+        }
+
+        validateThreadsAccess(threadIds);
+
+        String likePattern = '%' + sanitizeKeyword(keyword) + '%';
+
+        return [
+            SELECT Id, Name, Body__c, SearchBody__c, SentAt__c, Status__c,
+                   HasAttachment__c, RecordStatus__c, Thread__c,
+                   Sender__c, Sender__r.Name, Sender__r.SmallPhotoUrl,
+                   CreatedById, CreatedBy.Name, CreatedBy.SmallPhotoUrl
+            FROM CommunicatorMessage__c
+            WHERE Thread__c IN :threadIds
             AND   SearchBody__c LIKE :likePattern
             ORDER BY SentAt__c ASC
             LIMIT :MAX_SEARCH_RESULTS
@@ -55,6 +87,15 @@ public with sharing class CommunicatorSearchService {
         ];
         if (threads.isEmpty()) {
             throw new CommunicatorException('Thread not found or not accessible.');
+        }
+    }
+
+    private static void validateThreadsAccess(List<Id> threadIds) {
+        List<CommunicatorThread__c> threads = [
+            SELECT Id FROM CommunicatorThread__c WHERE Id IN :threadIds
+        ];
+        if (threads.isEmpty()) {
+            throw new CommunicatorException('No accessible threads found.');
         }
     }
 }

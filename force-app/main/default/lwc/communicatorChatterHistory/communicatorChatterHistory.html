@@ -1,0 +1,136 @@
+<template>
+    <section class={rootClass} aria-label="Histórico do Chatter">
+        <template if:true={showToolbar}>
+            <div class="comm-chatter-history__toolbar">
+                <div class="comm-chatter-history__toolbar-copy">
+                    <h2 class="comm-chatter-history__title">Histórico Chatter</h2>
+                    <p class="comm-chatter-history__subtitle">{toolbarCaption}</p>
+                </div>
+
+                <template if:true={showSearchBar}>
+                    <div class="comm-chatter-history__search">
+                        <label class="slds-assistive-text" for="comm-chatter-history-search">
+                            Buscar no histórico carregado
+                        </label>
+                        <input
+                            id="comm-chatter-history-search"
+                            class="comm-chatter-history__search-input"
+                            type="search"
+                            placeholder="Buscar no histórico carregado"
+                            value={searchTerm}
+                            oninput={handleSearchChange}
+                        />
+                        <template if:true={showClearSearch}>
+                            <button class="comm-chatter-history__clear-search" type="button" onclick={handleClearSearch}>
+                                Limpar
+                            </button>
+                        </template>
+                    </div>
+                </template>
+            </div>
+        </template>
+
+        <template if:true={showSearchHint}>
+            <div class="comm-chatter-history__hint" role="note">
+                {searchHintText}
+            </div>
+        </template>
+
+        <template if:true={showCommentsTruncatedNotice}>
+            <div class="comm-chatter-history__inline-alert comm-chatter-history__inline-alert--warning" role="status">
+                <span>Alguns comentários não foram exibidos devido ao volume do histórico.</span>
+            </div>
+        </template>
+
+        <div class={bodyClass}>
+            <div class="comm-chatter-history__top-sentinel" aria-hidden="true"></div>
+            <template if:true={showInitialLoading}>
+                <div class="comm-chatter-history__state comm-chatter-history__state--loading">
+                    <lightning-spinner size="medium" alternative-text="Carregando histórico Chatter"></lightning-spinner>
+                    <p>Carregando histórico Chatter...</p>
+                </div>
+            </template>
+
+            <template if:true={showNoOpportunityState}>
+                <div class="comm-chatter-history__state">
+                    <lightning-icon icon-name="utility:info" size="small"></lightning-icon>
+                    <h3>Selecione uma oportunidade</h3>
+                    <p>O histórico Chatter será carregado quando uma oportunidade válida estiver disponível.</p>
+                </div>
+            </template>
+
+            <template if:true={showErrorState}>
+                <div class="comm-chatter-history__state comm-chatter-history__state--error" role="alert">
+                    <lightning-icon icon-name="utility:error" size="small"></lightning-icon>
+                    <h3>Não foi possível carregar o histórico</h3>
+                    <p>{errorMessage}</p>
+                    <lightning-button label="Tentar novamente" onclick={handleRetry}></lightning-button>
+                </div>
+            </template>
+
+                <template if:true={showLoadedContent}>
+                <template if:true={showInlineLoadMoreError}>
+                    <div class="comm-chatter-history__inline-alert" role="alert">
+                        <span>{loadMoreErrorMessage}</span>
+                        <button class="comm-chatter-history__inline-action" type="button" onclick={handleLoadMore}>
+                            Tentar novamente
+                        </button>
+                    </div>
+                </template>
+
+                <div class="comm-chatter-history__messages">
+                    <template if:true={showSearchEmptyState}>
+                        <div class="comm-chatter-history__state">
+                            <lightning-icon icon-name="utility:search" size="small"></lightning-icon>
+                            <h3>Nenhum resultado no histórico carregado</h3>
+                            <p>Ajuste o termo da busca ou carregue mais posts para ampliar o conjunto pesquisável.</p>
+                        </div>
+                    </template>
+
+                    <template if:true={hasVisiblePosts}>
+                        <ul class="comm-chatter-history__list">
+                            <template for:each={visiblePosts} for:item="post">
+                                <li key={post.feedItemId} class="comm-chatter-history__list-item" data-feed-item-id={post.feedItemId}>
+                                    <c-communicator-chatter-history-post
+                                        post={post}
+                                        highlighted={post.isHighlighted}
+                                        highlighted-comment-id={post.highlightedCommentId}
+                                        allow-navigation={allowNavigation}
+                                        onnavigatefile={handleNavigateFile}
+                                    ></c-communicator-chatter-history-post>
+                                </li>
+                            </template>
+                        </ul>
+                    </template>
+
+                    <template if:true={showHistoryEmptyState}>
+                        <div class="comm-chatter-history__state">
+                            <lightning-icon icon-name="utility:chat" size="small"></lightning-icon>
+                            <h3>Nenhum post encontrado</h3>
+                            <p>{chatterHistoryEmptyMessage}</p>
+                        </div>
+                    </template>
+
+                    <template if:true={showCompactBottomSentinel}>
+                        <div class="comm-chatter-history__bottom-sentinel" aria-hidden="true"></div>
+                    </template>
+                </div>
+
+                <template if:true={showLoadMoreControls}>
+                    <div class="comm-chatter-history__load-more">
+                        <template if:true={isLoadingMore}>
+                            <lightning-spinner size="x-small" alternative-text="Carregando mensagens posteriores"></lightning-spinner>
+                            <span>Carregando mensagens posteriores...</span>
+                        </template>
+                        <template if:false={isLoadingMore}>
+                            <button class="comm-chatter-history__load-btn" type="button" onclick={handleLoadMore}>
+                                Carregar mensagens posteriores
+                            </button>
+                        </template>
+                    </div>
+                </template>
+
+            </template>
+        </div>
+    </section>
+</template>

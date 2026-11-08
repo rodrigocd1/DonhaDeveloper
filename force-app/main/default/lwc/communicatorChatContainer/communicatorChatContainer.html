@@ -3,9 +3,16 @@
 
         <!-- Cabeçalho -->
         <div class="comm-chat__header">
-            <span class="comm-chat__title">Chat</span>
+            <span class="comm-chat__title">{headerTitle}</span>
             <div class="comm-chat__header-actions">
                 <template if:true={showContent}>
+                    <lightning-button-icon
+                        icon-name="utility:list"
+                        variant="bare-inverse"
+                        alternative-text="Histórico de mensagens"
+                        title="Histórico de mensagens"
+                        onclick={handleToggleHistory}
+                    ></lightning-button-icon>
                     <lightning-button-icon
                         icon-name="utility:search"
                         variant="bare-inverse"

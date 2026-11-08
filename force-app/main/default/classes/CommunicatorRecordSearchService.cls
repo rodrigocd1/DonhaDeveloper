@@ -19,39 +19,49 @@ public with sharing class CommunicatorRecordSearchService {
             throw new CommunicatorException('Keyword must have at least 2 characters.');
         }
 
-        List<String>  objectNames     = CommunicatorConfigService.getObjectApiNames();
-        Integer       maxResults      = CommunicatorConfigService.getMaxSearchResults();
-        Boolean       filterOpenOnly  = CommunicatorConfigService.getFilterOpenOnly();
-        String        sanitized       = sanitizeKeyword(keyword.trim());
+        List<String> objectNames = CommunicatorConfigService.getObjectApiNames();
+        Integer maxResults = CommunicatorConfigService.getMaxSearchResults();
+        Boolean filterOpenOnly = CommunicatorConfigService.getFilterOpenOnly();
+        String sanitized = sanitizeKeyword(keyword.trim());
+        List<String> searchObjectNames = new List<String>();
+        Boolean includeRepasse = false;
 
-        // Build SOSL RETURNING clause dynamically
-        String returningClause = buildReturningClause(objectNames, maxResults, filterOpenOnly);
-
-        // Objects with IsClosed field — used for open-only filter
-        Set<String> closedFilterObjects = new Set<String>{ 'Opportunity', 'Case' };
-
-        String sosl = 'FIND :sanitized IN NAME FIELDS RETURNING ' + returningClause;
-
-        List<List<SObject>> soslResults;
-        try {
-            soslResults = Search.query(sosl);
-        } catch (Exception ex) {
-            throw new CommunicatorException('Search failed: ' + ex.getMessage());
+        for (String objectName : objectNames) {
+            if (objectName == 'Repasse__c') {
+                includeRepasse = true;
+                continue;
+            }
+            searchObjectNames.add(objectName);
         }
 
-        return mapResults(soslResults, objectNames);
-    }
+        List<List<SObject>> soslResults = new List<List<SObject>>();
+        if (!searchObjectNames.isEmpty()) {
+            String returningClause = buildReturningClause(searchObjectNames, maxResults, filterOpenOnly);
+            String sosl = 'FIND :sanitized IN NAME FIELDS RETURNING ' + returningClause;
 
-    // ─────────────────────────────────────────
-    // Private helpers
-    // ─────────────────────────────────────────
+            try {
+                soslResults = Search.query(sosl);
+            } catch (Exception ex) {
+                throw new CommunicatorException('Search failed: ' + ex.getMessage());
+            }
+        }
+
+        List<CommunicatorDTOs.RecordResultDTO> results = mapResults(soslResults, searchObjectNames);
+        if (includeRepasse) {
+            CommunicatorDTOs.RecordResultDTO repasseGroup = buildRepasseResults(keyword, maxResults);
+            if (repasseGroup != null && repasseGroup.records != null && !repasseGroup.records.isEmpty()) {
+                results.add(repasseGroup);
+            }
+        }
+
+        return results;
+    }
 
     private static String buildReturningClause(
         List<String> objectNames,
-        Integer      maxResults,
-        Boolean      filterOpenOnly
+        Integer maxResults,
+        Boolean filterOpenOnly
     ) {
-        // Objects that support IsClosed field
         Set<String> supportsIsClosedFilter = new Set<String>{ 'Opportunity', 'Case' };
 
         List<String> parts = new List<String>();
@@ -67,25 +77,25 @@ public with sharing class CommunicatorRecordSearchService {
 
     private static List<CommunicatorDTOs.RecordResultDTO> mapResults(
         List<List<SObject>> soslResults,
-        List<String>        objectNames
+        List<String> objectNames
     ) {
         List<CommunicatorDTOs.RecordResultDTO> results = new List<CommunicatorDTOs.RecordResultDTO>();
 
         for (Integer i = 0; i < soslResults.size(); i++) {
-            List<SObject> records   = soslResults[i];
-            String        objName   = i < objectNames.size() ? objectNames[i] : 'Unknown';
+            List<SObject> records = soslResults[i];
+            String objName = i < objectNames.size() ? objectNames[i] : 'Unknown';
 
             if (records.isEmpty()) continue;
 
             CommunicatorDTOs.RecordResultDTO resultGroup = new CommunicatorDTOs.RecordResultDTO();
             resultGroup.objectApiName = objName;
-            resultGroup.objectLabel   = getObjectLabel(objName);
+            resultGroup.objectLabel = getObjectLabel(objName);
             resultGroup.records = new List<CommunicatorDTOs.RecordItemDTO>();
 
             for (SObject rec : records) {
                 CommunicatorDTOs.RecordItemDTO item = new CommunicatorDTOs.RecordItemDTO();
-                item.recordId   = (String) rec.get('Id');
-                item.name       = (String) rec.get('Name');
+                item.recordId = (String) rec.get('Id');
+                item.name = (String) rec.get('Name');
                 item.objectType = objName;
                 resultGroup.records.add(item);
             }
@@ -107,5 +117,39 @@ public with sharing class CommunicatorRecordSearchService {
 
     private static String sanitizeKeyword(String keyword) {
         return keyword.replaceAll('[\\?&|!{}\\[\\]()\\^~\\*:\\\\\\"\'\\+\\-]', '\\\\$0') + '*';
+    }
+
+    private static CommunicatorDTOs.RecordResultDTO buildRepasseResults(String keyword, Integer maxResults) {
+        Set<Id> visibleAssessoriaIds = CommunicatorThreadService.getVisibleAssessoriaIdsForCurrentUser();
+        Set<Id> candidateOppIds = CommunicatorRepasseService.getCandidateOpportunityIdsByKeyword(
+            keyword,
+            maxResults,
+            visibleAssessoriaIds
+        );
+        Set<Id> visibleOppIds = CommunicatorOpportunityAccessService.getVisibleOpportunityIds(candidateOppIds);
+        List<Repasse__c> repasses = CommunicatorRepasseService.getRepassesByOpportunityIds(
+            visibleOppIds,
+            keyword,
+            maxResults,
+            visibleAssessoriaIds
+        );
+        if (repasses.isEmpty()) {
+            return null;
+        }
+
+        CommunicatorDTOs.RecordResultDTO resultGroup = new CommunicatorDTOs.RecordResultDTO();
+        resultGroup.objectApiName = 'Repasse__c';
+        resultGroup.objectLabel = getObjectLabel('Repasse__c');
+        resultGroup.records = new List<CommunicatorDTOs.RecordItemDTO>();
+
+        for (Repasse__c repasse : repasses) {
+            CommunicatorDTOs.RecordItemDTO item = new CommunicatorDTOs.RecordItemDTO();
+            item.recordId = (String) repasse.Id;
+            item.name = repasse.Name;
+            item.objectType = 'Repasse__c';
+            resultGroup.records.add(item);
+        }
+
+        return resultGroup;
     }
 }

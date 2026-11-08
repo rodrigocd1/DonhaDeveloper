@@ -1,0 +1,345 @@
+<template>
+    <template if:false={_hasPermission}>
+        <div class="comm-history comm-history--no-permission">
+            <div class="comm-history__no-permission-card">
+                <lightning-icon icon-name="utility:error" size="small" class="comm-history__no-permission-icon"></lightning-icon>
+                <p class="comm-history__no-permission-msg">{_noPermissionMessage}</p>
+            </div>
+        </div>
+    </template>
+    <template if:true={_hasPermission}>
+    <div class="comm-history">
+
+        <template if:false={isModal}>
+        <div class="comm-history__header">
+            <div class="comm-history__header-text">
+                <h2 class="comm-history__title">Histórico de mensagens</h2>
+                <p class="comm-history__subtitle">Confira o histórico de mensagens de suas oportunidades.</p>
+            </div>
+        </div>
+        </template>
+
+        <div class="comm-history__tabs" role="tablist">
+            <template for:each={tabs} for:item="tab">
+                <button
+                    key={tab.filter}
+                    class={tab.tabClass}
+                    data-filter={tab.filter}
+                    onclick={handleFilterSelect}
+                    role="tab"
+                >
+                    {tab.label}
+                    <template if:true={tab.showBadge}>
+                        <span class={tab.badgeClass} aria-hidden="true">{tab.badgeLabel}</span>
+                        <template if:true={tab.accessibilityLabel}>
+                            <span class="slds-assistive-text">{tab.accessibilityLabel}</span>
+                        </template>
+                    </template>
+                </button>
+            </template>
+            <template if:true={showCreateGroupButton}>
+                <button class="comm-history__create-group-btn comm-history__create-group-btn--desktop" onclick={handleOpenCreateGroup}>
+                    + Criar grupo
+                </button>
+            </template>
+            <template if:true={showCreateBroadcastButton}>
+                <button class="comm-history__create-group-btn comm-history__create-group-btn--desktop" onclick={handleOpenCreateBroadcast}>
+                    + Criar comunicado
+                </button>
+            </template>
+        </div>
+
+        <template if:true={showConversationPrimary}>
+            <div class="comm-history__search-row">
+                <template if:true={showCreateGroupButton}>
+                    <button class="comm-history__create-group-btn comm-history__create-group-btn--mobile" onclick={handleOpenCreateGroup}>
+                        + Criar grupo
+                    </button>
+                </template>
+                <div class="comm-history__search-bar">
+                    <input
+                        type="search"
+                        class="comm-history__search-input"
+                        placeholder={searchPlaceholder}
+                        value={keyword}
+                        oninput={handleSearchInput}
+                    />
+                    <lightning-icon icon-name="utility:search" size="x-small" class="comm-history__search-icon"></lightning-icon>
+                </div>
+                <template if:false={showGroups}>
+                <div class="comm-history__filter-wrap">
+                    <button class={filterBtnClass} onclick={handleToggleStageFilter} title="Filtrar visualizacao">
+                        <lightning-icon icon-name="utility:filterList" size="x-small" class="comm-history__filter-icon"></lightning-icon>
+                        <span>Filtrar visualizacao</span>
+                        <template if:true={hasActiveFilter}>
+                            <span class="comm-history__filter-dot"></span>
+                        </template>
+                    </button>
+                    <template if:true={showStageDropdown}>
+                        <div class="comm-history__filter-backdrop" onclick={handleCloseStageDropdown}></div>
+                        <div class="comm-history__filter-dropdown">
+                            <div class="comm-history__filter-section">
+                                <p class="comm-history__filter-label">Etapa:</p>
+                                <select class="comm-history__filter-select" onchange={handleEtapaChange}>
+                                    <option value="">Todas</option>
+                                    <template for:each={etapaOptions} for:item="opt">
+                                        <option key={opt.value} value={opt.value} selected={opt.selected}>{opt.label}</option>
+                                    </template>
+                                </select>
+                            </div>
+
+                            <div class="comm-history__filter-section">
+                                <p class="comm-history__filter-label">Fase:</p>
+                                <template if:true={hasStageOptions}>
+                                    <template for:each={stageOptions} for:item="opt">
+                                        <label key={opt.value} class="comm-history__filter-radio-label">
+                                            <input
+                                                type="checkbox"
+                                                value={opt.value}
+                                                checked={opt.checked}
+                                                onchange={handleStageChange}
+                                                class="comm-history__filter-checkbox"
+                                            />
+                                            {opt.label} ({opt.count})
+                                        </label>
+                                    </template>
+                                </template>
+                                <template if:false={hasStageOptions}>
+                                    <p class="comm-history__filter-empty">Nenhuma fase disponivel.</p>
+                                </template>
+                            </div>
+
+                            <template if:true={hasActiveFilter}>
+                                <button class="comm-history__filter-clear" onclick={handleClearFilters}>
+                                    Limpar filtros
+                                </button>
+                            </template>
+                        </div>
+                    </template>
+                </div>
+                </template>
+            </div>
+        </template>
+
+        <div class="comm-history__body">
+            <template if:true={showBroadcastView}>
+                <c-communicator-broadcast-workspace
+                    variant="expanded"
+                    is-community-context={isBroadcastCommunityContext}
+                    onbroadcastauthoringcontext={handleBroadcastAuthoringContext}
+                    onbroadcastimagepreviewopen={handleBroadcastImagePreviewOpen}
+                    onbroadcastimagepreviewclose={handleBroadcastImagePreviewReset}
+                    onbroadcastunreadchange={handleBroadcastUnreadChange}
+                ></c-communicator-broadcast-workspace>
+            </template>
+
+            <template if:true={showConversationPrimary}>
+                <template if:true={isLoading}>
+                    <div class="comm-history__loading">
+                        <lightning-spinner size="medium" alternative-text="Carregando..."></lightning-spinner>
+                    </div>
+                </template>
+
+                <template if:true={showGroups}>
+                    <template if:true={isLoadingGroups}>
+                        <div class="comm-history__loading">
+                            <lightning-spinner size="medium" alternative-text="Carregando grupos..."></lightning-spinner>
+                        </div>
+                    </template>
+
+                    <template if:false={isLoadingGroups}>
+                        <template if:true={hasGroups}>
+                            <ul class="comm-history__list">
+                                <template for:each={enrichedGroups} for:item="g">
+                                    <li key={g.groupId} class="comm-history__item" data-group-id={g.groupId} onclick={handleGroupSelect}>
+                                        <div class="comm-history__item-top">
+                                            <span class="comm-history__item-date">{g.lastMentionAtDisplay}</span>
+                                            <template if:true={g.showUnreadBadge}>
+                                                <span
+                                                    class="comm-history__unread-summary"
+                                                    title={g.unreadAriaLabel}
+                                                    aria-label={g.unreadAriaLabel}
+                                                >{g.unreadText}</span>
+                                            </template>
+                                        </div>
+                                        <p class="comm-history__item-name">{g.groupName}</p>
+                                        <div class="comm-history__item-stage">
+                                            <span class="comm-history__stage-pre">Oportunidades em andamento:</span>
+                                            <strong class="comm-history__group-opp-count">{g.activeOpportunityCount}</strong>
+                                        </div>
+                                    </li>
+                                </template>
+                            </ul>
+                        </template>
+
+                        <template if:false={hasGroups}>
+                            <div class="comm-history__empty">
+                                <lightning-icon icon-name="utility:groups" size="medium"></lightning-icon>
+                                <p>Nenhum grupo encontrado.</p>
+                            </div>
+                        </template>
+                    </template>
+                </template>
+
+                <template if:true={isEmpty}>
+                    <div class="comm-history__empty">
+                        <lightning-icon icon-name="utility:chat" size="medium"></lightning-icon>
+                        <p>Nenhuma conversa encontrada.</p>
+                    </div>
+                </template>
+
+                <template if:true={showList}>
+                    <ul class="comm-history__list">
+                        <template for:each={enrichedThreads} for:item="t">
+                            <li
+                                key={t.threadId}
+                                class="comm-history__item"
+                                data-thread-id={t.threadId}
+                                data-record-name={t.recordName}
+                                data-record-id={t.recordId}
+                                data-repasse-opportunity-id={t.repasseOpportunityId}
+                                data-stage-name={t.stageName}
+                                data-thread-name={t.threadName}
+                                onclick={handleThreadSelect}
+                            >
+                                <div class="comm-history__item-top">
+                                    <span class={t.lastMessageDateClass}>{t.lastMessageDisplay}</span>
+                                    <template if:true={t.showUnreadBadge}>
+                                        <span
+                                            class="comm-history__unread-summary"
+                                            title={t.unreadAriaLabel}
+                                            aria-label={t.unreadAriaLabel}
+                                        >{t.unreadText}</span>
+                                    </template>
+                                </div>
+
+                                <p class="comm-history__item-name">{t.recordName}</p>
+
+                                <div class="comm-history__item-stage">
+                                    <span class="comm-history__stage-pre">Etapa:</span>
+                                    <span class="comm-history__conv-type-text">{t.typeLabel}</span>
+                                    <span class="comm-history__meta-separator" aria-hidden="true">|</span>
+                                    <span class="comm-history__stage-pre">{t.displayStatusLabel}</span>
+                                    <span class={t.stageClass}>{t.displayStage}</span>
+                                </div>
+                                <template if:true={t.showRelatedRef}>
+                                    <template if:true={t.isRelatedRefClickable}>
+                                        <div
+                                            class="comm-history__item-ar"
+                                            data-record-id={t.relatedRefId}
+                                            data-related-type={t.relatedRefType}
+                                            data-object-api-name={t.relatedRefObjectApiName}
+                                            onclick={handleRelatedRefClick}
+                                        >
+                                            <lightning-icon icon-name="utility:work_order_type" size="x-small" class="comm-history__item-ar-icon"></lightning-icon>
+                                            <span>{t.relatedRefName}</span>
+                                        </div>
+                                    </template>
+                                    <template if:false={t.isRelatedRefClickable}>
+                                        <div class="comm-history__item-ar">
+                                            <lightning-icon icon-name="utility:work_order_type" size="x-small" class="comm-history__item-ar-icon"></lightning-icon>
+                                            <span>{t.relatedRefName}</span>
+                                        </div>
+                                    </template>
+                                </template>
+                            </li>
+                        </template>
+                    </ul>
+                </template>
+            </template>
+        </div>
+
+        <template if:true={showPagination}>
+            <div class="comm-history__pagination">
+                <span class="comm-history__total">{totalLabel}</span>
+                <div class="comm-history__pagination-right">
+                    <div class="comm-history__page-nav">
+                        <button
+                            class="comm-history__page-btn"
+                            onclick={handleFirstPage}
+                            disabled={firstDisabled}
+                            title="Primeira pagina"
+                        >
+                            <lightning-icon icon-name="utility:jump_to_left" size="x-small"></lightning-icon>
+                        </button>
+                        <button
+                            class="comm-history__page-btn"
+                            onclick={handlePrevPage}
+                            disabled={prevDisabled}
+                            title="Pagina anterior"
+                        >
+                            <lightning-icon icon-name="utility:chevronleft" size="x-small"></lightning-icon>
+                        </button>
+                        <div class="comm-history__page-list">
+                            <template for:each={paginationItems} for:item="item">
+                                <template if:true={item.page}>
+                                    <button
+                                        key={item.key}
+                                        class={item.className}
+                                        data-page={item.page}
+                                        onclick={handlePageSelect}
+                                    >{item.label}</button>
+                                </template>
+                                <template if:false={item.page}>
+                                    <span key={item.key} class="comm-history__page-ellipsis">{item.label}</span>
+                                </template>
+                            </template>
+                        </div>
+                        <button
+                            class="comm-history__page-btn"
+                            onclick={handleNextPage}
+                            disabled={nextDisabled}
+                            title="Proxima pagina"
+                        >
+                            <lightning-icon icon-name="utility:chevronright" size="x-small"></lightning-icon>
+                        </button>
+                        <button
+                            class="comm-history__page-btn"
+                            onclick={handleLastPage}
+                            disabled={lastDisabled}
+                            title="Ultima pagina"
+                        >
+                            <lightning-icon icon-name="utility:jump_to_right" size="x-small"></lightning-icon>
+                        </button>
+                    </div>
+                    <div class="comm-history__page-size">
+                        <select class="comm-history__page-size-select" disabled>
+                            <option value={pageSize}>{pageSizeLabel}</option>
+                        </select>
+                    </div>
+                    <div class="comm-history__goto">
+                        <label class="comm-history__goto-label" for="comm-history-goto">Ir para</label>
+                        <input
+                            id="comm-history-goto"
+                            type="number"
+                            min="1"
+                            max={totalPages}
+                            class="comm-history__goto-input"
+                            value={gotoPageValue}
+                            oninput={handleGotoInput}
+                            onkeydown={handleGotoKeydown}
+                        />
+                        <button class="comm-history__goto-btn" onclick={handleGotoPage}>Ir</button>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+    </div>
+
+    <template if:true={showCreateGroupModal}>
+        <c-communicator-create-group-modal
+            onclose={handleCreateGroupClose}
+            ongroupcreated={handleGroupCreated}
+        ></c-communicator-create-group-modal>
+    </template>
+    <template if:true={showBroadcastImagePreview}>
+        <c-communicator-broadcast-image-preview
+            src={broadcastImagePreviewSrc}
+            file-name={broadcastImagePreviewFileName}
+            alternative-text={broadcastImagePreviewAlternativeText}
+            onclose={handleBroadcastImagePreviewClose}
+        ></c-communicator-broadcast-image-preview>
+    </template>
+    </template>
+</template>

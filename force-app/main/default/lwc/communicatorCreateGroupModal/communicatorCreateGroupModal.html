@@ -1,0 +1,116 @@
+<template>
+    <div class="cgm-backdrop"></div>
+
+    <div class="cgm-container" role="dialog" aria-modal="true" aria-labelledby="cgm-title">
+
+        <!-- ── Header ── -->
+        <div class="cgm-header">
+            <h2 class="cgm-title" id="cgm-title">Criar um grupo</h2>
+            <button class="cgm-close-btn" onclick={handleClose} title="Fechar">
+                <lightning-icon icon-name="utility:close" size="x-small"></lightning-icon>
+            </button>
+        </div>
+
+        <!-- ── Body ── -->
+        <div class="cgm-body">
+
+            <!-- Nome do grupo -->
+            <div class="cgm-field">
+                <label class="cgm-label">
+                    Nome do grupo:<span class="cgm-required">*</span>
+                </label>
+                <input
+                    type="text"
+                    class={nameInputClass}
+                    placeholder="Digite o nome do grupo"
+                    value={groupName}
+                    oninput={handleNameInput}
+                    maxlength="80"
+                />
+            </div>
+
+            <!-- Adicione os usuários -->
+            <div class="cgm-field">
+                <label class="cgm-label">
+                    Adicione os usuários:<span class="cgm-required">*</span>
+                </label>
+                <div class="cgm-search-wrap">
+                    <input
+                        type="text"
+                        class="cgm-search-input"
+                        placeholder="Buscar por nome"
+                        value={searchTerm}
+                        oninput={handleSearchInput}
+                        onblur={handleSearchBlur}
+                    />
+                    <span class="cgm-search-icon-wrap">
+                        <lightning-icon icon-name="utility:search" size="x-small"></lightning-icon>
+                    </span>
+
+                    <template if:true={showDropdown}>
+                        <div class="cgm-dropdown" onmousedown={handleDropdownMousedown}>
+                            <template if:true={isSearching}>
+                                <div class="cgm-dropdown-loading">
+                                    <lightning-spinner size="x-small" alternative-text="Buscando..."></lightning-spinner>
+                                </div>
+                            </template>
+                            <template if:false={isSearching}>
+                                <template if:true={hasResults}>
+                                    <template for:each={searchResults} for:item="u">
+                                        <button
+                                            key={u.id}
+                                            class="cgm-dropdown-item"
+                                            data-id={u.id}
+                                            data-name={u.name}
+                                            onclick={handleSelectUser}
+                                        >{u.name}</button>
+                                    </template>
+                                </template>
+                                <template if:false={hasResults}>
+                                    <p class="cgm-dropdown-empty">Nenhum usuário encontrado.</p>
+                                </template>
+                            </template>
+                        </div>
+                    </template>
+                </div>
+                <p class="cgm-hint"><span class="cgm-required">*</span>Campos obrigatórios</p>
+            </div>
+
+            <!-- Usuários selecionados -->
+            <div class="cgm-selected-section">
+                <p class="cgm-selected-heading">Usuário selecionados:</p>
+                <template for:each={selectedUsers} for:item="u">
+                    <div key={u.id} class="cgm-selected-item">
+                        <span class="cgm-selected-name">{u.name}</span>
+                        <template if:true={u.isAdmin}>
+                            <span class="cgm-admin-badge">Admin.</span>
+                        </template>
+                        <template if:false={u.isAdmin}>
+                            <button
+                                class="cgm-remove-btn"
+                                data-id={u.id}
+                                onclick={handleRemoveUser}
+                            >
+                                <lightning-icon icon-name="utility:close" size="xx-small" class="cgm-remove-icon"></lightning-icon>
+                                Remover
+                            </button>
+                        </template>
+                    </div>
+                </template>
+            </div>
+
+        </div>
+
+        <!-- ── Footer ── -->
+        <div class="cgm-footer">
+            <button class="cgm-cancel-btn" onclick={handleClose} disabled={isSaving}>Cancelar</button>
+            <button class="cgm-save-btn" onclick={handleSave} disabled={isSaveDisabled}>
+                <template if:true={isSaving}>
+                    <lightning-spinner size="x-small" alternative-text="Salvando..."></lightning-spinner>
+                </template>
+                Criar grupo
+            </button>
+        </div>
+
+    </div>
+</template>

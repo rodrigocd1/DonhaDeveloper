@@ -48,4 +48,17 @@ private class PesquisasPortalSecurityTest {
             Assert.areEqual('Informe um CPF válido.', erro.getMessage());
         }
     }
+
+    @IsTest
+    static void emailObrigatorioNormalizaERejeitaInvalido() {
+        Assert.areEqual('ana@teste.com', PesquisasPortalSecurity.emailObrigatorio('  Ana@Teste.com '));
+        for (String invalido : new List<String>{ null, '', 'sem-arroba', 'a@b' }) {
+            try {
+                PesquisasPortalSecurity.emailObrigatorio(invalido);
+                Assert.fail('Deveria rejeitar: ' + invalido);
+            } catch (PesquisasPortalSecurity.PortalException erro) {
+                Assert.areEqual('Informe um e-mail válido.', erro.getMessage());
+            }
+        }
+    }
 }

@@ -1,0 +1,32 @@
+<template>
+    <div class="comm-chatter-attachment">
+        <div class="comm-chatter-attachment__icon">
+            <lightning-icon icon-name={iconName} size="x-small"></lightning-icon>
+        </div>
+
+        <div class="comm-chatter-attachment__copy">
+            <div class="comm-chatter-attachment__headline">
+                <span class="comm-chatter-attachment__title">{attachment.title}</span>
+                <span class={typeBadgeClass}>{typeBadgeLabel}</span>
+            </div>
+
+            <div class="comm-chatter-attachment__meta">
+                <template if:true={showExtension}>
+                    <span>{formattedExtension}</span>
+                </template>
+                <template if:true={showFileType}>
+                    <span>{attachment.fileType}</span>
+                </template>
+                <template if:true={showSize}>
+                    <span>{formattedSize}</span>
+                </template>
+            </div>
+        </div>
+
+        <template if:true={showNavigateAction}>
+            <button class="comm-chatter-attachment__action" type="button" onclick={handleNavigateFile}>
+                {actionLabel}
+            </button>
+        </template>
+    </div>
+</template>

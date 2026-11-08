@@ -3,7 +3,8 @@
     <fullName>Game_Lab_Payload_JSON__c</fullName>
     <label>Game Lab Payload JSON</label>
     <length>32768</length>
-    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
     <trackTrending>false</trackTrending>
     <type>LongTextArea</type>
     <visibleLines>10</visibleLines>

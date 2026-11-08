@@ -1,0 +1,69 @@
+<template>
+    <div class="comm-mention">
+        <!-- Search input -->
+        <div class="comm-mention__search">
+            <lightning-icon icon-name="utility:search" size="x-small" class="comm-mention__icon"></lightning-icon>
+            <input
+                type="text"
+                class="comm-mention__input"
+                placeholder="Buscar pessoas ou grupos..."
+                value={keyword}
+                oninput={handleInput}
+                onkeydown={handleKeyDown}
+                data-id="mention-input"
+            />
+        </div>
+
+        <!-- Results list -->
+        <ul class="comm-mention__list" role="listbox">
+
+            <!-- Users section -->
+            <template if:true={hasUsers}>
+                <li class="comm-mention__section-label">Pessoas</li>
+                <template for:each={users} for:item="u">
+                    <li
+                        key={u.id}
+                        class="comm-mention__item"
+                        role="option"
+                        data-id={u.id}
+                        data-name={u.name}
+                        data-type="User"
+                        onclick={handleSelect}
+                    >
+                        <img src={u.photoUrl} alt={u.name} class="comm-mention__avatar" />
+                        <span class="comm-mention__name">{u.name}</span>
+                        <span class="comm-mention__badge comm-mention__badge--user">Usuário</span>
+                    </li>
+                </template>
+            </template>
+
+            <!-- Groups section -->
+            <template if:true={hasGroups}>
+                <li class="comm-mention__section-label">Grupos</li>
+                <template for:each={groups} for:item="g">
+                    <li
+                        key={g.id}
+                        class="comm-mention__item"
+                        role="option"
+                        data-id={g.id}
+                        data-name={g.name}
+                        data-type="Group"
+                        onclick={handleSelect}
+                    >
+                        <div class="comm-mention__group-icon">
+                            <lightning-icon icon-name="utility:groups" size="x-small"></lightning-icon>
+                        </div>
+                        <span class="comm-mention__name">{g.name}</span>
+                        <span class="comm-mention__badge comm-mention__badge--group">{g.memberCount} membros</span>
+                    </li>
+                </template>
+            </template>
+
+            <!-- Empty -->
+            <template if:true={showEmpty}>
+                <li class="comm-mention__empty">Nenhum resultado encontrado</li>
+            </template>
+
+        </ul>
+    </div>
+</template>

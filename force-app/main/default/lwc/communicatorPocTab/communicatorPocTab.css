@@ -1,0 +1,10 @@
+:host {
+    display: block;
+    height: 100vh;
+    min-height: 0;
+}
+
+c-communicator-chat-floating-button {
+    display: block;
+    height: 100%;
+}

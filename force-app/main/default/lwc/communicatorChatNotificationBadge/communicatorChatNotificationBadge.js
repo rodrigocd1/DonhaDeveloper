@@ -1,22 +1,34 @@
 import { LightningElement, api, track } from 'lwc';
 import getUnreadCount                    from '@salesforce/apex/CommunicatorChatController.getUnreadCount';
 
-const POLL_INTERVAL_MS = 7000;
-const MAX_DISPLAY      = 99;
+const DEFAULT_POLL_MS = 6000;
+const MIN_POLL_MS     = 3000;
+const MAX_DISPLAY     = 99;
 
 export default class CommunicatorChatNotificationBadge extends LightningElement {
 
     @api threadId;
 
+    @api
+    get pollingIntervalMs() { return this._pollingIntervalMs; }
+    set pollingIntervalMs(val) {
+        const parsed = parseInt(val, 10);
+        this._pollingIntervalMs = (!isNaN(parsed) && parsed >= MIN_POLL_MS) ? parsed : DEFAULT_POLL_MS;
+        if (this._initialized) this._startPolling();
+    }
+
     @track unreadCount = 0;
 
-    _pollTimer = null;
+    _pollingIntervalMs = DEFAULT_POLL_MS;
+    _pollTimer         = null;
+    _initialized       = false;
 
     // ─────────────────────────────────────────
     // Lifecycle
     // ─────────────────────────────────────────
 
     connectedCallback() {
+        this._initialized = true;
         this._fetchCount();
         this._startPolling();
     }
@@ -42,7 +54,7 @@ export default class CommunicatorChatNotificationBadge extends LightningElement 
         this._stopPolling();
         this._pollTimer = setInterval(() => {
             this._fetchCount().catch(console.error);
-        }, POLL_INTERVAL_MS);
+        }, this._pollingIntervalMs);
     }
 
     _stopPolling() {

@@ -42,6 +42,14 @@ public class PesquisasPortalSecurity {
         return nome;
     }
 
+    public static String emailObrigatorio(String valor) {
+        String email = normalizarEmail(valor);
+        if (String.isBlank(email) || !emailValido(email)) {
+            throw new PortalException('Informe um e-mail válido.');
+        }
+        return email;
+    }
+
     public static Boolean cpfValido(String cpf) {
         if (String.isBlank(cpf) || cpf.length() != 11 || todosDigitosIguais(cpf)) {
             return false;

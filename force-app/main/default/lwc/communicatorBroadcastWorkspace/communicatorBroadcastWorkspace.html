@@ -1,0 +1,87 @@
+<template>
+    <div class="comm-broadcast-workspace" style={workspaceStyle}>
+        <template if:true={showDetailsModal}>
+            <c-communicator-broadcast-details-modal
+                mode={detailsModalMode}
+                broadcast-id={detailsBroadcastId}
+                is-community-context={isCommunityContext}
+                onclose={handleBroadcastModalClose}
+                onbroadcastcreated={handleBroadcastCreated}
+                onbroadcastsaved={handleBroadcastSaved}
+                onbroadcastarchived={handleBroadcastArchived}
+            ></c-communicator-broadcast-details-modal>
+        </template>
+
+        <template if:true={isListView}>
+            <c-communicator-broadcast-list
+                variant={variant}
+                items={items}
+                search-keyword={listSearchKeyword}
+                is-loading={isLoadingList}
+                is-loading-more={isLoadingMoreList}
+                has-more={hasMoreListItems}
+                error-message={listErrorMessage}
+                onbroadcastselect={handleBroadcastSelect}
+                onsearchchange={handleListSearchChange}
+                onclearsearch={handleListSearchClear}
+                onloadmore={handleLoadMoreList}
+            ></c-communicator-broadcast-list>
+        </template>
+
+        <template if:true={isTimelineView}>
+            <c-communicator-broadcast-timeline
+                style={timelineStyle}
+                variant={variant}
+                broadcast={selectedBroadcast}
+                messages={timelineMessages}
+                search-keyword={searchKeyword}
+                is-search-active={isSearchActive}
+                is-searching={isSearching}
+                is-loading={isLoadingTimeline}
+                is-loading-more={isLoadingMoreMessages}
+                has-more-messages={hasMoreMessages}
+                error-message={timelineErrorMessage}
+                search-error-message={searchErrorMessage}
+                has-thread={hasThread}
+                is-search-open={isSearchOpen}
+                can-manage-broadcast={canManageBroadcast}
+                editing-message={editingMessage}
+                onback={handleBackToList}
+                ondetails={handleBroadcastDetails}
+                oneditblocked={handleBroadcastEditBlocked}
+                oneditmessage={handleBroadcastEditMessage}
+                onretrymessage={handleBroadcastRetryMessage}
+                onsaveedit={handleBroadcastSaveEdit}
+                oncanceledit={handleBroadcastCancelEdit}
+                onattachmentclick={handleBroadcastAttachmentClick}
+                onloadinlineimages={handleLoadInlineImages}
+                onloadmoremessages={handleLoadMoreMessages}
+                onsearch={handleTimelineSearch}
+                onclearsearch={handleClearSearch}
+                ontogglesearch={handleToggleSearch}
+                onnavigatemessage={handleNavigateToMessage}
+            ></c-communicator-broadcast-timeline>
+
+            <template if:true={showComposer}>
+                <c-communicator-broadcast-composer
+                    style={composerStyle}
+                    broadcast={selectedBroadcast}
+                    mode={composerMode}
+                    editing-message={editingMessage}
+                    editing-attachment-draft={editingAttachmentDraft}
+                    upload-config-valid={uploadConfigValid}
+                    upload-config-error-message={uploadConfigErrorMessage}
+                    max-upload-broadcast-file-size-m-b={maxUploadBroadcastFileSizeMB}
+                    max-clipboard-broadcast-image-size-m-b={maxClipboardBroadcastImageSizeMB}
+                    onpublished={handleBroadcastPublished}
+                    onsaveedit={handleBroadcastSaveEdit}
+                    oncanceledit={handleBroadcastCancelEdit}
+                    oneditattachmentsadded={handleBroadcastEditAttachmentsAdded}
+                    oneditattachmentremove={handleBroadcastEditAttachmentRemove}
+                ></c-communicator-broadcast-composer>
+            </template>
+
+            <div class="comm-broadcast-workspace__bottom" aria-hidden="true"></div>
+        </template>
+    </div>
+</template>

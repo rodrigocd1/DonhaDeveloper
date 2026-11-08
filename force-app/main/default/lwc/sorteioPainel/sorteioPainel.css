@@ -1,0 +1,126 @@
+:host {
+  --sorteio-primaria: #173f73;
+  --sorteio-destaque: #f6b51b;
+  display: block;
+}
+
+.painel {
+  min-height: 100vh;
+  padding: 1.5rem 1rem;
+  box-sizing: border-box;
+  background: linear-gradient(160deg, var(--sorteio-primaria), #0b1f3a);
+  color: #fff;
+}
+
+.titulo {
+  margin: 0 0 1.5rem;
+  font-size: clamp(1.75rem, 5vw, 3rem);
+  font-weight: 800;
+  text-align: center;
+}
+
+.grade {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+}
+
+.cartao {
+  padding: 1.5rem;
+  border-radius: 1rem;
+  background: #fff;
+  color: #181818;
+  box-shadow: 0 1rem 2.5rem rgba(0, 0, 0, 0.25);
+}
+
+.inicio {
+  max-width: 28rem;
+  margin: 0 auto;
+  display: grid;
+  gap: 1rem;
+}
+
+.convite,
+.sorteio {
+  display: grid;
+  gap: 1rem;
+  text-align: center;
+}
+
+.link {
+  word-break: break-all;
+  font-size: 0.875rem;
+}
+
+.codigo-rotulo {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.codigo {
+  margin: 0;
+  color: var(--sorteio-primaria);
+  font-size: clamp(3rem, 12vw, 6rem);
+  font-weight: 800;
+  letter-spacing: 0.2em;
+}
+
+.subtitulo {
+  margin: 0 0 0.75rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.nomes {
+  max-height: 60vh;
+  margin: 0;
+  padding-left: 1.5rem;
+  overflow-y: auto;
+}
+
+.nomes li {
+  padding: 0.25rem 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.email {
+  color: #706e6b;
+  font-size: 0.875rem;
+}
+
+.ordem {
+  font-weight: 700;
+  color: var(--sorteio-primaria);
+}
+
+.ganhador {
+  margin: 0;
+  color: var(--sorteio-primaria);
+  font-size: clamp(2rem, 7vw, 4rem);
+  font-weight: 800;
+}
+
+.acoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+.alerta {
+  max-width: 40rem;
+  margin: 0 auto 1rem;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  background: #fff;
+  color: #ba0517;
+}
+
+@media (max-width: 48rem) {
+  .grade {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

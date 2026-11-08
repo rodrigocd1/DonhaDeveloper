@@ -1,0 +1,254 @@
+<template>
+    <div class="comm-hpage">
+
+        <template if:true={showPageHeader}>
+            <div class="comm-hpage__page-header">
+                <h2 class="comm-hpage__page-title">Histórico de mensagens</h2>
+                <p class="comm-hpage__page-subtitle">Confira o histórico de mensagens de suas oportunidades.</p>
+            </div>
+        </template>
+
+        <template if:true={showList}>
+            <c-communicator-chat-history
+                viewed-group-ids={_viewedGroupIds}
+                onthreadselected={handleThreadSelected}
+                ongroupselected={handleGroupSelected}
+            ></c-communicator-chat-history>
+        </template>
+
+        <template if:true={showThreadView}>
+            <div class="comm-hpage__view">
+                <div class="comm-hpage__header">
+                    <button class="comm-hpage__back" onclick={handleBack}>
+                        <lightning-icon icon-name="utility:back" size="x-small"></lightning-icon>
+                        Voltar
+                    </button>
+
+                    <div class="comm-hpage__record-card">
+                        <div class="comm-hpage__record-left">
+                            <span class="comm-hpage__record-type-label">Oportunidade:</span>
+                            <span class="comm-hpage__record-name">{activeRecordName}</span>
+                            <template if:true={currentRecordStageName}>
+                                <div class="comm-hpage__stage-row">
+                                    <span class="comm-hpage__stage-label">Etapa:</span>
+                                    <span class="comm-hpage__conv-type-text">{currentRecordTypeLabel}</span>
+                                    <span class="comm-hpage__meta-separator" aria-hidden="true">|</span>
+                                    <span class="comm-hpage__stage-label">Fase atual:</span>
+                                    <span class={currentStageBadgeClass}>{currentRecordStageName}</span>
+                                </div>
+                            </template>
+                            <template if:true={showAr}>
+                                <template if:true={isArClickable}>
+                                    <button class="comm-hpage__ar-link" onclick={handleAccessAr}>
+                                        <lightning-icon icon-name="utility:work_order_type" size="x-small" class="comm-hpage__ref-icon"></lightning-icon>
+                                        <span>{activeArName}</span>
+                                    </button>
+                                </template>
+                                <template if:false={isArClickable}>
+                                    <div class="comm-hpage__ar-link">
+                                        <lightning-icon icon-name="utility:work_order_type" size="x-small" class="comm-hpage__ref-icon"></lightning-icon>
+                                        <span>{activeArName}</span>
+                                    </div>
+                                </template>
+                            </template>
+                            <template if:true={showAb}>
+                                <template if:true={isAbClickable}>
+                                    <button class="comm-hpage__ar-link" onclick={handleAccessAb}>
+                                        <lightning-icon icon-name="utility:work_order_type" size="x-small" class="comm-hpage__ref-icon"></lightning-icon>
+                                        <span>{activeAbName}</span>
+                                    </button>
+                                </template>
+                                <template if:false={isAbClickable}>
+                                    <div class="comm-hpage__ar-link">
+                                        <lightning-icon icon-name="utility:work_order_type" size="x-small" class="comm-hpage__ref-icon"></lightning-icon>
+                                        <span>{activeAbName}</span>
+                                    </div>
+                                </template>
+                            </template>
+                            <template if:true={showQuote}>
+                                <template if:true={isQuoteClickable}>
+                                    <button class="comm-hpage__ar-link" onclick={handleAccessQuote}>
+                                        <lightning-icon icon-name="utility:work_order_type" size="x-small" class="comm-hpage__ref-icon"></lightning-icon>
+                                        <span>{activeQuoteName}</span>
+                                    </button>
+                                </template>
+                                <template if:false={isQuoteClickable}>
+                                    <div class="comm-hpage__ar-link">
+                                        <lightning-icon icon-name="utility:work_order_type" size="x-small" class="comm-hpage__ref-icon"></lightning-icon>
+                                        <span>{activeQuoteName}</span>
+                                    </div>
+                                </template>
+                            </template>
+                        </div>
+                        <button class="comm-hpage__access-btn" onclick={handleAccessRecord}>
+                            {accessRecordLabel}
+                        </button>
+                    </div>
+                </div>
+
+                <div class="comm-hpage__etapa-row">
+                    <span class="comm-hpage__etapa-label">Etapa:</span>
+                    <select class="comm-hpage__etapa-select" onchange={handleEtapaChange}>
+                        <template for:each={etapaOptions} for:item="opt">
+                            <option key={opt.value} value={opt.value} selected={opt.selected}>{opt.label}</option>
+                        </template>
+                    </select>
+                </div>
+
+                <div class="comm-hpage__search-row">
+                    <template if:true={showChatterHistory}>
+                        <c-communicator-chat-search
+                            search-mode="external"
+                            placeholder="Buscar no Chatter..."
+                            external-results={chatterSearchResults}
+                            external-search-complete={isChatterSearchComplete}
+                            external-is-searching={isChatterSearchLoading}
+                            onsearchchange={handleChatterSearchChange}
+                            onnavigatemessage={handleChatterNavigateToMessage}
+                        ></c-communicator-chat-search>
+                    </template>
+                    <template if:false={showChatterHistory}>
+                        <c-communicator-chat-search
+                            thread-id={activeThreadId}
+                            thread-ids={allThreadIds}
+                            stage-by-thread={stageByThread}
+                            onnavigatemessage={handleNavigateToMessage}
+                        ></c-communicator-chat-search>
+                    </template>
+                </div>
+
+                <template if:true={isMobileExperience}>
+                    <template if:true={activeRecordId}>
+                        <c-communicator-unread-alert
+                            record-id={activeRecordId}
+                            object-api-name="Opportunity"
+                            inline-mode
+                            onthreadclick={handleUnreadThreadClick}
+                            onlastmessageclick={handleUnreadLastMessageClick}
+                        ></c-communicator-unread-alert>
+                    </template>
+                </template>
+
+                <div class="comm-hpage__tabs-track">
+                    <div class="comm-hpage__mobile-stage-filter">
+                        <select class="comm-hpage__mobile-stage-select" onchange={handleMobileStageChange}>
+                            <template for:each={mobileStageOptions} for:item="opt">
+                                <option key={opt.value} value={opt.value} selected={opt.selected}>{opt.label}</option>
+                            </template>
+                        </select>
+                    </div>
+
+                    <div class="comm-hpage__tabs-scroll comm-hpage__tabs-scroll--desktop">
+                        <template for:each={stageTabs} for:item="tab">
+                            <button
+                                key={tab.stage}
+                                class={tab.tabClass}
+                                data-thread-id={tab.threadId}
+                                data-stage={tab.stage}
+                                onclick={handleStageTabClick}
+                            >
+                                {tab.label}
+                                <template if:true={tab.showBadge}>
+                                    <span class="comm-hpage__tab-badge">{tab.badgeLabel}</span>
+                                </template>
+                            </button>
+                        </template>
+                    </div>
+                </div>
+
+                <template if:true={showTimeline}>
+                    <c-communicator-chat-timeline
+                        key={activeThreadId}
+                        thread-id={activeThreadId}
+                        highlight-message-id={highlightMessageId}
+                    ></c-communicator-chat-timeline>
+                    <template if:true={showMessageInput}>
+                        <c-communicator-chat-message-input
+                            key={activeThreadId}
+                            thread-id={activeThreadId}
+                            onmessagesent={handleMessageSent}
+                        ></c-communicator-chat-message-input>
+                    </template>
+                    <template if:false={showMessageInput}>
+                        <div class="comm-hpage__readonly-notice">
+                            <lightning-icon icon-name="utility:lock" size="x-small" class="comm-hpage__readonly-icon"></lightning-icon>
+                            <span>Visualização somente leitura - fase encerrada.</span>
+                        </div>
+                    </template>
+                </template>
+
+                <template if:true={showChatterHistory}>
+                    <c-communicator-chatter-history
+                        thread-id={chatterHistoryThreadId}
+                        opportunity-id={activeRecordId}
+                        embedded
+                        allow-navigation
+                        open-files-in-new-tab
+                        hide-toolbar
+                        use-external-search
+                        external-search-term={chatterSearchTerm}
+                        onnavigatefile={handleChatterFileNavigation}
+                        onsearchstatechange={handleChatterSearchStateChange}
+                    ></c-communicator-chatter-history>
+                </template>
+
+                <template if:true={showEmptyStage}>
+                    <div class="comm-hpage__no-messages">
+                        <lightning-icon icon-name="utility:email" size="medium" class="comm-hpage__no-messages-icon"></lightning-icon>
+                        <p class="comm-hpage__no-messages-title">Sem histórico de mensagens...</p>
+                        <p class="comm-hpage__no-messages-text">Você poderá interagir aqui quando a oportunidade estiver nesta etapa.</p>
+                    </div>
+                </template>
+            </div>
+        </template>
+
+        <template if:true={showGroupView}>
+            <div class="comm-hpage__view">
+                <div class="comm-hpage__header">
+                    <button class="comm-hpage__back" onclick={handleGroupBack}>
+                        <lightning-icon icon-name="utility:back" size="x-small"></lightning-icon>
+                        Voltar
+                    </button>
+
+                    <div class="comm-hpage__record-card">
+                        <div class="comm-hpage__record-left">
+                            <span class="comm-hpage__record-name">{_activeGroup.groupName}</span>
+                            <div class="comm-hpage__stage-row">
+                                <span class="comm-hpage__stage-label">Oportunidades em andamento:</span>
+                                <strong class="comm-hpage__group-opp-count">{_activeGroup.activeOpportunityCount}</strong>
+                            </div>
+                        </div>
+                        <button class="comm-hpage__access-btn" onclick={handleGroupDetails}>
+                            Ver detalhes do grupo
+                        </button>
+                    </div>
+                </div>
+
+                <div class="comm-hpage__search-row">
+                    <c-communicator-chat-search
+                        thread-id={_activeGroupThreadId}
+                        onnavigatemessage={handleGroupNavigateMessage}
+                    ></c-communicator-chat-search>
+                </div>
+
+                <c-communicator-group-timeline
+                    group-id={_activeGroup.groupId}
+                    is-modal={isModal}
+                    highlight-message-id={_groupHighlightMsgId}
+                    onthreadready={handleGroupThreadReady}
+                    onnavigatetorecord={handleNavigateToRecord}
+                ></c-communicator-group-timeline>
+
+                <template if:true={showGroupDetailsModal}>
+                    <c-communicator-group-details-modal
+                        group={_activeGroup}
+                        onclose={handleGroupDetailsClose}
+                        ongroupupdated={handleGroupUpdated}
+                        ongroupdeleted={handleGroupDeleted}
+                    ></c-communicator-group-details-modal>
+                </template>
+            </div>
+        </template>
+
+    </div>
+</template>

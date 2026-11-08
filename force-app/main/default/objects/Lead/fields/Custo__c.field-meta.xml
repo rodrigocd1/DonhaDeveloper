@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Custo__c</fullName>
+    <description>Valor mensal gasto com energia usado para fins de segmentação do lead e apuração da elegibilidade para qualificação. Quando não informado diretamente, o custo é estimado como a média da faixa de custo caso ela tenha sido informada. Esse valor é uma aproximação do custo a ser apurado mais adiante na jornada da oportunidade do lead. Este valor é comparado com o custo mensal mínimo definido para a &quot;Distribuidora&quot; do Lead. Caso o seu custo seja maior que este mínimo, o lead será Qualificado. Se for inferior a este minimo, mas superior a um patamar mínimo de interesse, o lead fica &quot;Em Espera&quot;. Se o custo for abaixo do referido patamar mínimo de interesse, o lead vai para &quot;Sem Interesse&quot;.</description>
+    <inlineHelpText>Valor mensal gasto com energia usado para fins de segmentação do lead e apuração da elegibilidade para qualificação. Quando não informado diretamente, o custo é estimado como a média da faixa de custo caso ela tenha sido informada.</inlineHelpText>
+    <label>Custo</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackFeedHistory>true</trackFeedHistory>
+    <trackHistory>true</trackHistory>
+    <type>Currency</type>
+</CustomField>

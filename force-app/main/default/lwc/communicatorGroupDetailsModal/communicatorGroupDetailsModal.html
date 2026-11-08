@@ -1,0 +1,190 @@
+<template>
+    <div class="cgdm-backdrop"></div>
+
+    <div class="cgdm-container" role="dialog" aria-modal="true" aria-labelledby="cgdm-title">
+
+        <div class="cgdm-header">
+            <h2 class="cgdm-title" id="cgdm-title">Detalhes do grupo</h2>
+            <button class="cgdm-close-btn" onclick={handleClose} title="Fechar">
+                <lightning-icon icon-name="utility:close" size="x-small"></lightning-icon>
+            </button>
+        </div>
+
+        <div class="cgdm-body">
+
+            <template if:true={isLoading}>
+                <div class="cgdm-loading">
+                    <lightning-spinner size="small" alternative-text="Carregando..."></lightning-spinner>
+                </div>
+            </template>
+
+            <template if:false={isLoading}>
+
+                <template if:false={_isAddingUsersView}>
+                    <div class="cgdm-section">
+                        <p class="cgdm-section-label">Nome do grupo:</p>
+                        <template if:false={_editingName}>
+                            <div class="cgdm-name-row">
+                                <span class="cgdm-name">{displayedGroupName}</span>
+                                <template if:true={isAdmin}>
+                                    <button class="cgdm-icon-btn" onclick={handleEditName} title="Editar nome">
+                                        <lightning-icon icon-name="utility:edit" size="x-small"></lightning-icon>
+                                    </button>
+                                </template>
+                            </div>
+                        </template>
+                        <template if:true={_editingName}>
+                            <div class="cgdm-name-row">
+                                <input
+                                    type="text"
+                                    class="cgdm-input"
+                                    value={_newGroupName}
+                                    oninput={handleNameInput}
+                                    maxlength="80"
+                                />
+                                <button class="cgdm-icon-btn cgdm-icon-btn--confirm" onclick={handleConfirmName} title="Confirmar">
+                                    <lightning-icon icon-name="utility:check" size="x-small"></lightning-icon>
+                                </button>
+                            </div>
+                        </template>
+                    </div>
+
+                    <div class="cgdm-section">
+                        <p class="cgdm-section-label">Usuarios:</p>
+                        <div class="cgdm-members-list">
+                            <template for:each={displayedMembers} for:item="m">
+                                <div key={m.memberId} class="cgdm-member-row">
+                                    <div class="cgdm-member-left">
+                                        <span class="cgdm-member-name">{m.userName}</span>
+                                    </div>
+                                    <template if:true={m.isAdmin}>
+                                        <span class="cgdm-admin-badge">Admin.</span>
+                                    </template>
+                                    <template if:true={m.canRemove}>
+                                        <button
+                                            class="cgdm-remove-btn"
+                                            data-id={m.memberId}
+                                            onclick={handleRemoveMember}
+                                        >x Remover</button>
+                                    </template>
+                                </div>
+                            </template>
+                        </div>
+
+                        <template if:true={isAdmin}>
+                            <button class="cgdm-add-btn" onclick={handleAddUsers}>
+                                <lightning-icon icon-name="utility:add" size="xx-small" class="cgdm-add-icon"></lightning-icon>
+                                Adicionar usuarios
+                            </button>
+                        </template>
+                    </div>
+
+                    <template if:true={isAdmin}>
+                        <div class="cgdm-danger-section">
+                            <button class="cgdm-danger-btn" onclick={handleDeactivateGroup} disabled={isSaving}>
+                                <lightning-icon icon-name="utility:delete" size="x-small" class="cgdm-danger-icon"></lightning-icon>
+                                Encerrar grupo e apagar historico
+                            </button>
+                        </div>
+                    </template>
+                </template>
+
+                <template if:true={_isAddingUsersView}>
+                    <button class="cgdm-back-btn" onclick={handleBackFromAddUsers}>
+                        <lightning-icon icon-name="utility:back" size="x-small"></lightning-icon>
+                        Voltar
+                    </button>
+
+                    <div class="cgdm-section">
+                        <label class="cgdm-field-label">Adicione os usuarios:<span class="cgdm-required">*</span></label>
+                        <div class="cgdm-search-wrap">
+                            <input
+                                type="text"
+                                class="cgdm-search-input"
+                                placeholder="Buscar por nome"
+                                value={_searchTerm}
+                                oninput={handleSearchInput}
+                                onblur={handleSearchBlur}
+                            />
+                            <span class="cgdm-search-icon-wrap">
+                                <lightning-icon icon-name="utility:search" size="x-small"></lightning-icon>
+                            </span>
+
+                            <template if:true={_showDropdown}>
+                                <div class="cgdm-dropdown" onmousedown={handleDropdownMousedown}>
+                                    <template if:true={_isSearching}>
+                                        <div class="cgdm-dropdown-loading">
+                                            <lightning-spinner size="x-small" alternative-text="Buscando..."></lightning-spinner>
+                                        </div>
+                                    </template>
+                                    <template if:false={_isSearching}>
+                                        <template if:true={hasSearchResults}>
+                                            <template for:each={_searchResults} for:item="u">
+                                                <button
+                                                    key={u.id}
+                                                    class="cgdm-dropdown-item"
+                                                    data-id={u.id}
+                                                    data-name={u.name}
+                                                    onclick={handleSelectUser}
+                                                >{u.name}</button>
+                                            </template>
+                                        </template>
+                                        <template if:false={hasSearchResults}>
+                                            <p class="cgdm-dropdown-empty">Nenhum usuario encontrado.</p>
+                                        </template>
+                                    </template>
+                                </div>
+                            </template>
+                        </div>
+                        <p class="cgdm-hint"><span class="cgdm-required">*</span>Campos obrigatorios</p>
+                    </div>
+
+                    <div class="cgdm-selected-section">
+                        <p class="cgdm-selected-heading">Usuario selecionados:</p>
+                        <template for:each={pendingAdds} for:item="u">
+                            <div key={u.id} class="cgdm-selected-item">
+                                <span class="cgdm-selected-name">{u.name}</span>
+                                <button
+                                    class="cgdm-remove-btn"
+                                    data-id={u.id}
+                                    onclick={handleRemovePendingAdd}
+                                >x Remover</button>
+                            </div>
+                        </template>
+                    </div>
+                </template>
+
+            </template>
+
+        </div>
+
+        <template if:true={isAdmin}>
+        <div class="cgdm-footer">
+            <button class="cgdm-cancel-btn" onclick={handleClose} disabled={isSaving}>Cancelar</button>
+            <button class="cgdm-save-btn" onclick={handleSave} disabled={isSaveDisabled}>
+                <template if:true={isSaving}>
+                    <lightning-spinner size="x-small" alternative-text="Salvando..."></lightning-spinner>
+                </template>
+                Salvar alteracoes
+            </button>
+        </div>
+        </template>
+
+        <template if:true={_showDeleteConfirm}>
+            <div class="cgdm-confirm-backdrop"></div>
+            <div class="cgdm-confirm-modal" role="alertdialog" aria-modal="true" aria-labelledby="cgdm-confirm-title">
+                <h3 class="cgdm-confirm-title" id="cgdm-confirm-title">Confirmar exclusao</h3>
+                <p class="cgdm-confirm-text">
+                    Tem certeza que deseja encerrar o grupo e apagar o histórico? Esta ação não pode ser desfeita.
+                </p>
+                <div class="cgdm-confirm-actions">
+                    <button class="cgdm-confirm-cancel" onclick={handleCancelDeleteGroup} disabled={isSaving}>Cancelar</button>
+                    <button class="cgdm-confirm-danger" onclick={handleConfirmDeleteGroup} disabled={isSaving}>
+                        Sim, encerrar grupo
+                    </button>
+                </div>
+            </div>
+        </template>
+
+    </div>
+</template>

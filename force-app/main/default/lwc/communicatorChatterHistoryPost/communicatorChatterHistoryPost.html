@@ -1,0 +1,149 @@
+<template>
+    <article class="comm-msg comm-msg--theirs comm-chatter-post">
+        <div class="comm-msg__avatar comm-chatter-post__avatar">
+            <template if:true={hasAuthorPhoto}>
+                <img
+                    src={authorPhotoUrl}
+                    alt={authorName}
+                    class="comm-msg__photo"
+                    onerror={handleAuthorAvatarError}
+                />
+            </template>
+            <template if:false={hasAuthorPhoto}>
+                <span class="comm-chatter-post__avatar-fallback" aria-hidden="true">{authorInitials}</span>
+            </template>
+        </div>
+
+        <div class="comm-msg__content">
+            <div class="comm-msg__meta">
+                <span class="comm-msg__sender">{authorName}</span>
+                <span class="comm-msg__time">{formattedCreatedDate}</span>
+                <span class="comm-chatter-post__origin-badge">{originLabel}</span>
+            </div>
+
+            <div class={postBubbleClass}>
+                <template if:true={hasBody}>
+                    <div class="comm-chatter-post__body comm-chatter-post__body-content">
+                        <template for:each={postBodySegments} for:item="segment">
+                            <div key={segment.stableKey} class="comm-chatter-post__segment">
+                                <template if:true={segment.isRichText}>
+                                    <lightning-formatted-rich-text
+                                        class="comm-chatter-post__rich-text"
+                                        value={segment.value}
+                                    ></lightning-formatted-rich-text>
+                                </template>
+                            </div>
+                        </template>
+                    </div>
+                </template>
+
+                <template if:true={hasLink}>
+                    <div class="comm-chatter-post__link">
+                        <lightning-formatted-url
+                            value={linkUrl}
+                            label={linkLabel}
+                            target="_blank"
+                        ></lightning-formatted-url>
+                    </div>
+                </template>
+
+                <template if:true={hasAttachments}>
+                    <div class="comm-chatter-post__attachments" aria-label="Anexos do post">
+                        <template for:each={post.attachments} for:item="attachment">
+                            <div key={attachment.stableKey} class="comm-chatter-post__attachment-shell">
+                                <c-communicator-chatter-history-attachment
+                                    attachment={attachment}
+                                    feed-item-id={post.feedItemId}
+                                    allow-navigation={allowNavigation}
+                                    onnavigatefile={handleNavigateFile}
+                                ></c-communicator-chatter-history-attachment>
+                            </div>
+                        </template>
+                    </div>
+                </template>
+            </div>
+
+            <template if:true={hasComments}>
+                <div class="comm-msg__thread-controls">
+                    <button
+                        class="comm-msg__thread-toggle"
+                        type="button"
+                        aria-expanded={commentsToggleAriaExpanded}
+                        onclick={handleToggleComments}
+                    >
+                        {commentsToggleLabel}
+                    </button>
+                </div>
+
+                <template if:true={showCommentsList}>
+                    <div class="comm-msg__replies" aria-label={commentsLabel}>
+                        <template for:each={visibleComments} for:item="comment">
+                            <article
+                                key={comment.stableKey}
+                                class="comm-msg comm-msg--theirs comm-msg--reply comm-chatter-post__reply"
+                                data-feed-comment-id={comment.feedCommentId}
+                            >
+                                <div class="comm-msg__avatar">
+                                    <template if:true={comment.hasAuthorPhoto}>
+                                        <img
+                                            src={comment.safePhotoUrl}
+                                            alt={comment.safeAuthorName}
+                                            class="comm-msg__photo"
+                                            data-comment-key={comment.stableKey}
+                                            onerror={handleCommentAvatarError}
+                                        />
+                                    </template>
+                                    <template if:false={comment.hasAuthorPhoto}>
+                                        <span class="comm-chatter-post__avatar-fallback comm-chatter-post__avatar-fallback--reply" aria-hidden="true">
+                                            {comment.authorInitials}
+                                        </span>
+                                    </template>
+                                </div>
+
+                                <div class="comm-msg__content">
+                                    <div class="comm-msg__meta">
+                                        <span class="comm-msg__sender">{comment.safeAuthorName}</span>
+                                        <span class="comm-msg__time">{comment.formattedCreatedAt}</span>
+                                    </div>
+
+                                    <div class={comment.bubbleClass}>
+                                        <template if:true={comment.hasBody}>
+                                            <div class="comm-chatter-post__body comm-chatter-post__body--reply comm-chatter-post__body-content">
+                                                <template for:each={comment.bodySegments} for:item="segment">
+                                                    <div key={segment.stableKey} class="comm-chatter-post__segment">
+                                                        <template if:true={segment.isRichText}>
+                                                            <lightning-formatted-rich-text
+                                                                class="comm-chatter-post__rich-text"
+                                                                value={segment.value}
+                                                            ></lightning-formatted-rich-text>
+                                                        </template>
+                                                    </div>
+                                                </template>
+                                            </div>
+                                        </template>
+
+                                        <template if:true={comment.hasAttachments}>
+                                            <div class="comm-chatter-post__attachments comm-chatter-post__attachments--comment" aria-label="Anexos do comentario">
+                                                <template for:each={comment.attachments} for:item="attachment">
+                                                    <div key={attachment.stableKey} class="comm-chatter-post__attachment-shell">
+                                                        <c-communicator-chatter-history-attachment
+                                                            attachment={attachment}
+                                                            feed-item-id={post.feedItemId}
+                                                            feed-comment-id={comment.feedCommentId}
+                                                            allow-navigation={allowNavigation}
+                                                            onnavigatefile={handleNavigateFile}
+                                                        ></c-communicator-chatter-history-attachment>
+                                                    </div>
+                                                </template>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+                            </article>
+                        </template>
+                    </div>
+                </template>
+            </template>
+        </div>
+    </article>
+</template>

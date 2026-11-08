@@ -1,0 +1,128 @@
+<template>
+    <section class={containerClass}>
+        <div class="comm-broadcast-list__intro">
+            <h3 class="comm-broadcast-list__title">Comunicados</h3>
+            <p class="comm-broadcast-list__subtitle">Acompanhe os comunicados gerais publicados para você.</p>
+        </div>
+
+        <div class="comm-broadcast-list__search">
+            <div class="comm-broadcast-list__search-box">
+                <lightning-icon icon-name="utility:search" size="xx-small"></lightning-icon>
+                <input
+                    type="search"
+                    class="comm-broadcast-list__search-input"
+                    placeholder="Buscar por título, descrição ou autor"
+                    value={searchKeyword}
+                    oninput={handleSearchInput}
+                    onkeydown={handleSearchKeyDown}
+                    aria-label="Buscar comunicados"
+                />
+                <template if:true={hasSearchKeyword}>
+                    <button type="button" class="comm-broadcast-list__search-clear" onclick={handleClearSearch}>
+                        Limpar
+                    </button>
+                </template>
+            </div>
+        </div>
+
+        <template if:true={errorMessage}>
+            <div class="comm-broadcast-list__banner comm-broadcast-list__banner--error">
+                <lightning-icon icon-name="utility:error" size="x-small" variant="error"></lightning-icon>
+                <span>{errorMessage}</span>
+            </div>
+        </template>
+
+        <template if:true={isLoading}>
+            <div class="comm-broadcast-list__loading">
+                <lightning-spinner size="small" alternative-text="Carregando comunicados"></lightning-spinner>
+                <span>Carregando comunicados...</span>
+            </div>
+        </template>
+
+        <template if:true={hasVisibleItems}>
+            <div class="comm-broadcast-list__body">
+                <ul class="comm-broadcast-list__items">
+                    <template for:each={displayItems} for:item="item">
+                        <li key={item.groupId} class="comm-broadcast-list__item">
+                            <button
+                                class="comm-broadcast-list__card"
+                                data-group-id={item.groupId}
+                                onclick={handleSelect}
+                            >
+                                <div class="comm-broadcast-list__card-top">
+                                    <template if:true={item.createdByUserPhotoUrl}>
+                                        <img
+                                            src={item.createdByUserPhotoUrl}
+                                            alt={item.createdByUserName}
+                                            class="comm-broadcast-list__avatar"
+                                        />
+                                    </template>
+                                    <template if:false={item.createdByUserPhotoUrl}>
+                                        <span class="comm-broadcast-list__avatar comm-broadcast-list__avatar--fallback">
+                                            {item.creatorInitial}
+                                        </span>
+                                    </template>
+                                    <div class="comm-broadcast-list__summary">
+                                        <span class="comm-broadcast-list__name">{item.groupName}</span>
+                                        <span class="comm-broadcast-list__author">
+                                            <template if:true={item.createdByUserName}>
+                                                {item.createdByUserName}
+                                            </template>
+                                            <template if:false={item.createdByUserName}>
+                                                Autor nao informado
+                                            </template>
+                                        </span>
+                                    </div>
+                                    <div class="comm-broadcast-list__meta">
+                                        <template if:true={item.broadcastLastActivityAt}>
+                                            <span class="comm-broadcast-list__date">
+                                                <lightning-formatted-date-time
+                                                    value={item.broadcastLastActivityAt}
+                                                    year="numeric"
+                                                    month="2-digit"
+                                                    day="2-digit"
+                                                    hour="2-digit"
+                                                    minute="2-digit"
+                                                ></lightning-formatted-date-time>
+                                            </span>
+                                        </template>
+                                        <template if:true={item.showUnreadMessageText}>
+                                            <span class="comm-broadcast-list__unread-summary" title={item.unreadMessageAccessibilityLabel} aria-label={item.unreadMessageAccessibilityLabel}>{item.unreadMessageText}</span>
+                                        </template>
+                                    </div>
+                                </div>
+
+                                <template if:true={item.description}>
+                                    <p class="comm-broadcast-list__description">{item.description}</p>
+                                </template>
+                            </button>
+                        </li>
+                    </template>
+                </ul>
+            </div>
+        </template>
+
+        <template if:false={isLoading}>
+            <template if:false={hasVisibleItems}>
+                <div class={emptyContainerClass}>
+                    <lightning-icon icon-name="utility:announcement" size="small"></lightning-icon>
+                    <p>{emptyMessage}</p>
+                    <template if:true={hasSearchKeyword}>
+                        <button type="button" class="comm-broadcast-list__empty-action" onclick={handleClearSearch}>
+                            Limpar busca
+                        </button>
+                    </template>
+                </div>
+            </template>
+        </template>
+
+        <template if:true={hasMore}>
+            <div class="comm-broadcast-list__footer">
+                <button class="comm-broadcast-list__more" onclick={handleLoadMore} disabled={isLoadingMore}>
+                    <template if:true={isLoadingMore}>Carregando...</template>
+                    <template if:false={isLoadingMore}>Carregar mais</template>
+                </button>
+            </div>
+        </template>
+    </section>
+</template>

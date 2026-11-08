@@ -1,0 +1,958 @@
+:host {
+    --bg: #0b5a7a;
+    --bg-dark: #0a4e6b;
+    --bg-header: #07354b;
+    --bg-footer: #9dcde9;
+    --yellow: #f6e85c;
+    --white: #ffffff;
+    --muted: rgba(255, 255, 255, 0.7);
+    --option-bg: rgba(255, 255, 255, 0.1);
+    --option-border: rgba(168, 220, 244, 0.45);
+    display: block;
+    font-family: "Salesforce Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    height: 100dvh;
+    min-height: 100dvh;
+    width: 100vw;
+    overflow-x: hidden;
+}
+
+/* W-019640 — estados reais, perguntas configuráveis e acessibilidade */
+.loading-state {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    background: var(--bg-dark, #0a4e6b);
+}
+
+.question-group {
+    border: 0;
+    margin: 0 0 1.5rem;
+    padding: 0;
+    min-width: 0;
+}
+
+.question-group .field-label {
+    display: block;
+    width: 100%;
+}
+
+.consent-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    color: var(--white);
+    font-size: clamp(0.9rem, 1.8vw, 1.15rem);
+    line-height: 1.35;
+    cursor: pointer;
+}
+
+.consent-row input {
+    width: 1.35rem;
+    height: 1.35rem;
+    margin-top: 0.1rem;
+    accent-color: var(--yellow);
+    flex: 0 0 auto;
+}
+
+.consent-link {
+    color: var(--yellow);
+    text-decoration: underline;
+    text-underline-offset: 0.2rem;
+}
+
+.status-region {
+    min-height: 1.5rem;
+}
+
+.code-input {
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+}
+
+.assistive-text {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.global-error {
+    position: fixed;
+    left: 50%;
+    bottom: 2rem;
+    width: min(90vw, 36rem);
+    transform: translateX(-50%);
+    z-index: 20;
+}
+
+button:focus-visible,
+input:focus-visible,
+a:focus-visible {
+    outline: 3px solid var(--yellow);
+    outline-offset: 3px;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+/* ─── Base screens ─────────────────────────────────────────── */
+.screen {
+    height: 100dvh;
+    min-height: 100dvh;
+    width: 100vw;
+}
+
+.screen-01,
+.screen-dark {
+    display: flex;
+    flex-direction: column;
+    height: 100dvh;
+    min-height: 100dvh;
+    width: 100vw;
+    overflow: hidden;
+}
+
+.screen-dark {
+    background: linear-gradient(180deg, #0c5b7c 0%, var(--bg-dark) 100%);
+    color: var(--white);
+    position: relative;
+    isolation: isolate;
+}
+
+.screen-dark::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 41%;
+    height: 16%;
+    background: rgba(4, 28, 40, 0.38);
+    clip-path: polygon(28% 0, 100% 0, 100% 100%, 0 100%);
+    z-index: 0;
+}
+
+.screen-dark > * {
+    position: relative;
+    z-index: 1;
+}
+
+/* ─── Header ────────────────────────────────────────────────── */
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: clamp(1.4rem, 4dvh, 4.5rem) clamp(1.75rem, 6vw, 5.5rem) 0.65rem;
+    position: relative;
+    z-index: 2;
+}
+
+.header-01 {
+    background: transparent;
+}
+
+.header-dark {
+    background: transparent;
+}
+
+.logo {
+    display: block;
+    width: clamp(70px, 12vw, 136px);
+    height: auto;
+    object-fit: contain;
+    object-position: center;
+    flex-shrink: 0;
+}
+
+.step-num {
+    font-size: clamp(3rem, 10vw, 7rem);
+    font-weight: 800;
+    color: #aad9f4;
+    opacity: 1;
+    letter-spacing: -0.03em;
+}
+
+.step-num-dark {
+    font-size: clamp(3rem, 10vw, 7rem);
+    opacity: 0.75;
+}
+
+/* ─── Screen 01 ─────────────────────────────────────────────── */
+.screen-01 {
+    position: relative;
+    isolation: isolate;
+    border-top: 0.5rem solid #9CD4F2;
+    background: #0a4f6b;
+    color: var(--white);
+}
+
+.screen-01::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 42%;
+    height: 18%;
+    background: rgba(7, 47, 72, 0.36);
+    clip-path: polygon(30% 0, 100% 0, 100% 100%, 0 100%);
+    z-index: 1;
+}
+
+.hero-photo {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-color: #0d4a64;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.screen-01-body {
+    position: absolute;
+    left: clamp(1.75rem, 7vw, 6rem);
+    right: clamp(1.75rem, 7vw, 6rem);
+    bottom: clamp(4.5rem, 9dvh, 9rem);
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.75rem, 1.7dvh, 1.6rem);
+    z-index: 2;
+    max-width: clamp(20rem, 84vw, 56rem);
+}
+
+.title-01 {
+    font-size: clamp(2.6rem, 10.2vw, 7.25rem);
+    line-height: 0.92;
+    margin: 0;
+    font-weight: 300;
+}
+
+.title-01 strong {
+    font-weight: 800;
+}
+
+.sub-01 {
+    font-size: clamp(1.05rem, 2.8vw, 2.35rem);
+    line-height: 1.42;
+    margin: 0;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.time-01 {
+    font-size: clamp(1rem, 2.4vw, 1.95rem);
+    margin: 0;
+    color: var(--yellow);
+    font-style: italic;
+}
+
+.gift-notice {
+    border: 1.5px solid rgba(255, 255, 255, 0.55);
+    border-radius: 999px;
+    padding: clamp(0.55rem, 1.25dvh, 0.9rem) clamp(0.95rem, 2.2vw, 1.75rem);
+    font-size: clamp(0.72rem, 1.2vw, 1rem);
+    font-weight: 600;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    white-space: nowrap;
+}
+
+.gift-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--yellow);
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+/* ─── Screen body (02–04) ───────────────────────────────────── */
+.screen-body {
+    flex: 1;
+    padding: 1.25rem 1.45rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.92rem;
+    overflow-y: auto;
+}
+
+.screen-body-04 {
+    align-items: center;
+    text-align: center;
+}
+
+/* ─── Headings ──────────────────────────────────────────────── */
+.title-dark {
+    font-size: clamp(2.45rem, 5vw, 3.6rem);
+    line-height: 1.05;
+    margin: 0;
+    font-weight: 300;
+}
+
+.title-dark strong {
+    font-weight: 800;
+}
+
+.title-04 {
+    margin-top: 0.5rem;
+}
+
+/* ─── Labels ────────────────────────────────────────────────── */
+.field-label {
+    font-size: 1rem;
+    line-height: 1.45;
+    margin: 0;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.section-lbl {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--yellow);
+    margin: 0.15rem 0 0;
+}
+
+/* ─── Energy range options ──────────────────────────────────── */
+.range-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+}
+
+.range-option {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(168, 220, 244, 0.12);
+    border-left: 4px solid var(--option-border);
+    border-radius: 6px;
+    color: var(--white);
+    font-size: 1.02rem;
+    padding: 0.95rem 1.05rem;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+}
+
+.range-option:hover {
+    background: rgba(255, 255, 255, 0.14);
+}
+
+.range-option.active {
+    background: rgba(245, 207, 0, 0.18);
+    border-left-color: var(--yellow);
+    color: var(--yellow);
+    font-weight: 600;
+}
+
+/* ─── Solar toggle ──────────────────────────────────────────── */
+.solar-row {
+    display: flex;
+    gap: 0.7rem;
+}
+
+.btn-solar {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1.5px solid rgba(168, 220, 244, 0.22);
+    border-radius: 6px;
+    color: var(--white);
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 0.85rem;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+}
+
+.btn-solar:hover {
+    background: rgba(255, 255, 255, 0.14);
+}
+
+.btn-solar.active {
+    background: rgba(245, 207, 0, 0.18);
+    border-color: var(--yellow);
+    color: var(--yellow);
+}
+
+/* ─── Savings card (screen 03) ──────────────────────────────── */
+.savings-card {
+    background: linear-gradient(135deg, #f7eb70 0%, #fff2b3 100%);
+    border-radius: 12px;
+    padding: 1.1rem 1.25rem;
+    color: #0C3B54;
+    box-shadow: 0 12px 28px rgba(3, 32, 45, 0.18);
+}
+
+.savings-lbl {
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.savings-val {
+    font-size: 2.2rem;
+    font-weight: 800;
+    margin: 0.1rem 0;
+    line-height: 1.1;
+}
+
+.savings-brand {
+    font-size: 0.9rem;
+    margin: 0;
+    font-weight: 500;
+}
+
+/* ─── Benefits pills ────────────────────────────────────────── */
+.benefits-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+}
+
+.benefit-pill {
+    border: 1.5px solid rgba(255, 255, 255, 0.5);
+    border-radius: 999px;
+    padding: 0.45rem 1rem;
+    font-size: 0.9rem;
+    display: inline-block;
+    width: fit-content;
+}
+
+/* ─── Form fields ───────────────────────────────────────────── */
+.form-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+}
+
+.field-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    width: 100%;
+}
+
+.field-lbl {
+    font-size: 0.85rem;
+    color: var(--muted);
+}
+
+.field-input {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(168, 220, 244, 0.08);
+    border-bottom: 2px solid rgba(168, 220, 244, 0.8);
+    border-radius: 6px 6px 0 0;
+    color: var(--white);
+    font-size: 1rem;
+    padding: 0.65rem 0.85rem 0.5rem;
+    width: 100%;
+    outline: none;
+    transition: border-color 0.15s;
+}
+
+.field-input:focus {
+    border-bottom-color: var(--yellow);
+    border-color: rgba(246, 232, 92, 0.3);
+}
+
+.field-input::placeholder {
+    color: var(--muted);
+}
+
+/* ─── Screen 04 specifics ───────────────────────────────────── */
+.success-icon-wrap {
+    width: 110px;
+    height: 110px;
+    margin: 0 auto;
+    background: rgba(245, 207, 0, 0.15);
+    border-radius: 50%;
+    padding: 8px;
+    box-sizing: border-box;
+}
+
+.success-svg {
+    width: 100%;
+    height: 100%;
+}
+
+.sub-04 {
+    font-size: 0.95rem;
+    line-height: 1.55;
+    margin: 0;
+    color: rgba(255, 255, 255, 0.85);
+    text-align: center;
+}
+
+/* ─── Buttons ───────────────────────────────────────────────── */
+.btn-primary {
+    align-items: center;
+    background: var(--yellow);
+    border: 0;
+    border-radius: 999px;
+    color: #0C3B54;
+    cursor: pointer;
+    display: inline-flex;
+    font-size: 1.05rem;
+    font-weight: 700;
+    justify-content: center;
+    padding: 1rem 1.5rem;
+    text-align: center;
+    transition: opacity 0.15s;
+}
+
+.btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-full {
+    width: 100%;
+}
+
+.btn-secondary {
+    align-items: center;
+    background: rgba(5, 58, 80, 0.34);
+    border: none;
+    border-radius: 999px;
+    color: rgba(255, 255, 255, 0.55);
+    cursor: pointer;
+    display: inline-flex;
+    font-size: 1rem;
+    font-weight: 600;
+    justify-content: center;
+    padding: 0.85rem 1.5rem;
+    text-align: center;
+    transition: opacity 0.15s;
+}
+
+.dev-controls {
+    position: fixed;
+    right: 1rem;
+    bottom: 1rem;
+    z-index: 1000;
+    display: flex;
+    gap: 0.5rem;
+}
+
+.dev-btn {
+    min-height: 2.5rem;
+    padding: 0 0.9rem;
+    border: 0;
+    border-radius: 999px;
+    box-shadow: 0 0.45rem 1.25rem rgba(7, 79, 112, 0.18);
+    cursor: pointer;
+    font: inherit;
+    font-size: 0.78rem;
+    font-weight: 900;
+    line-height: 1;
+}
+
+.dev-btn-back {
+    background: rgba(255, 255, 255, 0.92);
+    color: var(--bg-dark);
+}
+
+.dev-btn-next {
+    background: var(--yellow);
+    color: #0c3b54;
+}
+
+/* ─── Error ─────────────────────────────────────────────────── */
+.error-box {
+    background: rgba(186, 28, 28, 0.18);
+    border: 1px solid rgba(252, 100, 100, 0.4);
+    border-radius: 8px;
+    color: #fca5a5;
+    font-size: 0.9rem;
+    padding: 0.75rem 1rem;
+}
+
+/* ─── Footer ────────────────────────────────────────────────── */
+.app-footer {
+    text-align: center;
+    padding: 0.56rem;
+    font-size: 0.78rem;
+    color: #0c3b54;
+    background: var(--bg-footer);
+    font-weight: 600;
+    position: relative;
+    z-index: 2;
+}
+
+.app-footer-dark {
+    color: #0c3b54;
+    background: var(--bg-footer);
+}
+
+.screen-01 .app-footer {
+    margin-top: auto;
+}
+
+.screen-01 .btn-primary {
+    font-size: clamp(1.05rem, 4vw, 3rem);
+    padding: clamp(1rem, 1.9dvh, 1.75rem) clamp(1.5rem, 6vw, 4rem);
+}
+
+/* ─── Responsive adjustments ────────────────────────────────── */
+@media (min-width: 600px) {
+    .screen {
+        min-height: 100dvh;
+        padding: 0;
+    }
+
+    .header {
+        padding: clamp(1.4rem, 4dvh, 4.5rem) clamp(1.75rem, 6vw, 5.5rem) 0.6rem;
+    }
+
+    .screen-body {
+        max-width: none;
+        margin: 0;
+        width: 100%;
+    }
+
+    .screen-01-body {
+        max-width: clamp(20rem, 84vw, 56rem);
+        padding: 0;
+        width: 100%;
+    }
+
+    .benefits-row {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+}
+
+@media (min-width: 1200px) {
+    .screen {
+        display: block;
+        min-height: 100dvh;
+        background: transparent;
+    }
+
+    .screen-01,
+    .screen-dark {
+        aspect-ratio: auto;
+        width: 100%;
+        min-height: 100dvh;
+    }
+
+    .screen-01 {
+        border-top-width: 0.75rem;
+    }
+
+    .screen-01::before,
+    .screen-dark::before {
+        width: 24rem;
+        max-width: 32vw;
+        height: 12rem;
+    }
+
+    .header {
+        padding: clamp(2.5rem, 4dvh, 4.75rem) clamp(3rem, 6vw, 6rem) 1rem;
+    }
+
+    .logo {
+        width: clamp(84px, 8vw, 136px);
+    }
+
+    .step-num,
+    .step-num-dark {
+        font-size: clamp(4.5rem, 7vw, 6.75rem);
+    }
+
+    .screen-01-body {
+        max-width: clamp(34rem, 84vw, 58rem);
+        padding: 0;
+        gap: clamp(1rem, 1.7dvh, 1.6rem);
+    }
+
+    .screen-body {
+        max-width: min(40rem, 38vw);
+        padding: 1rem 2.5rem 1.5rem;
+        gap: 1.15rem;
+    }
+
+    .title-dark {
+        font-size: clamp(3.6rem, 5vw, 5.5rem);
+    }
+
+    .title-01 {
+        font-size: clamp(4.5rem, 7vw, 7.25rem);
+    }
+
+    .field-label,
+    .section-lbl,
+    .benefit-pill,
+    .range-option,
+    .btn-solar,
+    .field-input,
+    .btn-primary,
+    .btn-secondary {
+        font-size: 1.2rem;
+    }
+
+    .field-lbl,
+    .app-footer,
+    .app-footer-dark {
+        font-size: 1rem;
+    }
+
+    .gift-notice {
+        max-width: 32rem;
+        padding: 0.9rem 1.5rem;
+    }
+
+    .savings-card {
+        padding: 1.5rem 1.65rem;
+    }
+
+    .savings-val {
+        font-size: 3.35rem;
+    }
+
+    .field-input {
+        padding: 0.95rem 1rem 0.75rem;
+    }
+
+    .app-footer,
+    .app-footer-dark {
+        margin-top: auto;
+        padding: 0.8rem 1rem;
+    }
+}
+
+/* ─── Figma-aligned flow screens (02-04) ───────────────────── */
+.screen-dark {
+    border-top: 0.5rem solid #9cd4f2;
+}
+
+.screen-body-02,
+.screen-body-03,
+.screen-body-04 {
+    width: 100%;
+    max-width: min(100%, 64rem);
+    margin: 0 auto;
+    padding: clamp(1.5rem, 5dvh, 6rem) clamp(1.75rem, 7vw, 6rem) clamp(1.75rem, 5dvh, 6rem);
+    gap: clamp(0.95rem, 2dvh, 1.85rem);
+}
+
+.screen-body-02 {
+    padding-top: clamp(2rem, 6dvh, 7rem);
+}
+
+.screen-02 .title-dark {
+    font-size: clamp(3.6rem, 10vw, 7rem);
+    line-height: 0.92;
+}
+
+.screen-02 .field-label {
+    font-size: clamp(1.25rem, 3.7vw, 2.45rem);
+    line-height: 1.15;
+}
+
+.screen-02 .range-list {
+    gap: clamp(0.75rem, 2.2dvh, 1.6rem);
+    width: 100%;
+}
+
+.screen-02 .range-option {
+    min-height: clamp(4.2rem, 8dvh, 7.2rem);
+    border-left-width: clamp(5px, 0.8vw, 8px);
+    border-radius: 10px;
+    font-size: clamp(1.25rem, 3.7vw, 2.35rem);
+    font-weight: 700;
+    padding: clamp(1rem, 2dvh, 1.7rem) clamp(1.35rem, 4vw, 2.5rem);
+    width: 100%;
+}
+
+.screen-02 .solar-row {
+    gap: clamp(1rem, 5vw, 3.5rem);
+    width: 100%;
+}
+
+.screen-02 .btn-solar {
+    min-height: clamp(3.8rem, 7dvh, 6rem);
+    border-radius: 10px;
+    font-size: clamp(1.2rem, 3.6vw, 2.25rem);
+}
+
+.screen-02 .btn-primary {
+    margin-top: clamp(0.7rem, 2dvh, 1.6rem);
+    font-size: clamp(1.4rem, 4.2vw, 3rem);
+    padding: clamp(1.1rem, 2.1dvh, 1.85rem) clamp(1.5rem, 6vw, 4rem);
+}
+
+.screen-body-03 {
+    padding-top: clamp(0.9rem, 2dvh, 2.4rem);
+    padding-bottom: clamp(0.9rem, 2dvh, 2rem);
+    gap: clamp(0.55rem, 1.2dvh, 0.95rem);
+    overflow: hidden;
+    max-width: min(100%, 68rem);
+    padding-left: clamp(1.2rem, 3.25vw, 3rem);
+    padding-right: clamp(1.2rem, 3.25vw, 3rem);
+}
+
+.screen-03 .savings-card {
+    width: min(100%, 42rem);
+    border-radius: 12px;
+    padding: clamp(0.85rem, 1.8dvh, 1.35rem) clamp(1rem, 2.8vw, 2rem);
+}
+
+.screen-03 .savings-lbl {
+    font-size: clamp(0.95rem, 2vw, 1.4rem);
+}
+
+.screen-03 .savings-val {
+    font-size: clamp(2.15rem, 4.9vw, 3.8rem);
+}
+
+.screen-03 .savings-brand {
+    font-size: clamp(0.95rem, 1.8vw, 1.35rem);
+}
+
+.screen-03 .section-lbl {
+    font-size: clamp(1rem, 2.2vw, 1.65rem);
+    color: #9fd2ee;
+    margin-top: clamp(0.45rem, 1dvh, 0.85rem);
+}
+
+.screen-03 .benefits-row {
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-direction: column;
+    gap: clamp(0.45rem, 1dvh, 0.8rem);
+    width: 100%;
+}
+
+.screen-03 .benefit-pill {
+    border-width: 2px;
+    display: inline-flex;
+    align-items: center;
+    gap: clamp(0.45rem, 1.2vw, 0.85rem);
+    font-size: clamp(1rem, 2.15vw, 1.5rem);
+    font-weight: 700;
+    line-height: 1.2;
+    padding: clamp(0.38rem, 0.85dvh, 0.65rem) clamp(0.8rem, 2vw, 1.4rem);
+}
+
+.pill-dot {
+    width: clamp(0.65rem, 1.5vw, 1rem);
+    height: clamp(0.65rem, 1.5vw, 1rem);
+    background: var(--yellow);
+    border-radius: 50%;
+    flex: 0 0 auto;
+}
+
+.screen-03 .form-fields,
+.screen-04 .field-row {
+    gap: clamp(0.65rem, 1.4dvh, 1rem);
+    width: 100%;
+}
+
+.screen-03 .field-lbl,
+.screen-04 .field-label {
+    font-size: clamp(0.9rem, 1.8vw, 1.2rem);
+    color: rgba(255, 255, 255, 0.82);
+}
+
+.screen-03 .field-input,
+.screen-04 .field-input {
+    min-height: clamp(3rem, 5dvh, 4.3rem);
+    appearance: none;
+    background: rgba(255, 255, 255, 0.1);
+    border-bottom-width: 5px;
+    border-radius: 10px 10px 0 0;
+    font-size: clamp(0.95rem, 2vw, 1.4rem);
+    padding: clamp(0.65rem, 1.2dvh, 0.95rem) clamp(1rem, 2.5vw, 1.6rem) 0.45rem;
+}
+
+.screen-03 .field-input:-webkit-autofill,
+.screen-04 .field-input:-webkit-autofill {
+    -webkit-text-fill-color: var(--white);
+    box-shadow: 0 0 0 1000px #1a6b86 inset;
+    transition: background-color 9999s ease-out;
+}
+
+.screen-03 .btn-primary,
+.screen-04 .btn-primary,
+.screen-04 .btn-secondary {
+    font-size: clamp(1rem, 2.2vw, 1.65rem);
+    padding: clamp(0.85rem, 1.6dvh, 1.25rem) clamp(1.5rem, 5vw, 3.2rem);
+}
+
+.screen-body-04 {
+    align-items: center;
+    text-align: center;
+    padding-top: clamp(4rem, 12dvh, 9rem);
+}
+
+.success-icon-wrap {
+    width: clamp(8.5rem, 29vw, 19rem);
+    height: clamp(8.5rem, 29vw, 19rem);
+    margin: 0 0 clamp(1.5rem, 4dvh, 4.5rem);
+    padding: clamp(0.7rem, 2vw, 1.8rem);
+    background: rgba(120, 199, 192, 0.24);
+}
+
+.screen-04 .title-dark {
+    font-size: clamp(4rem, 11.2vw, 7.6rem);
+    line-height: 0.92;
+}
+
+.screen-04 .sub-04 {
+    font-size: clamp(1.2rem, 3.6vw, 2.4rem);
+    line-height: 1.2;
+    text-align: center;
+}
+
+.screen-04 .field-row,
+.screen-04 .btn-primary,
+.screen-04 .btn-secondary {
+    width: 100%;
+}
+
+.screen-04 .btn-secondary {
+    background: rgba(255, 255, 255, 0.11);
+    margin-top: clamp(0.2rem, 1dvh, 0.8rem);
+}
+
+@media (max-width: 599px) {
+    .screen-body-02,
+    .screen-body-03,
+    .screen-body-04 {
+        max-width: none;
+        padding-left: 1.25rem;
+        padding-right: 1.25rem;
+    }
+
+    .screen-02 .solar-row {
+        gap: 0.75rem;
+    }
+
+    .screen-03 .savings-card {
+        width: 100%;
+    }
+
+    .dev-controls {
+        right: 12px;
+        bottom: 12px;
+        gap: 8px;
+    }
+
+    .dev-btn {
+        min-height: 36px;
+        padding: 0 12px;
+        font-size: 11px;
+    }
+}

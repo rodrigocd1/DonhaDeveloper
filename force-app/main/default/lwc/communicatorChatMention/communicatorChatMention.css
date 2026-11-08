@@ -1,0 +1,106 @@
+/* communicatorChatMention */
+:host { display: block; }
+
+.comm-mention {
+    background: #fff;
+    border: 1px solid #dddbda;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 16px rgba(0,0,0,.15);
+    overflow: hidden;
+    width: 280px;
+    max-height: 320px;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Salesforce Sans', Arial, sans-serif;
+}
+
+.comm-mention__search {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid #f0f0f0;
+    flex-shrink: 0;
+}
+
+.comm-mention__input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 0.85rem;
+    background: transparent;
+    color: #181818;
+}
+.comm-mention__input::placeholder { color: #aeacaa; }
+
+.comm-mention__list {
+    list-style: none;
+    padding: 0.25rem 0;
+    margin: 0;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.comm-mention__section-label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    color: #aeacaa;
+    padding: 0.35rem 0.75rem 0.15rem;
+}
+
+.comm-mention__item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.75rem;
+    cursor: pointer;
+    transition: background 0.1s;
+}
+.comm-mention__item:hover { background: #f0f7ff; }
+
+.comm-mention__avatar {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.comm-mention__group-icon {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: #e8f4fe;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.comm-mention__name {
+    flex: 1;
+    font-size: 0.85rem;
+    color: #181818;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.comm-mention__badge {
+    font-size: 0.65rem;
+    font-weight: 600;
+    padding: 1px 6px;
+    border-radius: 0.75rem;
+    flex-shrink: 0;
+}
+.comm-mention__badge--user  { background: #e8f4fe; color: #0176d3; }
+.comm-mention__badge--group { background: #f3ecfd; color: #7526e3; }
+
+.comm-mention__empty {
+    padding: 0.75rem;
+    font-size: 0.82rem;
+    color: #706e6b;
+    text-align: center;
+}

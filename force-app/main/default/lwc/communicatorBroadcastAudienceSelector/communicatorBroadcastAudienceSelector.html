@@ -1,0 +1,94 @@
+<template>
+    <section class="comm-broadcast-audience-selector">
+        <div class="comm-broadcast-audience-selector__types">
+            <template for:each={audienceTypeOptions} for:item="type">
+                <button
+                    key={type.value}
+                    type="button"
+                    class={type.className}
+                    data-type={type.value}
+                    onclick={handleAudienceTypeSelect}
+                    disabled={disabled}
+                >
+                    {type.label}
+                </button>
+            </template>
+        </div>
+
+        <template if:true={showSearchInput}>
+            <div class="comm-broadcast-audience-selector__search">
+                    <lightning-input
+                        type="search"
+                        variant="label-hidden"
+                        placeholder={searchPlaceholder}
+                        value={searchKeyword}
+                        onchange={handleSearchInput}
+                        onblur={handleSearchBlur}
+                        disabled={disabled}
+                    ></lightning-input>
+            </div>
+        </template>
+        <template if:false={showSearchInput}>
+            <p class="comm-broadcast-audience-selector__empty">{allSupportedUsersHelperText}</p>
+        </template>
+
+        <template if:true={searchErrorMessage}>
+            <div class="comm-broadcast-audience-selector__banner comm-broadcast-audience-selector__banner--error">
+                <lightning-icon icon-name="utility:error" size="x-small" variant="error"></lightning-icon>
+                <span>{searchErrorMessage}</span>
+            </div>
+        </template>
+
+        <template if:true={dropdownOpen}>
+            <div class="comm-broadcast-audience-selector__dropdown" onmousedown={handleDropdownMousedown}>
+                <template if:true={isSearching}>
+                    <div class="comm-broadcast-audience-selector__dropdown-loading">
+                        <lightning-spinner size="x-small" alternative-text="Buscando audiência"></lightning-spinner>
+                    </div>
+                </template>
+                <template if:false={isSearching}>
+                    <template if:true={hasSearchResults}>
+                        <template for:each={searchResults} for:item="result">
+                            <button
+                                key={result.id}
+                                type="button"
+                                class="comm-broadcast-audience-selector__dropdown-item"
+                                data-id={result.id}
+                                data-name={result.name}
+                                onclick={handleSelectResult}
+                            >
+                                <span>{result.name}</span>
+                            </button>
+                        </template>
+                    </template>
+                    <template if:false={hasSearchResults}>
+                        <p class="comm-broadcast-audience-selector__dropdown-empty">Nenhum resultado encontrado.</p>
+                    </template>
+                </template>
+            </div>
+        </template>
+
+        <div class="comm-broadcast-audience-selector__selected">
+            <template if:true={hasSelections}>
+                <template for:each={selectedCriteria} for:item="criterion">
+                    <div key={criterion.localKey} class="comm-broadcast-audience-selector__chip">
+                        <span class="comm-broadcast-audience-selector__chip-type">{criterion.typeLabel}</span>
+                        <span class="comm-broadcast-audience-selector__chip-name">{criterion.targetName}</span>
+                        <button
+                            type="button"
+                            class="comm-broadcast-audience-selector__chip-remove"
+                            data-key={criterion.localKey}
+                            onclick={handleRemoveCriterion}
+                            disabled={disabled}
+                        >
+                            <lightning-icon icon-name="utility:close" size="xx-small"></lightning-icon>
+                        </button>
+                    </div>
+                </template>
+            </template>
+            <template if:false={hasSelections}>
+                <p class="comm-broadcast-audience-selector__empty">{emptySelectedMessage}</p>
+            </template>
+        </div>
+    </section>
+</template>

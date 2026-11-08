@@ -3,6 +3,7 @@
     <fullName>Game_Last_Login_At__c</fullName>
     <label>Game Last Login At</label>
     <required>false</required>
-    <trackTrending>false</trackTrending>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
     <type>DateTime</type>
 </CustomField>

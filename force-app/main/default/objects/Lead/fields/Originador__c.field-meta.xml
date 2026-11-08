@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Originador__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <description>Campo lookup com o Originador do potencial cliente. Inicialmente, para evitar o problema de Lookup Skew, a implementação se deu através de variáveis texto com o Id e Nome do Originador. Posteriormente, Agosto/2023, identificou-se que caso a implementação se desse com um lookup configurado para, no caso de exclusão do objeto referneciado pelo Lookup ocorrer &quot;Clear the value of this field&quot;, então não havia problema de Record Lock. Com isto, passou-se a preencher o campo de lookup e este campo foi mantido apenas para não afetar eventuais automações construídas com base nele. Com o Lookup, conseguimos acessar os dados do registro por ele referenciado sem fazer uso de uma SOQL.</description>
+    <inlineHelpText>Empresa/Pessoa originadora do lead</inlineHelpText>
+    <label>Originador</label>
+    <referenceTo>Originador__c</referenceTo>
+    <relationshipLabel>Leads</relationshipLabel>
+    <relationshipName>Leads</relationshipName>
+    <required>false</required>
+    <trackFeedHistory>true</trackFeedHistory>
+    <trackHistory>true</trackHistory>
+    <type>Lookup</type>
+</CustomField>

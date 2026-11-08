@@ -32,16 +32,21 @@ export default class CommunicatorChatRoom extends LightningElement {
         this.dispatchEvent(new CustomEvent('close'));
     }
 
+    handleOpenHistory() {
+        this.dispatchEvent(new CustomEvent('openhistory'));
+    }
+
     handleToggleSearch() {
         this.showSearch = !this.showSearch;
         if (!this.showSearch) this.highlightMessageId = null;
     }
 
     handleNavigateToMessage(event) {
-        this.highlightMessageId = event.detail.messageId;
-        this.showSearch         = false;
+        const messageId = event.detail?.messageId;
+        if (!messageId) return;
+        this.showSearch = false;
         this.template.querySelector('c-communicator-chat-timeline')
-            ?.scrollToMessage(event.detail.messageId);
+            ?.navigateToMessage(messageId);
     }
 
     handleMessageSent() {

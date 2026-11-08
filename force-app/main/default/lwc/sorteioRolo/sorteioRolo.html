@@ -1,0 +1,17 @@
+<template>
+  <div class="palco">
+    <div class={classeJanela}>
+      <div class="marcador"></div>
+      <ul class="rolo" style={estiloRolo} ontransitionend={handleTransitionEnd} aria-hidden="true">
+        <template for:each={itens} for:item="item">
+          <li key={item.chave} class="item">{item.nome}</li>
+        </template>
+      </ul>
+    </div>
+    <div class="confetes" aria-hidden="true">
+      <template for:each={confetes} for:item="confete">
+        <span key={confete.chave} class="confete" style={confete.estilo}></span>
+      </template>
+    </div>
+  </div>
+</template>

@@ -1,9 +1,6 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
-    <label>Pesquisas - Check-in do Corretor</label>
-    <description
-  >Acesso interno para administrar lojas e criar check-ins do corretor.</description>
-    <hasActivationRequired>false</hasActivationRequired>
+    <description>Acesso interno para administrar lojas e criar check-ins do corretor.</description>
     <fieldPermissions>
         <editable>true</editable>
         <field>Loja__c.Ativa__c</field>
@@ -19,6 +16,8 @@
         <field>Loja__c.Ordem_Exibicao__c</field>
         <readable>true</readable>
     </fieldPermissions>
+    <hasActivationRequired>false</hasActivationRequired>
+    <label>Pesquisas - Check-in do Corretor</label>
     <objectPermissions>
         <allowCreate>true</allowCreate>
         <allowDelete>false</allowDelete>
@@ -26,6 +25,7 @@
         <allowRead>true</allowRead>
         <modifyAllRecords>false</modifyAllRecords>
         <object>Checkin_Corretor__c</object>
+        <viewAllFields>false</viewAllFields>
         <viewAllRecords>false</viewAllRecords>
     </objectPermissions>
     <objectPermissions>
@@ -35,6 +35,7 @@
         <allowRead>true</allowRead>
         <modifyAllRecords>false</modifyAllRecords>
         <object>Loja__c</object>
+        <viewAllFields>false</viewAllFields>
         <viewAllRecords>false</viewAllRecords>
     </objectPermissions>
 </PermissionSet>

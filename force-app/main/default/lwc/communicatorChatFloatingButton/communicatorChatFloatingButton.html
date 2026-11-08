@@ -1,141 +1,535 @@
 <template>
-    <!-- ── Botão flutuante ── -->
-    <div class="comm-fab-wrapper">
-        <button class={fabClass} title="Chat" onclick={handleToggle} aria-label="Abrir/fechar chat">
-            <lightning-icon icon-name={fabIcon} size="small" class="comm-fab__icon"></lightning-icon>
-        </button>
 
-        <!-- Badge de não lidos (visível só quando fechado) -->
-        <template if:true={showUnreadBadge}>
-            <span class="comm-fab-badge">{displayUnread}</span>
-        </template>
-    </div>
+    <template if:true={isFabMode}>
+        <div class="comm-fab-wrapper">
+            <button class={fabClass} title="Canal de mensagens" onclick={handleToggle} aria-label="Abrir/fechar chat">
+                <lightning-icon icon-name="utility:anywhere_chat" size="small" class="comm-fab__icon"></lightning-icon>
+                <span class="comm-fab__label">Canal de mensagens</span>
+                <template if:true={showUnreadBadge}>
+                    <span class={fabBadgeClass}>{displayUnread}</span>
+                </template>
+            </button>
+        </div>
+    </template>
 
-    <!-- ── Painel do chat ── -->
-    <template if:true={isOpen}>
-        <div class="comm-fab-panel">
-
-            <!-- TELA 1: Seleção de Oportunidade -->
+    <template if:true={showPanel}>
+        <div class={panelClass}>
+            <template if:false={_hasPermission}>
+                <div class="comm-picker">
+                    <div class="comm-picker__header">
+                        <lightning-icon icon-name="utility:anywhere_chat" size="x-small" class="comm-fab__icon"></lightning-icon>
+                        <span class="comm-picker__header-title">Canal de mensagens</span>
+                        <template if:true={isFabMode}>
+                            <button class="comm-picker__close" onclick={handleClose} title="Fechar">
+                                <lightning-icon icon-name="utility:close" size="x-small" class="comm-picker__close-icon"></lightning-icon>
+                            </button>
+                        </template>
+                    </div>
+                    <div class="comm-picker__no-permission">
+                        <div class="comm-picker__no-permission-card">
+                            <lightning-icon icon-name="utility:error" size="small" class="comm-picker__no-permission-icon"></lightning-icon>
+                            <p class="comm-picker__no-permission-msg">{_noPermissionMessage}</p>
+                        </div>
+                    </div>
+                </div>
+            </template>
+            <template if:true={_hasPermission}>
             <template if:false={showChat}>
                 <div class="comm-picker">
-
                     <div class="comm-picker__header">
-                        <lightning-icon icon-name="utility:chat" size="x-small"></lightning-icon>
-                        <span>Communicator Chat</span>
-                        <button class="comm-picker__close" onclick={handleFechar} title="Fechar">
-                            <lightning-icon icon-name="utility:close" size="x-small" variant="inverse"></lightning-icon>
-                        </button>
+                        <lightning-icon icon-name="utility:anywhere_chat" size="x-small" class="comm-fab__icon"></lightning-icon>
+                        <span class="comm-picker__header-title">Canal de mensagens</span>
+                        <template if:true={hasLiveNotificationBadge}>
+                            <button class="comm-picker__live-badge" title={liveNotificationTooltip} onclick={handleLiveNotificationClick}>
+                                {liveNotificationBadgeText}
+                            </button>
+                        </template>
+                        <template if:true={isFabMode}>
+                            <button class="comm-picker__close" onclick={handleClose} title="Fechar">
+                                <lightning-icon icon-name="utility:close" size="x-small" class="comm-picker__close-icon"></lightning-icon>
+                            </button>
+                        </template>
                     </div>
 
-                    <div class="comm-picker__body">
-                        <p class="comm-picker__label">Selecione uma Oportunidade para abrir o chat:</p>
-
-                        <lightning-record-picker
-                            label="Oportunidade"
-                            placeholder="Buscar Oportunidades..."
-                            object-api-name="Oportunidade"
-                            onchange={handleOportunidadeSelect}
-                            filter={opportunityFilter}
-                        ></lightning-record-picker>
-
-                        <!-- Recentes -->
-                        <template if:true={hasRecent}>
-                            <div class="comm-picker__recent">
-                                <p class="comm-picker__recent-label">Recentes:</p>
-                                <ul class="comm-picker__recent-list">
-                                    <template for:each={recentOpportunities} for:item="opp">
-                                        <li key={opp.id}>
-                                            <button
-                                                class="comm-picker__recent-btn"
-                                                data-id={opp.id}
-                                                data-name={opp.name}
-                                                onclick={handleRecentClick}
-                                            >
-                                                <lightning-icon icon-name="standard:opportunity" size="x-small"></lightning-icon>
-                                                <span>{opp.name}</span>
-                                            </button>
-                                        </li>
+                    <div class="comm-picker__tabs" role="tablist">
+                        <template for:each={tabs} for:item="tab">
+                            <button
+                                key={tab.key}
+                                class={tab.tabClass}
+                                data-filter={tab.filter}
+                                data-view={tab.view}
+                                onclick={handleFilterSelect}
+                                role="tab"
+                            >
+                                {tab.label}
+                                <template if:true={tab.showBadge}>
+                                    <span class={tab.badgeClass} aria-hidden="true">{tab.badgeLabel}</span>
+                                    <template if:true={tab.accessibilityLabel}>
+                                        <span class="slds-assistive-text">{tab.accessibilityLabel}</span>
                                     </template>
-                                </ul>
-                            </div>
+                                </template>
+                            </button>
                         </template>
+                    </div>
 
-                        <!-- Loading -->
-                        <template if:true={isLoadingThread}>
-                            <div class="comm-picker__loading">
-                                <lightning-spinner size="x-small" alternative-text="Loading..."></lightning-spinner>
-                                <span>Abrindo chat...</span>
-                            </div>
-                        </template>
+                    <template if:true={showConversationPrimary}>
 
-                        <!-- Erro -->
-                        <template if:true={loadError}>
-                            <div class="comm-picker__error">
-                                <lightning-icon icon-name="utility:error" size="x-small" variant="error"></lightning-icon>
-                                <span>{loadError}</span>
+                        <div class="comm-picker__search-section">
+                            <div class="comm-picker__search-bar">
+                                <lightning-icon icon-name="utility:search" size="xx-small" class="comm-picker__search-icon"></lightning-icon>
+                                <input
+                                    type="search"
+                                    class="comm-picker__search-input"
+                                    placeholder="Buscar por nome, oportunidade ou fases"
+                                    value={keyword}
+                                    oninput={handleSearchInput}
+                                />
                             </div>
-                        </template>
+
+                            <div class="comm-picker__filter-row">
+                                <div class="comm-picker__filter-wrap">
+                                    <button class={filterBtnClass} onclick={handleToggleStageFilter} title="Filtrar visualização">
+                                        <lightning-icon icon-name="utility:filterList" size="x-small" class="comm-picker__filter-icon"></lightning-icon>
+                                        Filtrar visualização
+                                        <template if:true={hasActiveFilter}>
+                                            <span class="comm-picker__filter-dot"></span>
+                                        </template>
+                                    </button>
+                                    <template if:true={showStageDropdown}>
+                                        <div class="comm-picker__filter-backdrop" onclick={handleCloseStageDropdown}></div>
+                                        <div class="comm-picker__filter-dropdown">
+                                            <div class="comm-picker__filter-section">
+                                                <p class="comm-picker__filter-label">Etapa:</p>
+                                                <select class="comm-picker__filter-select" value={_etapaFilter} onchange={handleEtapaChange}>
+                                                    <template for:each={etapaOptions} for:item="opt">
+                                                        <option key={opt.value} value={opt.value}>{opt.label}</option>
+                                                    </template>
+                                                </select>
+                                            </div>
+                                            <div class="comm-picker__filter-section">
+                                                <p class="comm-picker__filter-label">Fase:</p>
+                                                <template if:true={hasStageOptions}>
+                                                    <template for:each={stageOptions} for:item="opt">
+                                                        <label key={opt.value} class="comm-picker__filter-radio-label">
+                                                            <input type="checkbox" value={opt.value} checked={opt.checked} onchange={handleStageChange} class="comm-picker__filter-checkbox" />
+                                                            {opt.label} ({opt.count})
+                                                        </label>
+                                                    </template>
+                                                </template>
+                                                <template if:false={hasStageOptions}>
+                                                    <p class="comm-picker__filter-empty">Nenhuma fase disponível.</p>
+                                                </template>
+                                            </div>
+
+                                            <template if:true={hasActiveFilter}>
+                                                <button class="comm-picker__filter-clear" onclick={handleClearFilters}>
+                                                    Limpar filtros
+                                                </button>
+                                            </template>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="comm-picker__body">
+                            <template if:true={isLoadingThread}>
+                                <div class="comm-picker__loading">
+                                    <lightning-spinner size="x-small" alternative-text="Loading..."></lightning-spinner>
+                                    <span>Abrindo chat...</span>
+                                </div>
+                            </template>
+
+                            <template if:true={loadError}>
+                                <div class="comm-picker__error">
+                                    <lightning-icon icon-name="utility:error" size="x-small" variant="error"></lightning-icon>
+                                    <span>{loadError}</span>
+                                </div>
+                            </template>
+
+                            <template if:true={showRecents}>
+                                <template if:true={hasRecent}>
+                                    <ul class="comm-picker__list">
+                                        <template for:each={enrichedRecents} for:item="opp">
+                                            <li key={opp.id} class="comm-picker__list-item">
+                                                <button class="comm-picker__conv-item" data-id={opp.id} data-name={opp.name} data-objecttype={opp.effectiveRecordType} data-threadid={opp.threadId} onclick={handleRecentClick}>
+                                                    <div class="comm-picker__conv-top">
+                                                        <span class={opp.lastMessageDateClass}>{opp.lastMessageDisplay}</span>
+                                                        <template if:true={opp.showUnreadBadge}>
+                                                            <span class="comm-picker__conv-unread" title={opp.unreadAriaLabel} aria-label={opp.unreadAriaLabel}>
+                                                                <span class="comm-picker__conv-unread-text">{opp.unreadText}</span>
+                                                                <span class="comm-picker__conv-unread-dot" aria-hidden="true"></span>
+                                                            </span>
+                                                        </template>
+                                                    </div>
+                                                    <div class="comm-picker__conv-name">{opp.name}</div>
+                                                    <div class="comm-picker__conv-meta">
+                                                        <span class="comm-picker__conv-fase-label">Etapa:</span>
+                                                        <span class="comm-picker__conv-type-text">{opp.typeLabel}</span>
+                                                        <span class="comm-picker__conv-meta-separator" aria-hidden="true">|</span>
+                                                        <span class="comm-picker__conv-fase-label">{opp.displayStatusLabel}</span>
+                                                        <span class={opp.stageClass}>{opp.displayStatus}</span>
+                                                    </div>
+                                                    <template if:true={opp.showRelatedRef}>
+                                                        <template if:true={opp.isRelatedRefClickable}>
+                                                            <div class="comm-picker__conv-ar" data-related-id={opp.relatedRefId} data-related-name={opp.relatedRefName} data-related-type={opp.relatedRefType} data-related-object-api-name={opp.relatedRefObjectApiName} onclick={handleArClick} role="link" tabindex="0">
+                                                                <lightning-icon icon-name="utility:work_order_type" size="x-small" class="comm-picker__conv-ar-icon"></lightning-icon>
+                                                                {opp.relatedRefName}
+                                                            </div>
+                                                        </template>
+                                                        <template if:false={opp.isRelatedRefClickable}>
+                                                            <div class="comm-picker__conv-ar">
+                                                                <lightning-icon icon-name="utility:work_order_type" size="x-small" class="comm-picker__conv-ar-icon"></lightning-icon>
+                                                                {opp.relatedRefName}
+                                                            </div>
+                                                        </template>
+                                                    </template>
+                                                </button>
+                                            </li>
+                                        </template>
+                                    </ul>
+                                </template>
+                                <template if:false={hasRecent}>
+                                    <div class="comm-picker__empty">
+                                        <lightning-icon icon-name="utility:search" size="small"></lightning-icon>
+                                        <p>Nenhuma conversa ainda. Busque um registro para iniciar.</p>
+                                    </div>
+                                </template>
+                            </template>
+
+                            <template if:false={showRecents}>
+                                <template if:true={showRecentSection}>
+                                    <div class="comm-picker__recent">
+                                        <ul class="comm-picker__list">
+                                            <template for:each={enrichedRecents} for:item="opp">
+                                                <li key={opp.id} class="comm-picker__list-item">
+                                                    <button class="comm-picker__conv-item" data-id={opp.id} data-name={opp.name} data-objecttype={opp.effectiveRecordType} data-threadid={opp.threadId} onclick={handleRecentClick}>
+                                                        <div class="comm-picker__conv-top">
+                                                            <span class={opp.lastMessageDateClass}>{opp.lastMessageDisplay}</span>
+                                                            <template if:true={opp.showUnreadBadge}>
+                                                                <span class="comm-picker__conv-unread" title={opp.unreadAriaLabel} aria-label={opp.unreadAriaLabel}>
+                                                                    <span class="comm-picker__conv-unread-text">{opp.unreadText}</span>
+                                                                    <span class="comm-picker__conv-unread-dot" aria-hidden="true"></span>
+                                                                </span>
+                                                            </template>
+                                                        </div>
+                                                        <div class="comm-picker__conv-name">{opp.name}</div>
+                                                        <div class="comm-picker__conv-meta">
+                                                            <span class="comm-picker__conv-fase-label">Etapa:</span>
+                                                            <span class="comm-picker__conv-type-text">{opp.typeLabel}</span>
+                                                            <span class="comm-picker__conv-meta-separator" aria-hidden="true">|</span>
+                                                            <span class="comm-picker__conv-fase-label">{opp.displayStatusLabel}</span>
+                                                            <span class={opp.stageClass}>{opp.displayStatus}</span>
+                                                        </div>
+                                                        <template if:true={opp.showRelatedRef}>
+                                                            <template if:true={opp.isRelatedRefClickable}>
+                                                                <div class="comm-picker__conv-ar" data-related-id={opp.relatedRefId} data-related-name={opp.relatedRefName} data-related-type={opp.relatedRefType} data-related-object-api-name={opp.relatedRefObjectApiName} onclick={handleArClick} role="link" tabindex="0">
+                                                                    <lightning-icon icon-name="utility:work_order_type" size="x-small" class="comm-picker__conv-ar-icon"></lightning-icon>
+                                                                    {opp.relatedRefName}
+                                                                </div>
+                                                            </template>
+                                                            <template if:false={opp.isRelatedRefClickable}>
+                                                                <div class="comm-picker__conv-ar">
+                                                                    <lightning-icon icon-name="utility:work_order_type" size="x-small" class="comm-picker__conv-ar-icon"></lightning-icon>
+                                                                    {opp.relatedRefName}
+                                                                </div>
+                                                            </template>
+                                                        </template>
+                                                    </button>
+                                                </li>
+                                            </template>
+                                        </ul>
+                                    </div>
+                                </template>
+
+                                <template if:true={isLoadingList}>
+                                    <div class="comm-picker__loading">
+                                        <lightning-spinner size="x-small" alternative-text="Carregando..."></lightning-spinner>
+                                        <span>Carregando conversas...</span>
+                                    </div>
+                                </template>
+
+                                <template if:true={hasThreads}>
+                                    <ul class="comm-picker__list">
+                                        <template for:each={displayedThreads} for:item="t">
+                                            <li key={t.listKey} class="comm-picker__list-item">
+                                                <button class="comm-picker__conv-item" data-id={t.recordId} data-name={t.recordName} data-objecttype={t.effectiveRecordType} data-threadid={t.threadId} onclick={handleRecentClick}>
+                                                    <div class="comm-picker__conv-top">
+                                                        <span class={t.lastMessageDateClass}>{t.lastMessageDisplay}</span>
+                                                        <template if:true={t.showUnreadBadge}>
+                                                            <span class="comm-picker__conv-unread" title={t.unreadAriaLabel} aria-label={t.unreadAriaLabel}>
+                                                                <span class="comm-picker__conv-unread-text">{t.unreadText}</span>
+                                                                <span class="comm-picker__conv-unread-dot" aria-hidden="true"></span>
+                                                            </span>
+                                                        </template>
+                                                    </div>
+                                                    <div class="comm-picker__conv-name">{t.recordName}</div>
+                                                    <div class="comm-picker__conv-meta">
+                                                        <span class="comm-picker__conv-fase-label">Etapa:</span>
+                                                        <span class="comm-picker__conv-type-text">{t.typeLabel}</span>
+                                                        <span class="comm-picker__conv-meta-separator" aria-hidden="true">|</span>
+                                                        <span class="comm-picker__conv-fase-label">{t.displayStatusLabel}</span>
+                                                        <span class={t.stageClass}>{t.displayStatus}</span>
+                                                    </div>
+                                                    <template if:true={t.showRelatedRef}>
+                                                        <template if:true={t.isRelatedRefClickable}>
+                                                            <div class="comm-picker__conv-ar" data-related-id={t.relatedRefId} data-related-name={t.relatedRefName} data-related-type={t.relatedRefType} data-related-object-api-name={t.relatedRefObjectApiName} onclick={handleArClick} role="link" tabindex="0">
+                                                                <lightning-icon icon-name="utility:work_order_type" size="x-small" class="comm-picker__conv-ar-icon"></lightning-icon>
+                                                                {t.relatedRefName}
+                                                            </div>
+                                                        </template>
+                                                        <template if:false={t.isRelatedRefClickable}>
+                                                            <div class="comm-picker__conv-ar">
+                                                                <lightning-icon icon-name="utility:work_order_type" size="x-small" class="comm-picker__conv-ar-icon"></lightning-icon>
+                                                                {t.relatedRefName}
+                                                            </div>
+                                                        </template>
+                                                    </template>
+                                                </button>
+                                            </li>
+                                        </template>
+                                    </ul>
+                                </template>
+
+                                <template if:true={isListEmpty}>
+                                    <div class="comm-picker__empty">
+                                        <lightning-icon icon-name="utility:search" size="small"></lightning-icon>
+                                        <p>Nenhuma oportunidade encontrada.</p>
+                                    </div>
+                                </template>
+                            </template>
+
+                            <template if:true={showGroupList}>
+                                <template if:true={_isLoadingGroups}>
+                                    <div class="comm-picker__loading">
+                                        <lightning-spinner size="x-small" alternative-text="Carregando grupos..."></lightning-spinner>
+                                        <span>Carregando grupos...</span>
+                                    </div>
+                                </template>
+                                <template if:false={_isLoadingGroups}>
+                                    <template if:true={hasGroups}>
+                                        <ul class="comm-picker__list">
+                                            <template for:each={_groups} for:item="grp">
+                                                <li key={grp.groupId} class="comm-picker__list-item">
+                                                    <button class="comm-picker__conv-item" data-group-id={grp.groupId} onclick={handleGroupSelect}>
+                                                        <div class="comm-picker__conv-top">
+                                                            <span class="comm-picker__conv-date"></span>
+                                                            <template if:true={grp.unreadMentionCount}>
+                                                                <span class="comm-picker__conv-unread">
+                                                                    <span class="comm-picker__conv-unread-text">{grp.unreadMentionCount} não lidas</span>
+                                                                    <span class="comm-picker__conv-unread-dot" aria-hidden="true"></span>
+                                                                </span>
+                                                            </template>
+                                                        </div>
+                                                        <div class="comm-picker__conv-name">{grp.groupName}</div>
+                                                        <div class="comm-picker__conv-meta">
+                                                            <span class="comm-picker__conv-fase-label">Oportunidades em andamento:</span>
+                                                            <span class="comm-picker__conv-type-text">{grp.activeOpportunityCount}</span>
+                                                        </div>
+                                                    </button>
+                                                </li>
+                                            </template>
+                                        </ul>
+                                    </template>
+                                    <template if:true={hasNoGroups}>
+                                        <div class="comm-picker__empty">
+                                            <lightning-icon icon-name="utility:groups" size="small"></lightning-icon>
+                                            <p>Você não pertence a nenhum grupo.</p>
+                                        </div>
+                                    </template>
+                                </template>
+                            </template>
+
+                            <template if:true={showGroupView}>
+                                <div class="comm-picker__group-header">
+                                    <button class="comm-picker__group-back" onclick={handleGroupBack}>
+                                        <lightning-icon icon-name="utility:back" size="x-small"></lightning-icon>
+                                        <span>Voltar</span>
+                                    </button>
+                                    <span class="comm-picker__group-title">{_activeGroup.groupName}</span>
+                                </div>
+                                <div class="comm-picker__group-search">
+                                    <c-communicator-chat-search
+                                        thread-id={_activeGroupThreadId}
+                                        onnavigatemessage={handleGroupNavigateMessage}
+                                    ></c-communicator-chat-search>
+                                </div>
+                                <c-communicator-group-timeline
+                                    group-id={_activeGroup.groupId}
+                                    highlight-message-id={_groupHighlightMsgId}
+                                    onthreadready={handleGroupThreadReady}
+                                ></c-communicator-group-timeline>
+                            </template>
+                        </div>
+                    </template>
+
+                    <template if:true={showBroadcastPrimary}>
+                        <div class="comm-picker__body comm-picker__body--broadcast">
+                            <c-communicator-broadcast-workspace
+                                variant="compact"
+                                is-community-context={isBroadcastCommunityContext}
+                                onbroadcastviewchange={handleBroadcastViewChange}
+                                onbroadcastimagepreviewopen={handleBroadcastImagePreviewOpen}
+                                onbroadcastimagepreviewclose={handleBroadcastImagePreviewReset}
+                                onbroadcastunreadchange={handleBroadcastUnreadChange}
+                            ></c-communicator-broadcast-workspace>
+                        </div>
+                    </template>
+
+                    <div class="comm-picker__footer">
+                        <button class="comm-picker__expand-btn" onclick={handleOpenHistory}>
+                            Expandir navegação
+                        </button>
                     </div>
                 </div>
             </template>
 
-            <!-- TELA 2: Chat -->
             <template if:true={showChat}>
                 <div class="comm-chat">
-
-                    <!-- Header -->
-                    <div class="comm-chat__header">
-                        <div class="comm-chat__header-left">
-                            <button class="comm-chat__back" onclick={handleVoltar} title="Voltar">
-                                <lightning-icon icon-name="utility:back" size="x-small" variant="inverse"></lightning-icon>
+                    <div class="comm-picker__header comm-chat__topbar">
+                        <button class="comm-chat__topbar-back" onclick={handleBack} title="Voltar">
+                            <lightning-icon icon-name="utility:back" size="x-small"></lightning-icon>
+                        </button>
+                        <lightning-icon icon-name="utility:anywhere_chat" size="x-small" class="comm-fab__icon"></lightning-icon>
+                        <span class="comm-picker__header-title">Canal de mensagens</span>
+                        <template if:true={hasLiveNotificationBadge}>
+                            <button class="comm-picker__live-badge" title={liveNotificationTooltip} onclick={handleLiveNotificationClick}>
+                                {liveNotificationBadgeText}
                             </button>
-                            <lightning-icon icon-name="standard:opportunity" size="x-small"></lightning-icon>
-                            <span class="comm-chat__title" title={opportunityName}>{opportunityName}</span>
-                        </div>
-                        <div class="comm-chat__header-actions">
-                            <lightning-button-icon
-                                icon-name="utility:search"
-                                variant="bare-inverse"
-                                alternative-text="Buscar"
-                                title="Buscar"
-                                onclick={handleToggleBuscar}
-                            ></lightning-button-icon>
+                        </template>
+                        <div class="comm-chat__topbar-actions">
+                            <lightning-button-icon icon-name="utility:search" variant="bare" alternative-text="Buscar" title="Buscar" onclick={handleToggleSearch}></lightning-button-icon>
                             <template if:true={unreadCount}>
-                                <span class="comm-chat__badge">{unreadCount}</span>
+                                <span class="comm-chat__topbar-badge">{unreadCount}</span>
                             </template>
-                            <lightning-button-icon
-                                icon-name="utility:close"
-                                variant="bare-inverse"
-                                alternative-text="Fechar"
-                                title="Fechar"
-                                onclick={handleFechar}
-                            ></lightning-button-icon>
+                            <template if:true={isFabMode}>
+                                <lightning-button-icon icon-name="utility:close" variant="bare" alternative-text="Fechar" title="Fechar" onclick={handleClose}></lightning-button-icon>
+                            </template>
                         </div>
                     </div>
 
-                    <!-- Buscar -->
-                    <template if:true={showBuscar}>
-                        <c-communicator-chat-search
-                            thread-id={threadId}
-                            onnavigatemessage={handleNavigateToMessage}
-                        ></c-communicator-chat-search>
+                    <div class="comm-chat__details">
+                        <button class="comm-chat__backlink" onclick={handleBack} title="Voltar">
+                            <lightning-icon icon-name="utility:back" size="x-small"></lightning-icon>
+                            <span>Voltar</span>
+                        </button>
+
+                        <div class="comm-chat__opp">
+                            <div class="comm-chat__opp-left">
+                                <div class="comm-chat__opp-label">Oportunidade:</div>
+                                <div class="comm-chat__opp-name">{opportunityName}</div>
+                                <div class="comm-chat__opp-meta-row">
+                                    <div class="comm-chat__opp-meta-ar">
+                                        <div class="comm-chat__opp-meta">
+                                            <span class="comm-chat__opp-meta-label">Etapa:</span>
+                                            <span class="comm-chat__opp-type-text">{activeRecordTypeLabel}</span>
+                                            <span class="comm-chat__opp-meta-separator" aria-hidden="true">|</span>
+                                            <span class="comm-chat__opp-meta-label">{opportunityStatusLabel}</span>
+                                            <span class={opportunityStageClass}>{opportunityStage}</span>
+                                        </div>
+                                        <template if:true={opportunityArName}>
+                                            <template if:true={opportunityArId}>
+                                                <div class="comm-picker__conv-ar comm-chat__opp-ar-link" data-related-id={opportunityArId} data-related-name={opportunityArName} data-related-type={opportunityRelatedRefType} data-related-object-api-name={opportunityRelatedRefObjectApiName} onclick={handleArClick} role="link" tabindex="0">
+                                                    <lightning-icon icon-name="utility:work_order_type" size="x-small" class="comm-picker__conv-ar-icon"></lightning-icon>
+                                                    {opportunityArName}
+                                                </div>
+                                            </template>
+                                            <template if:false={opportunityArId}>
+                                                <div class="comm-picker__conv-ar comm-chat__opp-ar-link">
+                                                    <lightning-icon icon-name="utility:work_order_type" size="x-small" class="comm-picker__conv-ar-icon"></lightning-icon>
+                                                    {opportunityArName}
+                                                </div>
+                                            </template>
+                                        </template>
+                                    </div>
+                                    <button class="comm-chat__opp-btn comm-chat__opp-btn--mobile" onclick={handleOpenOpportunity}>
+                                        {accessOpportunityLabel}
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="comm-chat__opp-right">
+                                <button class="comm-chat__opp-btn" onclick={handleOpenOpportunity}>
+                                    {accessOpportunityLabel}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <template if:true={showSearch}>
+                        <template if:true={showCompactChatterSection}>
+                            <c-communicator-chat-search
+                                search-mode="external"
+                                placeholder={compactSearchPlaceholder}
+                                external-results={chatterSearchResults}
+                                external-search-complete={isChatterSearchComplete}
+                                external-is-searching={isChatterSearchLoading}
+                                onsearchchange={handleCompactChatterSearchChange}
+                                onnavigatemessage={handleCompactChatterNavigateToMessage}
+                            ></c-communicator-chat-search>
+                        </template>
+                        <template if:false={showCompactChatterSection}>
+                            <c-communicator-chat-search thread-id={threadId} thread-ids={chatThreadIds} onnavigatemessage={handleNavigateToMessage}></c-communicator-chat-search>
+                        </template>
                     </template>
 
-                    <!-- Timeline -->
-                    <c-communicator-chat-timeline
-                        thread-id={threadId}
-                        highlight-message-id={highlightMessageId}
-                    ></c-communicator-chat-timeline>
+                    <div class="comm-chat__timeline-region">
+                        <template if:true={showCompactChatterSection}>
+                            <div class="comm-chat__timeline comm-chat__timeline--chatter">
+                                <c-communicator-chatter-history
+                                    thread-id={threadId}
+                                    opportunity-id={opportunityId}
+                                    embedded
+                                    hide-toolbar
+                                    use-external-search
+                                    external-search-term={chatterSearchTerm}
+                                    allow-navigation
+                                    open-files-in-new-tab
+                                    load-all-messages
+                                    onnavigatefile={handleChatterFileNavigation}
+                                    onsearchstatechange={handleCompactChatterSearchStateChange}
+                                ></c-communicator-chatter-history>
+                            </div>
+                        </template>
 
-                    <!-- Input -->
+                        <template if:true={showCompactStandardTimeline}>
+                            <div class="comm-chat__timeline">
+                                <c-communicator-chat-timeline thread-id={threadId} thread-ids={chatThreadIds} highlight-message-id={highlightMessageId} empty-variant="floating" load-all-messages></c-communicator-chat-timeline>
+                            </div>
+                        </template>
+                    </div>
+
                     <c-communicator-chat-message-input
+                        compact-mode
                         thread-id={threadId}
+                        upload-record-id={threadId}
+                        disabled={isCompactComposerDisabled}
                         onmessagesent={handleMessageSent}
                     ></c-communicator-chat-message-input>
 
+                    <div class="comm-chat__footer">
+                        <div class="comm-chat__footer-actions">
+                            <template if:true={canShowCompactChatterToggle}>
+                                <button class="comm-chat__history-btn" onclick={handleToggleChatterHistory}>
+                                    {compactChatterToggleLabel}
+                                </button>
+                            </template>
+                            <button class="comm-chat__history-btn" onclick={handleOpenConversationHistory}>
+                            Acessar histórico de conversa
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </template>
-
+            </template>
         </div>
+    </template>
+
+    <template if:true={showBroadcastImagePreview}>
+        <c-communicator-broadcast-image-preview
+            src={broadcastImagePreviewSrc}
+            file-name={broadcastImagePreviewFileName}
+            alternative-text={broadcastImagePreviewAlternativeText}
+            onclose={handleBroadcastImagePreviewClose}
+        ></c-communicator-broadcast-image-preview>
     </template>
 </template>

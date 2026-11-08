@@ -1,0 +1,357 @@
+<template>
+    <section class={containerClass}>
+        <div class="comm-broadcast-timeline__header">
+            <button class="comm-broadcast-timeline__back" onclick={handleBack}>
+                <lightning-icon icon-name="utility:back" size="x-small"></lightning-icon>
+                <span>Voltar</span>
+            </button>
+
+            <template if:true={hasBroadcast}>
+                <div class="comm-broadcast-timeline__hero">
+                    <template if:true={broadcast.createdByUserPhotoUrl}>
+                        <img
+                            src={broadcast.createdByUserPhotoUrl}
+                            alt={broadcast.createdByUserName}
+                            class="comm-broadcast-timeline__avatar"
+                        />
+                    </template>
+                    <template if:false={broadcast.createdByUserPhotoUrl}>
+                        <span class="comm-broadcast-timeline__avatar comm-broadcast-timeline__avatar--fallback">
+                            {broadcast.creatorInitial}
+                        </span>
+                    </template>
+                    <div class="comm-broadcast-timeline__hero-copy">
+                        <div class="comm-broadcast-timeline__hero-head">
+                            <div class="comm-broadcast-timeline__hero-main">
+                                <h3 class="comm-broadcast-timeline__title">{broadcast.groupName}</h3>
+                                <div class="comm-broadcast-timeline__meta">
+                                    <span>
+                                        <template if:true={broadcast.createdByUserName}>
+                                            {broadcast.createdByUserName}
+                                        </template>
+                                        <template if:false={broadcast.createdByUserName}>
+                                            Autor nao informado
+                                        </template>
+                                    </span>
+                                    <template if:true={broadcastActivityAt}>
+                                        <span class="comm-broadcast-timeline__meta-separator">|</span>
+                                        <lightning-formatted-date-time
+                                            value={broadcastActivityAt}
+                                            year="numeric"
+                                            month="2-digit"
+                                            day="2-digit"
+                                            hour="2-digit"
+                                            minute="2-digit"
+                                        ></lightning-formatted-date-time>
+                                    </template>
+                                </div>
+                            </div>
+
+                            <div class="comm-broadcast-timeline__hero-actions">
+                                <template if:true={showSearchToggle}>
+                                    <lightning-button-icon
+                                        class="comm-broadcast-timeline__search-toggle"
+                                        icon-name={searchToggleIconName}
+                                        variant="bare"
+                                        alternative-text={searchToggleLabel}
+                                        onclick={handleToggleSearch}
+                                        title={searchToggleLabel}
+                                        aria-label={searchToggleLabel}
+                                    ></lightning-button-icon>
+                                </template>
+
+                                <template if:true={showDetailsButton}>
+                                    <button class="comm-broadcast-timeline__details-btn" type="button" onclick={handleOpenDetails}>
+                                        Detalhes
+                                    </button>
+                                </template>
+                            </div>
+                        </div>
+
+                        <template if:true={broadcast.description}>
+                            <p class="comm-broadcast-timeline__description">{broadcast.description}</p>
+                        </template>
+                    </div>
+                </div>
+            </template>
+        </div>
+
+        <template if:true={showSearchForm}>
+            <div class="comm-broadcast-timeline__search">
+                <div class="comm-broadcast-timeline__search-box">
+                    <lightning-icon icon-name="utility:search" size="xx-small"></lightning-icon>
+                    <input
+                        type="search"
+                        class="comm-broadcast-timeline__search-input"
+                        placeholder="Buscar neste comunicado"
+                        value={localSearchKeyword}
+                        oninput={handleSearchInput}
+                        onkeydown={handleSearchKeyDown}
+                    />
+                    <template if:true={isSearching}>
+                        <lightning-spinner size="x-small" alternative-text="Buscando..."></lightning-spinner>
+                    </template>
+                </div>
+            </div>
+        </template>
+
+        <template if:true={errorMessage}>
+            <div class="comm-broadcast-timeline__banner comm-broadcast-timeline__banner--error">
+                <lightning-icon icon-name="utility:error" size="x-small" variant="error"></lightning-icon>
+                <span>{errorMessage}</span>
+            </div>
+        </template>
+
+        <template if:true={searchErrorMessage}>
+            <div class="comm-broadcast-timeline__banner comm-broadcast-timeline__banner--warning">
+                <lightning-icon icon-name="utility:warning" size="x-small"></lightning-icon>
+                <span>{searchErrorMessage}</span>
+            </div>
+        </template>
+
+        <template if:true={isSearchActive}>
+            <div class="comm-broadcast-timeline__result-chip">
+                Exibindo resultados para "{searchKeyword}"
+            </div>
+        </template>
+
+        <div class="comm-broadcast-timeline__body">
+            <template if:true={isLoading}>
+                <div class="comm-broadcast-timeline__loading">
+                    <lightning-spinner size="small" alternative-text="Carregando comunicado"></lightning-spinner>
+                    <span>Carregando comunicado...</span>
+                </div>
+            </template>
+
+            <template if:true={hasMessages}>
+                <template if:true={hasMoreMessages}>
+                    <div class="comm-broadcast-timeline__footer">
+                        <button
+                            class="comm-broadcast-timeline__more"
+                            type="button"
+                            onclick={handleLoadMoreMessages}
+                            disabled={isLoadingMore}
+                        >
+                            <template if:true={isLoadingMore}>Carregando...</template>
+                            <template if:false={isLoadingMore}>Carregar anteriores</template>
+                        </button>
+                    </div>
+                </template>
+
+                <ul class="comm-broadcast-timeline__messages">
+                    <template for:each={renderedMessages} for:item="message">
+                        <li
+                            key={message.Id}
+                            class="comm-broadcast-timeline__message"
+                            data-message-id={message.Id}
+                            onclick={handleSearchResultClick}
+                        >
+                            <div class="comm-broadcast-timeline__message-shell">
+                                <template if:true={message.senderPhotoUrl}>
+                                    <img
+                                        src={message.senderPhotoUrl}
+                                        alt={message.senderName}
+                                        class="comm-broadcast-timeline__photo"
+                                    />
+                                </template>
+                                <template if:false={message.senderPhotoUrl}>
+                                    <span class="comm-broadcast-timeline__photo comm-broadcast-timeline__photo--fallback">
+                                        {message.senderInitial}
+                                    </span>
+                                </template>
+
+                                <div class="comm-broadcast-timeline__message-content">
+                                    <div class="comm-broadcast-timeline__message-meta">
+                                        <span class="comm-broadcast-timeline__sender">{message.senderName}</span>
+                                        <span class="comm-broadcast-timeline__sent-at">
+                                            <lightning-formatted-date-time
+                                                value={message.sentAt}
+                                                year="numeric"
+                                                month="2-digit"
+                                                day="2-digit"
+                                                hour="2-digit"
+                                                minute="2-digit"
+                                            ></lightning-formatted-date-time>
+                                        </span>
+                                        <template if:true={message.editedAt}>
+                                            <span class="comm-broadcast-timeline__edited">
+                                                Editada em
+                                                <lightning-formatted-date-time
+                                                    value={message.editedAt}
+                                                    year="numeric"
+                                                    month="2-digit"
+                                                    day="2-digit"
+                                                    hour="2-digit"
+                                                    minute="2-digit"
+                                                ></lightning-formatted-date-time>
+                                            </span>
+                                        </template>
+                                        <template if:true={message.showStatusChip}>
+                                            <span class={message.statusClass}>{message.statusLabel}</span>
+                                        </template>
+                                    </div>
+
+                                    <div class="comm-broadcast-timeline__message-row">
+                                        <div class={message.bubbleClass}>
+                                            <template if:true={message.isSystemMessage}>
+                                                <span class="comm-broadcast-timeline__system-tag">Sistema</span>
+                                            </template>
+                                            <button
+                                                type="button"
+                                                class={message.subjectButtonClass}
+                                                data-message-id={message.Id}
+                                                onclick={handleSubjectClick}
+                                                aria-expanded={message.isExpanded}
+                                            >
+                                                <template if:true={message.isSearchResult}>
+                                                    <span
+                                                        class={message.subjectTextClass}
+                                                        data-search-preview-id={message.Id}
+                                                        lwc:dom="manual"
+                                                    ></span>
+                                                </template>
+                                                <template if:false={message.isSearchResult}>
+                                                    <span class={message.subjectTextClass}>{message.subjectLabel}</span>
+                                                </template>
+                                                <lightning-icon
+                                                    icon-name={message.subjectToggleIcon}
+                                                    size="xx-small"
+                                                    class="comm-broadcast-timeline__subject-icon"
+                                                ></lightning-icon>
+                                            </button>
+
+                                            <template if:true={message.isExpanded}>
+                                                <div class="comm-broadcast-timeline__details">
+                                                    <template if:true={message.hasBody}>
+                                                        <div class="comm-broadcast-timeline__body-text">
+                                                            <template for:each={message.bodyTokens} for:item="token">
+                                                                <span key={token.key}>
+                                                                    <template if:true={token.isLink}>
+                                                                        <a
+                                                                            class="comm-broadcast-timeline__body-link"
+                                                                            href={token.href}
+                                                                            target="_blank"
+                                                                            rel="noopener noreferrer"
+                                                                            onclick={handleBodyLinkClick}
+                                                                        >{token.text}</a>
+                                                                    </template>
+                                                                    <template if:false={token.isLink}>
+                                                                        <span>{token.text}</span>
+                                                                    </template>
+                                                                </span>
+                                                            </template>
+                                                        </div>
+                                                    </template>
+                                                    <template if:true={message.showStatusError}>
+                                                        <div class="comm-broadcast-timeline__status-error">
+                                                            {message.distributionError}
+                                                        </div>
+                                                    </template>
+                                                    <template if:true={message.hasAttachment}>
+                                                        <div class="comm-broadcast-timeline__attachments">
+                                                            <template for:each={message.attachments} for:item="attachment">
+                                                                <div key={attachment.contentDocumentId} class={attachment.attachmentRowClass}>
+                                                                    <template if:true={attachment.isInlineImage}>
+                                                                        <div class="comm-broadcast-timeline__inline-image">
+                                                                            <template if:true={attachment.isInlineLoading}>
+                                                                                <div class="comm-broadcast-timeline__inline-image-state">
+                                                                                    <lightning-spinner
+                                                                                        size="small"
+                                                                                        alternative-text="Carregando imagem"
+                                                                                    ></lightning-spinner>
+                                                                                    <span>Carregando imagem</span>
+                                                                                </div>
+                                                                            </template>
+                                                                            <template if:true={attachment.isInlineLoaded}>
+                                                                                <button
+                                                                                    type="button"
+                                                                                    class="comm-broadcast-timeline__inline-image-button"
+                                                                                    data-content-document-id={attachment.contentDocumentId}
+                                                                                    data-message-id={message.Id}
+                                                                                    data-thread-id={message.threadId}
+                                                                                    data-file-extension={attachment.fileExtension}
+                                                                                    data-file-name={attachment.fileName}
+                                                                                    onclick={handleAttachmentClick}
+                                                                                    aria-label={attachment.previewLabel}
+                                                                                >
+                                                                                    <img
+                                                                                        class="comm-broadcast-timeline__inline-image-img"
+                                                                                        src={attachment.inlineSrc}
+                                                                                        alt={attachment.altText}
+                                                                                        loading="lazy"
+                                                                                    />
+                                                                                </button>
+                                                                            </template>
+                                                                            <template if:true={attachment.isInlineError}>
+                                                                                <div class="comm-broadcast-timeline__inline-image-error">
+                                                                                    {attachment.inlineErrorMessage}
+                                                                                </div>
+                                                                            </template>
+                                                                        </div>
+                                                                    </template>
+                                                                    <div class="comm-broadcast-timeline__attachment-main">
+                                                                        <lightning-icon icon-name="doctype:attachment" size="x-small"></lightning-icon>
+                                                                        <button
+                                                                            class="comm-broadcast-timeline__attachment-link"
+                                                                            data-content-document-id={attachment.contentDocumentId}
+                                                                            data-message-id={message.Id}
+                                                                            data-thread-id={message.threadId}
+                                                                            data-file-extension={attachment.fileExtension}
+                                                                            data-file-name={attachment.fileName}
+                                                                            onclick={handleAttachmentClick}
+                                                                        >Ver anexo</button>
+                                                                        <span class="comm-broadcast-timeline__attachment-name">{attachment.fileName}</span>
+                                                                    </div>
+                                                                </div>
+                                                            </template>
+                                                        </div>
+                                                    </template>
+                                                </div>
+                                            </template>
+                                        </div>
+
+                                        <template if:true={message.showEditAction}>
+                                            <lightning-button-icon
+                                                class="comm-broadcast-timeline__edit"
+                                                icon-name="utility:edit"
+                                                variant="bare"
+                                                size="small"
+                                                alternative-text="Alterar mensagem"
+                                                title="Alterar mensagem"
+                                                aria-label="Alterar mensagem"
+                                                data-message-id={message.Id}
+                                                onclick={handleEditMessage}
+                                            ></lightning-button-icon>
+                                        </template>
+                                        <template if:true={message.showRetryAction}>
+                                            <button
+                                                class="comm-broadcast-timeline__retry"
+                                                type="button"
+                                                data-message-id={message.Id}
+                                                onclick={handleRetryMessage}
+                                                disabled={message.retryDisabled}
+                                            >
+                                                {message.retryLabel}
+                                            </button>
+                                        </template>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </template>
+                </ul>
+            </template>
+
+            <template if:false={isLoading}>
+                <template if:false={hasMessages}>
+                    <div class="comm-broadcast-timeline__empty">
+                        <lightning-icon icon-name="utility:announcement" size="small"></lightning-icon>
+                        <p>{emptyMessage}</p>
+                    </div>
+                </template>
+            </template>
+
+            <div class="comm-broadcast-timeline__bottom" aria-hidden="true"></div>
+        </div>
+    </section>
+</template>

@@ -1,0 +1,552 @@
+/* communicatorHistoryPage */
+
+:host {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: visible;
+}
+
+.comm-hpage {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    height: calc(100vh - 100px);
+    min-height: 400px;
+    background: #fff;
+    font-family: 'Salesforce Sans', Arial, sans-serif;
+    overflow: hidden;
+}
+
+/* Child list component fills all remaining space */
+c-communicator-chat-history {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+}
+
+/* ── Page header (thread/group views, non-modal) ── */
+.comm-hpage__page-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid #e5e5e5;
+    flex-shrink: 0;
+}
+
+.comm-hpage__page-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #181818;
+    margin: 0;
+}
+
+.comm-hpage__page-subtitle {
+    font-size: 0.8rem;
+    color: #706e6b;
+    margin: 0;
+}
+
+/* ── Thread view wrapper ── */
+.comm-hpage__view {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+
+/* ─────────────────────────────────────────────
+   Header: back button + record card
+───────────────────────────────────────────── */
+.comm-hpage__header {
+    flex-shrink: 0;
+    background: #fff;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.comm-hpage__back {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    background: none;
+    border: none;
+    color: #0176d3;
+    font-size: 0.8rem;
+    cursor: pointer;
+    padding: 0.6rem 1.25rem 0.2rem;
+    --lwc-colorTextIconDefault: #0176d3;
+    --slds-c-icon-color-foreground-default: #0176d3;
+    transition: color 0.1s;
+}
+.comm-hpage__back:hover { color: #014486; }
+
+.comm-hpage__record-card {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.4rem 1.25rem 0.85rem;
+}
+
+.comm-hpage__record-left {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    flex: 1;
+    min-width: 0;
+}
+
+.comm-hpage__record-type-label {
+    font-size: 0.75rem;
+    color: #706e6b;
+}
+
+
+.comm-hpage__record-name {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #181818;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Fase atual row */
+.comm-hpage__stage-row {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+}
+
+.comm-hpage__stage-label {
+    font-size: 0.75rem;
+    color: #706e6b;
+    flex-shrink: 0;
+}
+
+.comm-hpage__conv-type-text {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #181818;
+    flex-shrink: 0;
+}
+
+.comm-hpage__meta-separator {
+    font-size: 0.75rem;
+    color: #aeacaa;
+    flex-shrink: 0;
+}
+
+/* AR link */
+.comm-hpage__ar-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 0.8125rem;
+    color: #1B96FF;
+    cursor: pointer;
+    text-decoration: underline;
+    --lwc-colorTextIconDefault: #1B96FF;
+    --slds-c-icon-color-foreground-default: #1B96FF;
+}
+.comm-hpage__ar-link:hover { color: #0a7fcc; }
+
+/* Stage badge (same colour system as communicatorChatFloatingButton) */
+.comm-hpage__badge {
+    display: inline-block;
+    padding: 0.15rem 0.6rem;
+    border-radius: 0.75rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    line-height: 1.4;
+    width: fit-content;
+}
+.comm-hpage__badge--orange       { background: #fff0d3; color: #c86400; }
+.comm-hpage__badge--blue         { background: #e8f4ff; color: #0176d3; }
+.comm-hpage__badge--yellow       { background: #fef9c3; color: #b45309; }
+.comm-hpage__badge--green        { background: #ecfdf5; color: #15803d; }
+.comm-hpage__badge--red          { background: #fff1f0; color: #ba0517; }
+.comm-hpage__badge--default      { background: #f3f3f3; color: #444;    }
+.comm-hpage__badge--purple       { background: #efe4ff; color: #6b21a8; }
+.comm-hpage__badge--violet       { background: #eee4ff; color: #5a2bc2; }
+.comm-hpage__badge--sky          { background: #d7eeff; color: #0c6e91; }
+.comm-hpage__badge--lime         { background: #e4f4c9; color: #5e7a1e; }
+.comm-hpage__badge--pink         { background: #f8d9ff; color: #a318a6; }
+.comm-hpage__badge--indigo-soft  { background: #e9e9ff; color: #4a3be0; }
+.comm-hpage__badge--indigo       { background: #e5e7ff; color: #4a4fb9; }
+.comm-hpage__badge--cyan-soft    { background: #d6f2fb; color: #14768f; }
+.comm-hpage__badge--yellow-soft  { background: #ffefb6; color: #a56a00; }
+.comm-hpage__badge--lavender     { background: #e8dff9; color: #684e97; }
+.comm-hpage__badge--sand         { background: #fce7c9; color: #946000; }
+.comm-hpage__badge--cyan         { background: #beefff; color: #0f708a; }
+.comm-hpage__badge--blue-soft    { background: #dce7ff; color: #2f5bc9; }
+.comm-hpage__badge--rose         { background: #fce2e9; color: #b01f3a; }
+.comm-hpage__badge--teal         { background: #cbf7f1; color: #0f7d71; }
+.comm-hpage__badge--purple-soft  { background: #eadafb; color: #7a47a9; }
+.comm-hpage__badge--amber-soft   { background: #ffe4ae; color: #c26c00; }
+.comm-hpage__badge--ice          { background: #cdeeff; color: #2b758f; }
+.comm-hpage__badge--stone        { background: #e8ded6; color: #6b5448; }
+.comm-hpage__badge--beige        { background: #efe1d2; color: #7a5b3e; }
+.comm-hpage__badge--orange-soft  { background: #ffd9c2; color: #c2410c; }
+.comm-hpage__badge--mint         { background: #d9f8ea; color: #1f8e61; }
+.comm-hpage__badge--aqua-soft    { background: #d9f7ff; color: #0f708d; }
+.comm-hpage__badge--gold-soft    { background: #ffe8a6; color: #a06405; }
+.comm-hpage__badge--blue-strong  { background: #dbe8ff; color: #2a63e8; }
+.comm-hpage__badge--indigo-strong{ background: #dee2ff; color: #3f47cb; }
+.comm-hpage__badge--green-soft   { background: #d7f7de; color: #15803d; }
+
+/* "Acessar oportunidade" button */
+.comm-hpage__access-btn {
+    flex-shrink: 0;
+    align-self: flex-start;
+    padding: 0.4rem 1rem;
+    background: #fff;
+    border: 1px solid #0176d3;
+    border-radius: 0.25rem;
+    font-size: 0.8125rem;
+    color: #0176d3;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.12s;
+    margin-top: 0.25rem;
+}
+.comm-hpage__access-btn:hover { background: #e8f4ff; }
+
+/* ─────────────────────────────────────────────
+   Etapa filter row
+───────────────────────────────────────────── */
+.comm-hpage__etapa-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.55rem 1.25rem;
+    flex-shrink: 0;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.comm-hpage__etapa-label {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #181818;
+    white-space: nowrap;
+}
+
+.comm-hpage__etapa-select {
+    appearance: none;
+    -webkit-appearance: none;
+    padding: 0.3rem 1.75rem 0.3rem 0.6rem;
+    font-size: 0.8125rem;
+    color: #181818;
+    background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23444' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 0.5rem center;
+    border: 1px solid #dddbda;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    outline: none;
+    min-width: 140px;
+}
+.comm-hpage__etapa-select:focus { border-color: #0176d3; }
+
+/* ─────────────────────────────────────────────
+   Search bar
+───────────────────────────────────────────── */
+.comm-hpage__search-row {
+    padding: 0.55rem 1.25rem;
+    flex-shrink: 0;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.comm-hpage__search-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: 1px solid #dddbda;
+    border-radius: 0.25rem;
+    padding: 0.4rem 0.75rem;
+    background: #fff;
+    max-width: 400px;
+}
+
+.comm-hpage__search-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 0.875rem;
+    background: transparent;
+    color: #181818;
+    min-width: 0;
+}
+.comm-hpage__search-input::placeholder { color: #aeacaa; }
+
+.comm-hpage__search-icon {
+    flex-shrink: 0;
+    --lwc-colorTextIconDefault: #706e6b;
+    --slds-c-icon-color-foreground-default: #706e6b;
+}
+
+/* ─────────────────────────────────────────────
+   Stage tabs — horizontal carousel
+───────────────────────────────────────────── */
+.comm-hpage__tabs-track {
+    flex-shrink: 0;
+    border-bottom: 1px solid #e5e5e5;
+    overflow: hidden;
+}
+
+.comm-hpage__mobile-stage-filter {
+    display: none;
+}
+
+.comm-hpage__mobile-stage-select {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 100%;
+    padding: 0.4rem 1.75rem 0.4rem 0.6rem;
+    font-size: 0.8125rem;
+    color: #181818;
+    background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23444' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 0.5rem center;
+    border: 1px solid #dddbda;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    outline: none;
+}
+
+.comm-hpage__mobile-stage-select:focus {
+    border-color: #0176d3;
+}
+
+.comm-hpage__tabs-scroll {
+    display: flex;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding: 0 0.75rem;
+}
+.comm-hpage__tabs-scroll::-webkit-scrollbar { display: none; }
+
+.comm-hpage__tab {
+    flex-shrink: 0;
+    padding: 0.7rem 0.9rem;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    font-size: 0.8125rem;
+    color: #444;
+    cursor: pointer;
+    white-space: nowrap;
+    margin-bottom: -1px;
+    transition: color 0.12s, border-color 0.12s;
+}
+.comm-hpage__tab:hover { color: #0176d3; }
+.comm-hpage__tab--active {
+    color: #0176d3;
+    font-weight: 600;
+    border-bottom-color: #0176d3;
+}
+
+.comm-hpage__tab-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.1rem;
+    height: 1.1rem;
+    background: #0176d3;
+    color: #fff;
+    border-radius: 0.55rem;
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 0 0.25rem;
+    margin-left: 0.35rem;
+    vertical-align: middle;
+    line-height: 1;
+}
+
+/* ─────────────────────────────────────────────
+   Empty stage state
+───────────────────────────────────────────── */
+.comm-hpage__no-messages {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    gap: 0.4rem;
+    padding: 3rem 1rem;
+    background: #eef7ff;
+    text-align: center;
+    min-height: 0;
+}
+
+.comm-hpage__no-messages-icon {
+    --lwc-colorTextIconDefault: #b0bec5;
+    --slds-c-icon-color-foreground-default: #b0bec5;
+    margin-bottom: 0.5rem;
+}
+
+.comm-hpage__no-messages-title {
+    font-size: 0.9375rem;
+    font-weight: 500;
+    margin: 0;
+    color: #3e3e3c;
+}
+
+.comm-hpage__no-messages-text {
+    font-size: 0.875rem;
+    margin: 0;
+    color: #706e6b;
+}
+
+/* ─────────────────────────────────────────────
+   Timeline and input — fill remaining height
+───────────────────────────────────────────── */
+c-communicator-chat-timeline {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    /* Allow scroll to propagate to the page/modal body when the timeline
+       has no overflow. Prevents scroll being silently absorbed when the
+       parent container doesn't provide a bounded height. */
+    --comm-overscroll-behavior: auto;
+}
+
+c-communicator-chatter-history {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+}
+
+c-communicator-chat-message-input {
+    flex-shrink: 0;
+}
+
+.comm-hpage__readonly-notice {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+    padding: 10px 16px;
+    background: #f3f3f3;
+    border-top: 1px solid #e0e0e0;
+    color: #706e6b;
+    font-size: 12px;
+}
+
+.comm-hpage__readonly-icon {
+    --lwc-colorTextIconDefault: #706e6b;
+}
+
+/* ── Group view ── */
+.comm-hpage__group-opp-count {
+    color: #181818;
+    margin-left: 0.25rem;
+}
+
+.comm-hpage__group-timeline {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    background: #f3f3f3;
+}
+
+@media (max-height: 800px) and (min-width: 768px) {
+    .comm-hpage__page-header {
+        padding: 0.75rem 1rem;
+    }
+
+    .comm-hpage__back {
+        padding: 0.5rem 1rem 0.2rem;
+    }
+
+    .comm-hpage__record-card {
+        padding: 0.35rem 1rem 0.65rem;
+    }
+
+    .comm-hpage__etapa-row,
+    .comm-hpage__search-row {
+        padding: 0.5rem 1rem;
+    }
+}
+
+@media (max-width: 1024px) {
+    .comm-hpage__record-card {
+        flex-wrap: wrap;
+    }
+
+    .comm-hpage__access-btn {
+        margin-top: 0;
+    }
+}
+
+@media (max-width: 767px) {
+    .comm-hpage__page-header {
+        padding: 0.75rem 0.75rem;
+    }
+
+    .comm-hpage__back {
+        padding: 0.5rem 0.75rem 0.2rem;
+    }
+
+    .comm-hpage__record-card {
+        padding: 0.35rem 0.75rem 0.65rem;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+    }
+
+    .comm-hpage__record-name {
+        font-size: 1rem;
+    }
+
+    .comm-hpage__access-btn {
+        width: 100%;
+        text-align: center;
+    }
+
+    .comm-hpage__etapa-row {
+        padding: 0.5rem 0.75rem;
+        flex-wrap: wrap;
+    }
+
+    .comm-hpage__etapa-select {
+        min-width: 0;
+        width: 100%;
+    }
+
+    .comm-hpage__search-row {
+        padding: 0.5rem 0.75rem;
+    }
+
+    .comm-hpage__search-bar {
+        max-width: none;
+        width: 100%;
+    }
+
+    .comm-hpage__mobile-stage-filter {
+        display: block;
+        padding: 0.5rem 0.75rem;
+    }
+
+    .comm-hpage__tabs-scroll--desktop {
+        display: none;
+    }
+
+    .comm-hpage__tabs-scroll {
+        padding: 0 0.45rem;
+    }
+
+    .comm-hpage__tab {
+        padding: 0.65rem 0.75rem;
+    }
+
+    .comm-hpage__readonly-notice {
+        padding: 10px 12px max(10px, env(safe-area-inset-bottom, 0px));
+    }
+}

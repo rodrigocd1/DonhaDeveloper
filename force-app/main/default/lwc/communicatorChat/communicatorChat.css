@@ -1,5 +1,12 @@
 /* communicatorChat */
 
+:host {
+    --comm-mobile-safe-top: env(safe-area-inset-top, 0px);
+    --comm-mobile-safe-right: env(safe-area-inset-right, 0px);
+    --comm-mobile-safe-bottom: env(safe-area-inset-bottom, 0px);
+    --comm-mobile-safe-left: env(safe-area-inset-left, 0px);
+}
+
 /* ─────────────────────────────────────
    Modo FAB — botão flutuante
 ───────────────────────────────────── */
@@ -70,8 +77,9 @@
     position: fixed;
     bottom: 6.5rem;
     right: 2rem;
-    width: 400px;
-    height: 580px;
+    width: min(400px, calc(100vw - 2.5rem));
+    height: min(580px, calc(100dvh - 8rem));
+    max-height: calc(100dvh - 8rem);
     z-index: 8001;
     border-radius: 0.75rem;
     box-shadow: 0 8px 32px rgba(0,0,0,.2);
@@ -104,15 +112,25 @@
 /* ── Mobile ── */
 @media (max-width: 767px) {
     .comm-fab-wrapper {
-        bottom: 1rem;
-        right: 1rem;
+        bottom: calc(1rem + var(--comm-mobile-safe-bottom));
+        right: calc(1rem + var(--comm-mobile-safe-right));
     }
 
     .comm-fab__panel {
+        top: 0;
+        left: 0;
         bottom: 0;
         right: 0;
         width: 100vw;
         height: 100dvh;
+        max-height: 100dvh;
         border-radius: 0;
+    }
+}
+
+@media (max-height: 800px) and (min-width: 768px) {
+    .comm-fab__panel {
+        height: min(580px, calc(100dvh - 6.5rem));
+        max-height: calc(100dvh - 6.5rem);
     }
 }

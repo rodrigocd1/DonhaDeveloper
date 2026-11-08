@@ -1,0 +1,179 @@
+<template>
+    <div class="screen" style={themeStyle}>
+        <template if:true={isLoading}>
+            <div class="loading-state" role="status" aria-live="polite">
+                <lightning-spinner alternative-text="Carregando configuração" size="medium"></lightning-spinner>
+            </div>
+        </template>
+
+        <template if:true={isStep1}>
+            <div class="screen-01">
+                <header class="header header-01">
+                    <img class="logo" src={logoUrl} alt={resolvedBrandName} />
+                    <span class="step-num">01</span>
+                </header>
+                <div class="hero-photo" style={heroPhotoStyle}></div>
+                <div class="screen-01-body">
+                    <h1 class="title-01">{content.heroTitle}</h1>
+                    <p class="sub-01">{content.heroSubtitle}</p>
+                    <p class="time-01"><em>{content.heroTimeText}</em></p>
+                    <button class="btn-primary btn-full" type="button" onclick={goToStep2}>
+                        {content.primaryButtonLabel} →
+                    </button>
+                    <div class="gift-notice"><span class="gift-dot"></span>{content.giftNotice}</div>
+                </div>
+                <footer class="app-footer">{content.footerText}</footer>
+            </div>
+        </template>
+
+        <template if:true={isStep2}>
+            <div class="screen-dark screen-02">
+                <header class="header header-dark">
+                    <img class="logo" src={logoUrl} alt={resolvedBrandName} />
+                    <span class="step-num step-num-dark">02</span>
+                </header>
+                <div class="screen-body screen-body-02">
+                    <h1 class="title-dark">{content.simulationTitle}</h1>
+                    <template for:each={questions} for:item="question">
+                        <fieldset key={question.key} class="question-group">
+                            <legend class="field-label">{question.label}</legend>
+                            <div class="range-list">
+                                <template for:each={question.options} for:item="option">
+                                    <button
+                                        key={option.key}
+                                        type="button"
+                                        class={option.cssClass}
+                                        data-question={question.key}
+                                        data-option={option.key}
+                                        aria-pressed={option.ariaPressed}
+                                        onclick={selectAnswer}
+                                    >
+                                        {option.label}
+                                    </button>
+                                </template>
+                            </div>
+                        </fieldset>
+                    </template>
+                    <template if:true={errorMessage}>
+                        <div class="error-box" role="alert">{errorMessage}</div>
+                    </template>
+                    <button class="btn-primary btn-full" type="button" onclick={goToStep3}>
+                        {content.resultButtonLabel} →
+                    </button>
+                </div>
+                <footer class="app-footer app-footer-dark">{content.footerText}</footer>
+            </div>
+        </template>
+
+        <template if:true={isStep3}>
+            <div class="screen-dark screen-03">
+                <header class="header header-dark">
+                    <img class="logo" src={logoUrl} alt={resolvedBrandName} />
+                    <span class="step-num step-num-dark">03</span>
+                </header>
+                <div class="screen-body screen-body-03">
+                    <div class="savings-card">
+                        <p class="savings-lbl">{content.resultTitle}</p>
+                        <p class="savings-val">R$ {savingsAmount}/mês</p>
+                        <p class="savings-brand">{content.resultMessage}</p>
+                    </div>
+                    <p class="section-lbl">{content.reasonsLabel}</p>
+                    <div class="benefits-row">
+                        <template for:each={benefitItems} for:item="benefit">
+                            <span key={benefit.key} class="benefit-pill">
+                                <span class="pill-dot"></span>{benefit.label}
+                            </span>
+                        </template>
+                    </div>
+                    <p class="section-lbl">{content.formTitle}</p>
+                    <div class="status-region" aria-live="polite">
+                        <template if:true={errorMessage}>
+                            <div class="error-box" role="alert">{errorMessage}</div>
+                        </template>
+                    </div>
+                    <div class="form-fields">
+                        <div class="field-row">
+                            <label class="field-lbl" for="fullName">Nome completo</label>
+                            <input id="fullName" class="field-input" type="text" name="fullName" value={formData.fullName} required maxlength="120" autocomplete="name" oninput={handleFormChange} />
+                        </div>
+                        <template if:true={showCpf}>
+                            <div class="field-row">
+                                <label class="field-lbl" for="cpf">CPF</label>
+                                <input id="cpf" class="field-input" type="text" name="cpf" value={formData.cpf} required={config.requireCpf} inputmode="numeric" minlength="11" maxlength="11" oninput={handleCpfInput} />
+                            </div>
+                        </template>
+                        <div class="field-row">
+                            <label class="field-lbl" for="mobilePhone">WhatsApp</label>
+                            <input id="mobilePhone" class="field-input" type="tel" name="mobilePhone" value={whatsappDisplayValue} required={config.requirePhone} inputmode="numeric" autocomplete="tel-national" maxlength="17" placeholder="(99) 99999 - 9999" oninput={handlePhoneInput} />
+                        </div>
+                        <div class="field-row">
+                            <label class="field-lbl" for="email">E-mail</label>
+                            <input id="email" class="field-input" type="email" name="email" value={formData.email} required={config.requireEmail} maxlength="80" autocomplete="email" oninput={handleFormChange} />
+                        </div>
+                        <label class="consent-row">
+                            <input type="checkbox" name="consentAccepted" checked={formData.consentAccepted} onchange={handleFormChange} />
+                            <span>{config.consentLabel}</span>
+                        </label>
+                        <template if:true={hasConsentLink}>
+                            <a class="consent-link" href={consentLink} target="_blank" rel="noopener noreferrer">Política de privacidade</a>
+                        </template>
+                    </div>
+                    <button class="btn-primary btn-full" type="button" onclick={handleSubmit} disabled={isSubmitting}>
+                        {submitLabel} →
+                    </button>
+                </div>
+                <footer class="app-footer app-footer-dark">{content.footerText}</footer>
+            </div>
+        </template>
+
+        <template if:true={isStep4}>
+            <div class="screen-dark screen-04">
+                <header class="header header-dark">
+                    <img class="logo" src={logoUrl} alt={resolvedBrandName} />
+                    <span class="step-num step-num-dark">04</span>
+                </header>
+                <div class="screen-body screen-body-04">
+                    <div class="success-icon-wrap" aria-hidden="true">
+                        <svg class="success-svg" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="48" cy="48" r="48" fill="#F5CF00"></circle>
+                            <polyline points="28,50 42,63 68,36" fill="none" stroke="#0C3B54" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"></polyline>
+                        </svg>
+                    </div>
+                    <h1 class="title-dark title-04">{finalTitle}</h1>
+                    <p class="sub-04 status-region" aria-live="polite">{finalMessage}</p>
+                    <template if:true={isCheckingDelivery}>
+                        <lightning-spinner alternative-text="Enviando código" size="small"></lightning-spinner>
+                    </template>
+                    <template if:true={showRetryButton}>
+                        <button class="btn-primary btn-full" type="button" onclick={handleRetryDelivery}>Tentar envio novamente →</button>
+                    </template>
+                    <template if:true={showCodeForm}>
+                        <p class="field-label">{content.giftInputLabel}</p>
+                        <div class="field-row">
+                            <label class="assistive-text" for="giftCode">{content.giftInputLabel}</label>
+                            <input id="giftCode" class="field-input code-input" type="text" name="giftCode" value={giftCode} maxlength="30" autocomplete="one-time-code" placeholder={content.giftInputPlaceholder} oninput={handleGiftCode} />
+                        </div>
+                        <template if:true={errorMessage}>
+                            <div class="error-box" role="alert">{errorMessage}</div>
+                        </template>
+                        <button class="btn-primary btn-full" type="button" onclick={handleValidateCode} disabled={validationButtonDisabled}>
+                            {content.giftButtonLabel} →
+                        </button>
+                    </template>
+                    <button class="btn-secondary btn-full" type="button" onclick={restart}>{content.secondaryButtonLabel} →</button>
+                </div>
+                <footer class="app-footer app-footer-dark">{content.footerText}</footer>
+            </div>
+        </template>
+
+        <template if:true={errorMessage}>
+            <template if:false={isStep2}>
+                <template if:false={isStep3}>
+                    <template if:false={isStep4}>
+                        <div class="global-error error-box" role="alert">{errorMessage}</div>
+                    </template>
+                </template>
+            </template>
+        </template>
+    </div>
+</template>

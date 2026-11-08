@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Distribuidora_Nome__c</fullName>
+    <description>Nome da distribuidora calculado automaticamente pelo flow before save do lead, com base no campo text Distribuidora_Id__c, não visível pelos usuários comuns. A distribuidora pode ser alterada através do botão Ações pelos usuários com a devida permissão. O screen flow guia o usuário autorizado na escolha das possíveis distribuidoras e atualiza o campo Distribuidora_Id__c com o ID da distribuidora selecionada.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Nome da distribuidora calculado automaticamente com base no campo ID da distribuidora. A distribuidora pode ser alterada através do botão Ações pelos usuários com a devida permissão.</inlineHelpText>
+    <label>Distribuidora Nome</label>
+    <length>80</length>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

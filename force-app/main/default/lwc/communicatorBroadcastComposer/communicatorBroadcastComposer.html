@@ -1,0 +1,110 @@
+<template>
+    <section class="comm-broadcast-composer">
+        <template if:true={uploadErrorMessage}>
+            <div class="comm-broadcast-composer__banner comm-broadcast-composer__banner--error" role="alert">
+                <lightning-icon icon-name="utility:error" size="x-small" variant="error"></lightning-icon>
+                <span>{uploadErrorMessage}</span>
+            </div>
+        </template>
+
+        <template if:true={hasAttachments}>
+            <div class="comm-broadcast-composer__attachments">
+                <template for:each={displayedFiles} for:item="file">
+                    <div key={file.localId} class="comm-broadcast-composer__attachment">
+                        <lightning-icon icon-name="doctype:attachment" size="x-small"></lightning-icon>
+                        <span class="comm-broadcast-composer__attachment-name">{file.fileName}</span>
+                        <button
+                            type="button"
+                            class="comm-broadcast-composer__attachment-remove"
+                            data-upload-id={file.localId}
+                            onclick={handleRemoveAttachment}
+                            disabled={isSubmitting}
+                        >
+                            Remover
+                        </button>
+                    </div>
+                </template>
+            </div>
+        </template>
+
+        <div class="comm-broadcast-composer__field">
+            <label class="comm-broadcast-composer__label" for="broadcast-subject">Assunto</label>
+            <input
+                id="broadcast-subject"
+                type="text"
+                class="comm-broadcast-composer__input"
+                placeholder={subjectPlaceholder}
+                value={messageSubject}
+                oninput={handleSubjectInput}
+                disabled={isSubmitting}
+            />
+            <div class="comm-broadcast-composer__field-meta">
+                <span>Obrigatório para comunicados</span>
+                <span>{subjectCharacterCount}/255</span>
+            </div>
+            <template if:true={subjectErrorMessage}>
+                <div class="comm-broadcast-composer__field-error" role="alert">{subjectErrorMessage}</div>
+            </template>
+        </div>
+
+        <textarea
+            class="comm-broadcast-composer__textarea"
+            placeholder={messagePlaceholder}
+            value={messageBody}
+            oninput={handleMessageInput}
+            onkeydown={handleKeyDown}
+            onpaste={handleBodyPaste}
+            rows="4"
+            disabled={isSubmitting}
+        ></textarea>
+
+        <div class="comm-broadcast-composer__actions">
+            <div class={uploadClass}>
+                <button
+                    class="comm-broadcast-composer__upload-visual"
+                    type="button"
+                    tabindex="-1"
+                    aria-hidden="true"
+                    disabled={isUploadDisabled}
+                >
+                    <template if:true={isAttachmentProcessing}>
+                        <lightning-spinner size="x-small" alternative-text="Anexando"></lightning-spinner>
+                    </template>
+                    <template if:false={isAttachmentProcessing}>
+                        <lightning-icon icon-name="utility:upload" size="x-small"></lightning-icon>
+                    </template>
+                    <span>Anexar arquivo</span>
+                </button>
+                <template for:each={uploadInputTokens} for:item="uploadInputToken">
+                    <lightning-file-upload
+                        key={uploadInputToken}
+                        class="comm-broadcast-composer__upload-input"
+                        label="Anexar arquivo"
+                        variant="label-hidden"
+                        record-id={broadcast.groupId}
+                        accept={acceptedFormatsList}
+                        multiple
+                        disabled={isUploadDisabled}
+                        onuploadfinished={handleUploadFinished}
+                    ></lightning-file-upload>
+                </template>
+            </div>
+
+            <div class="comm-broadcast-composer__actions-group">
+                <template if:true={isEditMode}>
+                    <button type="button" class="comm-broadcast-composer__cancel" onclick={handleCancel} disabled={isSubmitting}>
+                        Cancelar
+                    </button>
+                </template>
+                <button type="button" class="comm-broadcast-composer__submit" onclick={handleSubmit} disabled={isSubmitDisabled}>
+                    <template if:true={isSubmitting}>
+                        <lightning-spinner size="x-small" alternative-text="Processando"></lightning-spinner>
+                    </template>
+                    <template if:false={isSubmitting}>
+                        {submitLabel}
+                    </template>
+                </button>
+            </div>
+        </div>
+    </section>
+</template>
